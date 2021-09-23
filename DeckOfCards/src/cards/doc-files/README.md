@@ -1,0 +1,3 @@
+Icons by icons8.com
+
+<a target="_blank" href="https://icons8.com/icon/qtsHxv4fy83l/card">Card</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a>
