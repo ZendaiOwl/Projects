@@ -1,9 +1,4 @@
 /**
- * 
- */
-package cards;
-
-/**
  * @author ZendaiOwl
  *         <p>
  *         <li>Clubs = 1</li>

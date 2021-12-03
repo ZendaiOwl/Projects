@@ -1,5 +1,3 @@
-package cards;
-
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -47,6 +45,17 @@ public class DeckOfCards {
   }
 
   /**
+   * @return the next card in the deck as a Card object
+   */
+  public Card nextCard() {
+    if (currentcard < maxcards) {
+      return deck.get(currentcard++);
+    } else {
+      return null;
+    }
+  }
+
+  /**
    * @return the deck of cards as an ArrayList<Card>
    */
   public ArrayList<Card> cards() {
@@ -68,7 +77,7 @@ public class DeckOfCards {
    * @return the specified card as a String
    */
   public String card(int i) {
-    String o = deck.get(i).card() + "\n";
+    String o = deck.get(i).card();
     return o;
   }
 
@@ -83,10 +92,8 @@ public class DeckOfCards {
    * @return 2 cards in a String with a new line included per card
    */
   public String deal2() {
-    String draw2 = "";
-    for (int i = currentcard; i < (currentcard + 2); i++)
-      draw2 += deck.get(i).card() + " \n";
-    this.currentcard += 2;
+    String draw2 = deck.get(this.currentcard++).card() + "\n" + 
+    deck.get(this.currentcard++).card();
     return draw2;
   }
 
@@ -94,10 +101,9 @@ public class DeckOfCards {
    * @return 3 cards in a String with a new line included per card
    */
   public String deal3() {
-    String draw3 = "";
-    for (int c = currentcard; c < (currentcard + 3); c++)
-      draw3 += deck.get(c).card() + " \n";
-    this.currentcard += 3;
+    String draw3 = deck.get(currentcard++).card() + "\n" +
+    deck.get(currentcard++).card() + "\n" +
+    deck.get(currentcard++).card();
     return draw3;
   }
 
@@ -105,10 +111,10 @@ public class DeckOfCards {
    * @return 4 cards in a String with a new line included per card
    */
   public String deal4() {
-    String draw4 = "";
-    for (int c = currentcard; c < (currentcard + 4); c++)
-      draw4 += deck.get(c).card() + " \n";
-    this.currentcard += 4;
+    String draw4 = deck.get(currentcard++).card() + "\n" +
+    deck.get(currentcard++).card() + "\n" +
+    deck.get(currentcard++).card() + "\n" +
+    deck.get(currentcard++).card();
     return draw4;
   }
 
@@ -116,10 +122,11 @@ public class DeckOfCards {
    * @return 5 cards in a String with a new line included per card
    */
   public String deal5() {
-    String draw5 = "";
-    for (int c = currentcard; c < (currentcard + 5); c++)
-      draw5 += deck.get(c).card() + " \n";
-    this.currentcard += 5;
+    String draw5 = deck.get(currentcard++).card() + "\n" +
+    deck.get(currentcard++).card() + "\n" +
+    deck.get(currentcard++).card() + "\n" +
+    deck.get(currentcard++).card() + "\n" +
+    deck.get(currentcard++).card();
     return draw5;
   }
 
@@ -153,31 +160,6 @@ public class DeckOfCards {
         x--;
       }
     return u;
-  }
-
-  /**
-   * @param args A program to test and demo the DeckOfCards class
-   */
-  public static void main(String[] args) {
-    DeckOfCards test = new DeckOfCards();
-    for (String s : test.cardS())
-      System.out.println(s);
-    System.out.println("\nShuffling");
-    test.shuffle();
-    System.out.println("\nTo String\n");
-    System.out.println(test.toString());
-    System.out.println("Dealing 1 card");
-    System.out.println(test.deal1() + "\n");
-    System.out.println("Dealing 2 cards");
-    System.out.println(test.deal2());
-    System.out.println("Dealing 3 cards");
-    System.out.println(test.deal3());
-    System.out.println("Dealing 4 cards");
-    System.out.println(test.deal4());
-    System.out.println("Dealing 5 cards");
-    System.out.println(test.deal5());
-    System.out.println("Cards remaining : " + test.remaining());
-    System.out.println("Card counter : " + test.current());
   }
 
 }
