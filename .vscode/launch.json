@@ -6,6 +6,41 @@
   "configurations": [
     {
       "type": "java",
+      "name": "Launch Clubs",
+      "request": "launch",
+      "mainClass": "Clubs",
+      "projectName": "DeckOfCards_d63fde86"
+    },
+    {
+      "type": "java",
+      "name": "Launch Hearts",
+      "request": "launch",
+      "mainClass": "Hearts",
+      "projectName": "DeckOfCards_d63fde86"
+    },
+    {
+      "type": "java",
+      "name": "Launch Spades",
+      "request": "launch",
+      "mainClass": "Spades",
+      "projectName": "DeckOfCards_d63fde86"
+    },
+    {
+      "type": "java",
+      "name": "Launch Diamonds",
+      "request": "launch",
+      "mainClass": "images.Diamonds",
+      "projectName": "DeckOfCards_d63fde86"
+    },
+    {
+      "type": "java",
+      "name": "Launch Diamonds",
+      "request": "launch",
+      "mainClass": "Diamonds",
+      "projectName": "DeckOfCards_d63fde86"
+    },
+    {
+      "type": "java",
       "name": "Launch App",
       "request": "launch",
       "mainClass": "App",

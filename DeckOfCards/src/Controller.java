@@ -1,15 +1,9 @@
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.text.Text;
-import java.awt.*;
-import java.io.*;
 
-import javax.imageio.ImageReader;
-
-public class Controller {
+public class Controller extends Images{
   @FXML 
   private ImageView left;
   @FXML
@@ -30,10 +24,7 @@ public class Controller {
   private ImageView cardImageView;
   @FXML
   protected void handleDealButtonAction(ActionEvent event) {
-    File img = new File("/images/diamonds1.png");
-    Image image = new Image(img.toURI().toString());
-    middle.setImage(image);
-
+    middle.setImage(super.cards()[0][0]); 
   }
 
   @FXML

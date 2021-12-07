@@ -1,8 +1,10 @@
+import javafx.scene.image.Image;
+
 /**
  * @author ZendaiOwl
  * 
  */
-enum Rank {
+public enum Rank {
   ACE(1) {
     @Override
     public String toString() {
@@ -12,7 +14,7 @@ enum Rank {
   DEUCE(2) {
     @Override
     public String toString() {
-      return "Deuce";
+      return "Two";
     }
   },
   THREE(3) {
