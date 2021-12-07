@@ -14,6 +14,7 @@ public class App extends Application {
     root.getChildren().add(loader.load());
     Scene scene = new Scene(root, 640, 480);
     stage.setTitle("Deck of Cards");
+    
     stage.setScene(scene);
     stage.show();
   }

@@ -1,6 +1,6 @@
 import javafx.scene.image.Image;
 public class Images {
-  private final int RANKS = 12;
+  private final int RANKS = 13;
   private Image[] diamonds, clubs, hearts, spades;
   private Image[][] cards;
   public Images(){
