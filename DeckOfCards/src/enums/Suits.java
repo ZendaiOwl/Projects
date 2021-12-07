@@ -1,3 +1,4 @@
+package enums;
 /**
  * @author ZendaiOwl
  *         <p>
@@ -7,7 +8,7 @@
  *         <li>Spades = 4</li>
  *         </p>
  */
-enum Suits {
+public enum Suits {
   CLUBS(1) {
     @Override
     public String toString() {

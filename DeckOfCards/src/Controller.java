@@ -1,9 +1,12 @@
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.image.ImageView;
+import javafx.scene.image.*;
+import java.util.Random;
 
 public class Controller extends Images{
+  private Images cards = new Images();
+  private Random r = new Random();
   @FXML 
   private ImageView left;
   @FXML
@@ -24,7 +27,7 @@ public class Controller extends Images{
   private ImageView cardImageView;
   @FXML
   protected void handleDealButtonAction(ActionEvent event) {
-    middle.setImage(super.cards()[0][0]); 
+    this.middle.setImage(cards.cards()[r.nextInt(3)+1][r.nextInt(12)]); 
   }
 
   @FXML

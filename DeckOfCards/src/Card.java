@@ -1,3 +1,6 @@
+import enums.Rank;
+import enums.Suits; 
+
 /**
  * @author ZendaiOwl
  *

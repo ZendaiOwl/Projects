@@ -64,9 +64,9 @@
                         <Button fx:id="shuffle" mnemonicParsing="false" prefHeight="26.0" prefWidth="85.0" text="Shuffle" />
                     </items>
                   </ToolBar>
-                  <ImageView fx:id="imageview1" fitHeight="279.0" fitWidth="215.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="1" />
-                  <ImageView fx:id="imageview3" fitHeight="277.0" fitWidth="215.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                  <ImageView fx:id="imageview2" fitHeight="280.0" fitWidth="215.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <ImageView fx:id="left" fitHeight="279.0" fitWidth="215.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="1" />
+                  <ImageView fx:id="middle" fitHeight="280.0" fitWidth="215.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <ImageView fx:id="right" fitHeight="277.0" fitWidth="215.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                </children>
             </GridPane>
       </children>

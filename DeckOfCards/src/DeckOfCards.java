@@ -1,6 +1,9 @@
 import java.util.ArrayList;
 import java.util.Collections;
 
+import enums.Rank;
+import enums.Suits;
+
 /**
  * @author ZendaiOwl
  *

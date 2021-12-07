@@ -1,16 +1,9 @@
-import java.util.*;
-
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import java.net.URL;
 import javafx.scene.*;
-import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import javafx.stage.*;
 
 public class App extends Application {
-
-  private DeckOfCards deck = new DeckOfCards();
 
   @Override
   public void start(Stage stage) throws Exception {
@@ -20,6 +13,7 @@ public class App extends Application {
     Group root = new Group();
     root.getChildren().add(loader.load());
     Scene scene = new Scene(root, 640, 480);
+    stage.setTitle("Deck of Cards");
     stage.setScene(scene);
     stage.show();
   }
