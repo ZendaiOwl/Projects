@@ -1,0 +1,1 @@
+time.sleep(float( random.uniform(min_delay*10,max_delay*10) / 10 ))
