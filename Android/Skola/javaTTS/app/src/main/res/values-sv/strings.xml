@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Pratglada Android</string>
+    <string name="hint_tts_text">Skriv in en text som skall läsas upp.</string>
+    <string name="button1">Tala</string>
+    <string name="tag_mainActivity">MainActivity</string>
+    <string name="msg_tts_init_error">Något gick fel vid initiering av Text-Till-Tal!</string>
+    <string name="hello_android">Hejsan Android!</string>
+    <string name="course_welcome">Välkommen till kursen IK 10 95 Android applikationsutveckling. Vi syns i Learn!</string>
+    <string name="err_noText">Ingen text inskriven! Skriv något och prova igen</string>
+    <string name="err_cancelled">Avbryten</string>
+    <string name="err_lang_unsupported">Standard språket för denna telefon stöds inte</string>
+</resources>
