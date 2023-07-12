@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Pratglada Android</string>
+    <string name="hint_text">Skriv in text som skall läsas upp</string>
+    <string name="speech_button">Tala</string>
+    <string name="description_input_text">Input fält för text som skall läsas upp</string>
+    <string name="course_welcome">Welcome to the IK10965 Android course. See you in Learn!"</string>
+    <string name="hello_android">Hello Android! </string>
+</resources>
