@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">Kanban</string>
+    <string name="TXT_debug_title">Task</string>
+    <string name="TXT_debug_info">Info</string>
+    <string name="TXT_debug_status">Status</string>
+    <string name="TXT_debug_time">Time</string>
+    <string name="TXT_contentDescription_fab">Add new task</string>
+    <string name="TXT_hint_task">Task</string>
+    <string name="TXT_btn_save">Save</string>
+    <string name="TXT_empty_task">Task is empty, not saving</string>
+    <string name="TXT_empty_field">A field in the task is empty</string>
+    <string name="TXT_empty_title">Title field is empty</string>
+    <string name="TXT_empty_info">Info field is empty</string>
+    <string name="TXT_empty_status">Status is empty</string>
+    <string name="TXT_task_created">Created Task</string>
+    <string name="DBG_cancelled">Cancelled</string>
+    <string name="DBG_no_data">No data</string>
+    <string name="DBG_no_text">No text</string>
+    <string name="TAG_MainActivity">MainActivity</string>
+    <string name="TXT_status_not_started">Not started</string>
+    <string name="TXT_status_ongoing">Ongoing</string>
+    <string name="TXT_status_completed">Completed</string>
+    <string name="TXT_button_cancel">Cancel</string>
+    <string name="TXT_contentDescription_edit_icon">Edit text icon</string>
+    <string name="TXT_button_edit_pen_icon">Edit icon with a pen</string>
+    <string name="TXT_button_delete">Delete</string>
+    <string name="TXT_deleted">Deleted</string>
+    <string name="TXT_updated">Updated</string>
+</resources>
