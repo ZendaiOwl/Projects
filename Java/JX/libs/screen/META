@@ -1,9 +1,0 @@
-NEEDLIBS = zero jdk0
-
-SUBDIRS = jx/devices
-
-LIBNAME = screen
-CLASSFILES = jx/devices/*.class
-NUMBERENV = int
-
-

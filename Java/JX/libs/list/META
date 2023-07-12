@@ -1,8 +1,0 @@
-NEEDLIBS = zero
-NEEDLIBS += jdk0
-NEEDLIBS += zero_misc
-SUBDIRS = jx/buffer/multithread
-LIBNAME    = list
-NUMBERENV  = int
-MAINTAINER = felser@cs.fau.de
-
