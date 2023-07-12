@@ -1,0 +1,373 @@
+body {
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  background: #EEE;
+}
+
+nav,
+header {
+  background: #EEE;
+}
+
+h1 {
+  font-family: Red Hat Display;
+  text-align: center;
+  font-size: 1.8em;
+  color: black;
+}
+
+h2 {
+  font-family: Red Hat Display;
+}
+
+.rainbow {
+  background: linear-gradient(124deg, #ff2400, #e81d1d, #e8b71d, #e3e81d, #1de840, #1ddde8, #2b1de8, #dd00f3, #dd00f3);
+  animation: rainbow 12s ease infinite;
+  background-size: 1800% 1800%;
+}
+
+.grid-container {
+  display: grid;
+  max-width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 10px;
+  justify-content: center;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  grid-row-start: 4;
+  grid-row-end: 5;
+  grid-column-start: 1;
+  grid-column-end: 2;
+  grid-gap: 10px;
+}
+
+.grid-container > div {
+  background-color: rgba(255, 255, 255, 0.8);
+  text-align: center;
+  padding: 10px 0;
+  font-size: 30px;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+}
+
+.grid-text {
+  font-size: 18px;
+  font-family: Red Hat Text;
+  text-align: left;
+}
+
+.section {
+  max-width: 50%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.q-section {
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.question {
+  font-family: Red Hat Text;
+  font-size: larger;
+}
+
+.answer {
+  display: grid;
+  margin: inherit;
+  padding: 10px;
+  justify-content: left;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(1, 1fr);
+  grid-gap: 10px;
+}
+
+.columns {
+  text-align: left;
+  margin-left: auto;
+}
+
+.column {
+  display: block;
+  flex-basis: 0;
+  flex-grow: 1;
+  flex-shrink: 1;
+  padding: 0.75rem;
+}
+
+
+.lala {
+  margin-right: 25%;
+  margin-left: 25%;
+}
+
+.container {
+  text-align: center;
+  display: inline-grid;
+}
+
+.container-text {
+  text-align: center;
+  font-size: 20px;
+  font-family: Red Hat Text;
+}
+
+.container-advice {
+  width: 75%;
+  padding-left: 15%;
+}
+
+.text {
+  font-size: 18px;
+  font-family: Red Hat Text;
+  text-align: left;
+  margin-left: 10%;
+  margin-right: 10%;
+}
+
+.link-text {
+  font-size: 18px;
+  font-family: Red Hat Text;
+}
+
+.list-text {
+  font-size: 18px;
+  font-family: Red Hat Text;
+  text-align: left;
+}
+
+.list-height {
+  padding-bottom: 12px;
+}
+
+.button {
+  border-width: 1px;
+  border-radius: 12px;
+  cursor: pointer;
+  padding-bottom: calc(0.5em - 1px);
+  padding-left: 1em;
+  padding-right: 1em;
+  padding-top: calc(0.5em - 1px);
+  text-align: center;
+  white-space: nowrap;
+  background-color: #485fc7;
+  border-color: transparent;
+  color: #fff;
+  font-size: 16px;
+}
+
+.button:hover {
+  background-color: #3e56c4;
+  border-color: transparent;
+  color: #fff;
+}
+
+.button:focus {
+  border-color: transparent;
+  color: #fff;
+}
+
+.button:active {
+  background-color: #3a51bb;
+  border-color: transparent;
+  color: #fff;
+}
+
+.card {
+  background-color: white;
+  border-radius: 1rem;
+  box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, 0.1), 0 0px 0 1px rgba(10, 10, 10, 0.02);
+  color: #4a4a4a;
+  max-width: 100%;
+  position: relative;
+  padding: 1.5rem;
+  margin-top: 12px;
+  margin-bottom: 12px;
+}
+
+.card-header:first-child, .card-content:first-child, .card-footer:first-child {
+  border-top-left-radius: 0.25rem;
+  border-top-right-radius: 0.25rem;
+}
+
+.card-header:last-child, .card-content:last-child, .card-footer:last-child {
+  border-bottom-left-radius: 0.25rem;
+  border-bottom-right-radius: 0.25rem;
+}
+
+.card-header {
+  background-color: transparent;
+  align-items: stretch;
+  box-shadow: 0 0.125em 0.25em rgba(10, 10, 10, 0.1);
+  display: flex;
+}
+
+.card-header-title {
+  align-items: center;
+  color: #363636;
+  display: flex;
+  flex-grow: 1;
+  font-weight: 700;
+  padding: 0.75rem 1rem;
+}
+
+.card-header-title.is-centered {
+  justify-content: center;
+}
+
+.card-header-icon {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  appearance: none;
+  background: none;
+  border: none;
+  color: currentColor;
+  font-family: inherit;
+  font-size: 1em;
+  margin: 0;
+  padding: 0;
+  align-items: center;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  padding: 0.75rem 1rem;
+}
+
+.card-image {
+  display: block;
+  position: relative;
+}
+
+.card-image:first-child img {
+  border-top-left-radius: 0.25rem;
+  border-top-right-radius: 0.25rem;
+}
+
+.card-image:last-child img {
+  border-bottom-left-radius: 0.25rem;
+  border-bottom-right-radius: 0.25rem;
+}
+
+.card-content {
+  background-color: transparent;
+  padding: 1.5rem;
+}
+
+.card-footer {
+  background-color: transparent;
+  border-top: 1px solid #ededed;
+  align-items: stretch;
+  display: flex;
+}
+
+.card-footer-item {
+  align-items: center;
+  display: flex;
+  flex-basis: 0;
+  flex-grow: 1;
+  flex-shrink: 0;
+  justify-content: center;
+  padding: 0.75rem;
+}
+
+.card-footer-item:not(:last-child) {
+  border-right: 1px solid #ededed;
+}
+
+.card .media:not(:last-child) {
+  margin-bottom: 1.5rem;
+}
+
+.navbar {
+  background-color: #EEE;
+  min-height: 3.25rem;
+  position: relative;
+  z-index: 30;
+}
+
+.navbar > .container {
+  align-items: stretch;
+  display: flex;
+  min-height: 3.25rem;
+  width: 100%;
+}
+
+.navbar-start {
+  justify-content: flex-start;
+  margin-right: 75%;
+}
+
+.navbar-end {
+  justify-content: flex-end;
+  margin-left: 75%;
+}
+
+.navbar-item {
+  color: #4a4a4a;
+  display: block;
+  line-height: 1.5;
+  padding: 0.5rem 0.75rem;
+  position: relative;
+  font-family: Red Hat Text;
+  font-size: 1.2em;
+}
+
+.radio {
+  cursor: pointer;
+  display: inline-block;
+  line-height: 1.25;
+  position: relative;
+}
+
+input[type="radio"] {
+  vertical-align: baseline;
+}
+
+.radio input {
+  cursor: pointer;
+}
+
+.radio:hover {
+  color: #363636;
+}
+
+.radio[disabled],
+.radio input[disabled] {
+  color: #7a7a7a;
+  cursor: not-allowed;
+}
+
+.radio + .radio {
+  margin-left: 0.5em;
+}
+
+.total {
+  margin-bottom: 12px;
+}
+
+@-webkit-keyframes rainbow {
+    0%{background-position:0% 82%}
+    50%{background-position:100% 19%}
+    100%{background-position:0% 82%}
+}
+
+@-moz-keyframes rainbow {
+    0%{background-position:0% 82%}
+    50%{background-position:100% 19%}
+    100%{background-position:0% 82%}
+}
+
+@-o-keyframes rainbow {
+    0%{background-position:0% 82%}
+    50%{background-position:100% 19%}
+    100%{background-position:0% 82%}
+}
+
+@keyframes rainbow { 
+    0%{background-position:0% 82%}
+    50%{background-position:100% 19%}
+    100%{background-position:0% 82%}
+}
