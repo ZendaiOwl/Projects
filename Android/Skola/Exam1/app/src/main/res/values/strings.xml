@@ -1,0 +1,98 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Application name -->
+    <string name="app_name">Examination 1</string>
+    <string name="app_label">Introduktion</string>
+    <string name="page1_label">PDF s.1 Profile</string>
+    <string name="page2_label">PDF s.2 Experience</string>
+    <string name="page3_label">PDF s.3 Education</string>
+    <string name="page4_label">PDF s.4 Volunteer</string>
+    <!-- Just some default generated strings -->
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <!-- Titles -->
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_main2">ActivityCV</string>
+    <string name="title_activity_page1">PDF s.1 Introduktion</string>
+    <string name="title_activity_page2">PDF s.2 Erfarenhet</string>
+    <string name="title_activity_page3">PDF s.3 Utbildning</string>
+    <string name="title_activity_page4">PDF s.4 Volontärsarbete</string>
+    <!-- IMG Content Description text -->
+    <string name="IMG_description_profile">A picture of a man walking on a road, some mist in the air.</string>
+    <!-- TAG's used for debugging -->
+    <string name="TAG_OpenPDF">OpenPDF</string>
+    <string name="TAG_Page1" tools:ignore="Typos">Page1</string>
+    <string name="TAG_Page2" tools:ignore="Typos">Page2</string>
+    <string name="TAG_Page3" tools:ignore="Typos">Page3</string>
+    <string name="TAG_Page4" tools:ignore="Typos">Page4</string>
+    <string name="TAG_ActivityCV">ActivityCV</string>
+    <string name="TAG_FirstFragment">FirstFragment</string>
+    <string name="TAG_SecondFragment">SecondFragment</string>
+    <string name="TAG_MainActivity">MainActivity</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_page_label">PDF s.1 Introduktion</string>
+    <string name="second_page_label">PDF s.2 Erfarenhet</string>
+    <string name="third_page_label">PDF s.3 Utbildning</string>
+    <string name="fourth_page_label">PDF s.4 Volontärsarbete</string>
+    <string name="first_fragment_label">Introduktion</string>
+    <string name="second_fragment_label">Hobby</string>
+    <string name="second_main_activity_label">CV</string>
+    <string name="next">Hobby</string>
+    <string name="previous">Tillbaka</string>
+    <string name="hobby">Hobby</string>
+    <!-- TXT Content Descriptions-->
+    <string name="TXT_contentDescription_ncp_logo">Nextcloud Pi project logo</string>
+    <string name="TXT_contentDescription_imgView_cv">A PDF image of Victor-ray\'s CV</string>
+    <!-- TXT Strings and phrases -->
+    <string name="TXT_myName">Victor-ray, S.</string>
+    <string name="TXT_cv">CV</string>
+    <string name="TXT_hello">Hejsan!</string>
+    <string name="TXT_name">Victor-ray</string>
+    <string name="TXT_age">30</string>
+    <string name="TXT_occupation">Customer Support</string>
+    <string name="TXT_employer">Majorel</string>
+    <string name="TXT_client">Netflix</string>
+    <string name="TXT_ncp">Nextcloudpi</string>
+    <string name="TXT_email">Email</string>
+    <string name="TXT_email_skola">h16vicso@du.se</string>
+    <string name="TXT_copied">Copied!</string>
+    <string name="TXT_presentation">Hejsan!\nJag heter Victor-ray &amp; är nu 30 år gammal, arbetar som customer support åt Netflix, hos ett företag som heter Majorel och deras branch som finns i Nederländerna. Detta medans jag studerar Utveckling av e-Tjänster på Högskolan Dalarna.</string>
+    <string name="TXT_hobby">Jag gillar att lära mig &amp; har en raspberry pi 4 som jag brukar testa lite olika programvaror eller lär mig något nytt med.\n\nPå fritiden är jag lite delaktig i ett open-source projekt som heter Nextcloudpi, Nextcloud på en Raspberry Pi, tidigare har jag studerat musik och spelade en del gitarr.</string>
+    <string name="TXT_cv_info">Nedan finner du sidorna i mitt CV, jag valde att presentera PDF sidorna från mitt befintliga CV, då mitt CV är relativt stort.\n\nDesvärre så fungerar inga UI interaktioner i Android SDK PDFRenderer utan endast 1 sida åt gången kan öppnas och ingen zoom kan genomföras. Jag valde denna eftersom den följer med native i Android SDK och kräver därför inte att ett externt library måste importeras.\n\nDärför har jag lagt in en knapp som öppnar varje sida i mitt CV, det finns också delvis nerskrivet i min strings.xml fil, men då det blir så mycket skrev jag endast första sidan innan jag bestämde mig för att visa PDF sidorna istället.</string>
+    <string name="TXT_profile">Profile</string>
+    <string name="TXT_experience">Experience</string>
+    <string name="TXT_education">Education</string>
+    <string name="TXT_volunteer">Volunteer</string>
+    <string name="TXT_interest">Mina intressen</string>
+    <string name="TXT_interest_tech">Teknologi</string>
+    <string name="TXT_interest_music">Musik</string>
+    <string name="TXT_interest_learning">Lära</string>
+    <string name="TXT_interest_drawing">Måla</string>
+    <string name="TXT_interest_writing">Skriva</string>
+    <string name="TXT_interest_watching_movies">Kolla på film</string>
+    <string name="TXT_interest_gaming">Spela</string>
+    <!-- Used for Victor-ray's CV -->
+    <string name="CV_title_profile">Profile</string>
+    <string name="CV_name">VICTOR-RAY ANDRÈ JUNIOR SÖBYE</string>
+    <string name="CV_subtitle_occupation">Technical Support &amp; Customer Service</string>
+    <string name="CV_subtitle_studies">Student in Development of e-Services</string>
+    <string name="CV_birthdate">14th September 1991</string>
+    <string name="CV_phonenr">+31 621 62 38 19</string>
+    <string name="CV_email_one">victorray.sobye@gmail.com</string>
+    <string name="CV_email_two">victorray91@pm.me</string>
+    <string name="CV_address">Stationsweg 3D, 1702AA, Heerhugowaard, NL.</string>
+    <string name="CV_intro_paragraph_one">Hello!\nMy name is Victor-ray and I’m currently studying Development of e-Services at University Dalarna while working full-time as Customer Support Representative for Netflix in Amsterdam with Majorel.</string>
+    <string name="CV_intro_paragraph_two">I want to find work as a developer when I finish my education, since that is something I really like to do, being able to develop and build something that others find interesting, enjoy or simply is useful for them in their everyday lives. Perhaps I will also continue my education to higher levels, I will see in time, right now I’m expected to take my graduation exam project in December this year if everything goes well.</string>
+    <string-array name="CV">
+        <item>@string/CV_title_profile</item>
+        <item>@string/CV_name</item>
+        <item>@string/CV_subtitle_occupation</item>
+        <item>@string/CV_subtitle_studies</item>
+        <item>@string/CV_birthdate</item>
+        <item>@string/CV_phonenr</item>
+        <item>@string/CV_email_one</item>
+        <item>@string/CV_email_two</item>
+        <item>@string/CV_address</item>
+        <item>@string/CV_intro_paragraph_one</item>
+        <item>@string/CV_intro_paragraph_two</item>
+    </string-array>
+</resources>

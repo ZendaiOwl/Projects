@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/FirstFragment">
+
+    <fragment
+        android:id="@+id/FirstFragment"
+        android:name="com.example.exam1.FirstFragment"
+        android:label="@string/first_fragment_label"
+        tools:layout="@layout/fragment_first">
+
+        <action
+            android:id="@+id/action_FirstFragment_to_SecondFragment"
+            app:destination="@id/SecondFragment" />
+        <action
+            android:id="@+id/action_open_cv_activity"
+            app:destination="@id/ActivityCV"/>
+    </fragment>
+    <fragment
+        android:id="@+id/SecondFragment"
+        android:name="com.example.exam1.SecondFragment"
+        android:label="@string/second_fragment_label"
+        tools:layout="@layout/fragment_second">
+
+        <action
+            android:id="@+id/action_SecondFragment_to_FirstFragment"
+            app:destination="@id/FirstFragment" />
+    </fragment>
+    <activity
+        android:id="@+id/ActivityCV"
+        android:name="com.example.exam1.ActivityCV"
+        android:label="@string/second_main_activity_label"
+        tools:layout="@layout/activity_cv"/>
+    <action
+        android:id="@+id/action_page_one"
+        app:destination="@id/Page1"/>
+    <action
+        android:id="@+id/action_page_two"
+        app:destination="@id/Page2"/>
+    <action
+        android:id="@+id/action_page_three"
+        app:destination="@id/Page3"/>
+    <action
+        android:id="@+id/action_page_four"
+        app:destination="@id/Page4"/>
+    <activity
+        android:id="@+id/Page1"
+        android:name="com.example.exam1.Page1"
+        android:label="@string/first_page_label"
+        tools:layout="@layout/activity_page1"/>
+    <activity
+        android:id="@+id/Page2"
+        android:name="com.example.exam1.Page2"
+        android:label="@string/second_page_label"
+        tools:layout="@layout/activity_page2"/>
+    <activity
+        android:id="@+id/Page3"
+        android:name="com.example.exam1.Page3"
+        android:label="@string/third_page_label"
+        tools:layout="@layout/activity_page3"/>
+    <activity
+        android:id="@+id/Page4"
+        android:name="com.example.exam1.Page4"
+        android:label="@string/fourth_page_label"
+        tools:layout="@layout/activity_page4"/>
+</navigation>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <group
+        android:id="@+id/menu_interest_group"
+        android:menuCategory="container">
+        <item
+            android:id="@+id/menu_interest"
+            android:icon="@drawable/logo"
+            android:orderInCategory="1"
+            android:title="@string/TXT_interest"
+            app:showAsAction="never" />
+        <item
+            android:id="@+id/menu_interest_tech"
+            android:title="@string/TXT_interest_tech"
+            android:orderInCategory="2"
+            app:showAsAction="never"/>
+        <item
+            android:id="@+id/menu_interest_learning"
+            android:title="@string/TXT_interest_learning"
+            android:orderInCategory="3"
+            app:showAsAction="never" />
+        <item
+            android:id="@+id/menu_interest_music"
+            android:title="@string/TXT_interest_music"
+            android:orderInCategory="4"
+            app:showAsAction="never" />
+        <item
+            android:id="@+id/menu_interest_writing"
+            android:title="@string/TXT_interest_writing"
+            android:orderInCategory="5"
+            app:showAsAction="never" />
+        <item
+            android:id="@+id/menu_interest_drawing"
+            android:title="@string/TXT_interest_drawing"
+            android:orderInCategory="6"
+            app:showAsAction="never" />
+        <item
+            android:id="@+id/menu_interest_gaming"
+            android:title="@string/TXT_interest_gaming"
+            android:orderInCategory="7"
+            app:showAsAction="never" />
+        <item
+            android:id="@+id/menu_interest_watching_movies"
+            android:title="@string/TXT_interest_watching_movies"
+            android:orderInCategory="8"
+            app:showAsAction="never" />
+    </group>
+</menu>
