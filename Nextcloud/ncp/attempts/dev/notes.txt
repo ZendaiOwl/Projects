@@ -1,0 +1,50 @@
+
+Nextcloud:apache
+total 180K
+drwxrwxrwx 15 www-data www-data 4.0K Feb 14 20:47 .
+drwxrwxr-x  1 www-data root     4.0K Jan 12 00:55 ..
+-rw-r--r--  1 www-data www-data 3.2K Feb 14 20:47 .htaccess
+-rw-r--r--  1 www-data www-data  101 Feb 14 20:47 .user.ini
+drwxr-xr-x 47 www-data www-data 4.0K Feb 14 20:47 3rdparty
+-rw-r--r--  1 www-data www-data  19K Feb 14 20:47 AUTHORS
+-rw-r--r--  1 www-data www-data  34K Feb 14 20:47 COPYING
+drwxr-xr-x 50 www-data www-data 4.0K Feb 14 20:47 apps
+drwxr-xr-x  2 www-data www-data 4.0K Feb 14 20:47 config
+-rw-r--r--  1 www-data www-data 4.0K Feb 14 20:47 console.php
+drwxr-xr-x 23 www-data www-data 4.0K Feb 14 20:47 core
+-rw-r--r--  1 www-data www-data 6.2K Feb 14 20:47 cron.php
+drwxr-xr-x  2 www-data www-data 4.0K Feb 14 20:47 custom_apps
+drwxr-xr-x  2 www-data www-data 4.0K Feb 14 20:47 data
+drwxr-xr-x  2 www-data www-data  12K Feb 14 20:47 dist
+-rw-r--r--  1 www-data www-data  156 Feb 14 20:47 index.html
+-rw-r--r--  1 www-data www-data 3.4K Feb 14 20:47 index.php
+drwxr-xr-x  6 www-data www-data 4.0K Feb 14 20:47 lib
+-rwxr-xr-x  1 www-data www-data  283 Feb 14 20:47 occ
+drwxr-xr-x  2 www-data www-data 4.0K Feb 14 20:47 ocm-provider
+drwxr-xr-x  2 www-data www-data 4.0K Feb 14 20:47 ocs
+drwxr-xr-x  2 www-data www-data 4.0K Feb 14 20:47 ocs-provider
+-rw-r--r--  1 www-data www-data 3.1K Feb 14 20:47 public.php
+-rw-r--r--  1 www-data www-data 5.5K Feb 14 20:47 remote.php
+drwxr-xr-x  4 www-data www-data 4.0K Feb 14 20:47 resources
+-rw-r--r--  1 www-data www-data   26 Feb 14 20:47 robots.txt
+-rw-r--r--  1 www-data www-data 2.4K Feb 14 20:47 status.php
+drwxr-xr-x  3 www-data www-data 4.0K Feb 14 20:47 themes
+-rw-r--r--  1 www-data www-data  383 Feb 14 20:47 version.php
+
+config
+total 120K
+drwxr-xr-x  2 www-data www-data 4.0K Feb 14 20:47 .
+drwxrwxrwx 15 www-data www-data 4.0K Feb 14 20:47 ..
+-rw-r--r--  1 www-data www-data  495 Feb 14 20:47 .htaccess
+-rw-r--r--  1 www-data www-data    0 Feb 14 20:47 CAN_INSTALL
+-rw-r--r--  1 www-data www-data   60 Feb 14 20:47 apache-pretty-urls.config.php
+-rw-r--r--  1 www-data www-data   70 Feb 14 20:47 apcu.config.php
+-rw-r--r--  1 www-data www-data  377 Feb 14 20:47 apps.config.php
+-rw-r--r--  1 www-data www-data 2.1K Feb 14 20:47 autoconfig.php
+-rw-r--r--  1 www-data www-data  72K Feb 14 20:47 config.sample.php
+-rw-r--r--  1 www-data www-data  484 Feb 14 20:47 redis.config.php
+-rw-r--r--  1 www-data www-data  798 Feb 14 20:47 reverse-proxy.config.php
+-rw-r--r--  1 www-data www-data 1.3K Feb 14 20:47 s3.config.php
+-rw-r--r--  1 www-data www-data 1.1K Feb 14 20:47 smtp.config.php
+-rw-r--r--  1 www-data www-data 1.1K Feb 14 20:47 swift.config.php
+

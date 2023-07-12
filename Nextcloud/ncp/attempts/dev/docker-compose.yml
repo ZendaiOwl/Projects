@@ -1,0 +1,32 @@
+version: "3.8"
+services:
+  docker:
+    image: docker:dind
+    privileged: true
+    environment:
+      DOCKER_TLS_CERTDIR: /certs
+    networks:
+      - docker
+    volumes:
+      - docker-certs-ca:/certs
+      - docker-certs-client:/certs/client
+
+  docker-client:
+    image: docker
+    environment:
+      DOCKER_TLS_CERTDIR: /certs
+    # Just loop at infinitum, we will get to this container by `docker exec`ing
+    command: [sh, -c, "while sleep 1; do :; done"]
+    networks:
+      - docker
+    depends_on:
+      - docker
+    volumes:
+      - docker-certs-client:/certs/client:ro
+
+volumes:
+  docker-certs-ca:
+  docker-certs-client:
+
+networks:
+  docker:

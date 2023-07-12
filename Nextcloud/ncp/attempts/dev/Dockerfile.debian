@@ -1,0 +1,56 @@
+# syntax=docker/dockerfile:1
+FROM debian:bullseye-slim AS builder
+ARG HOST="github.com"
+ARG OWNER="ZendaiOwl"
+ARG REPO="nextcloudpi"
+ARG BRANCH="Refactoring"
+ARG REPO_URL="https://${HOST}/${OWNER}/${REPO}"
+ARG LIB_HOST="raw.githubusercontent.com"
+ARG LIB_OWNER="ZendaiOwl"
+ARG LIB_REPO="Build"
+ARG LIB_BRANCH="master"
+ARG LIB_PATH="Bash/Libs/Library.sh"
+ARG LIB_URL="https://${LIB_HOST}/${LIB_OWNER}/${LIB_REPO}/${LIB_BRANCH}/${LIB_PATH}"
+ARG REPO_DIR='/ncp'
+ARG HTTP_USER="www-data"
+ARG DOCKERBUILD='1'
+ENV DOCKERBUILD="$DOCKERBUILD"
+ENV DEBIAN_FRONTEND=noninteractive
+# RUN mkdir --parents /var/lib/docker
+# COPY --from=docker:dind /var/lib/docker/ /var/lib/docker/
+COPY ./buildlib.sh /buildlib.sh
+COPY ./library.sh /library.sh
+RUN printf '%s\n' \
+           "REPO_URL: $REPO_URL" \
+           "LIBRARY_URL: $LIBRARY_URL" \
+           "DOCKERBUILD: $DOCKERBUILD"
+RUN apt-get update --assume-yes; \
+    useradd --home-dir /var/www --create-home \
+            --uid 33 --user-group \
+            --shell /bin/bash www-data; \
+    apt-get install --quiet \
+                    --assume-yes \
+                    --no-show-upgraded \
+                    --auto-remove=true \
+                    --no-install-recommends \
+                    bash git wget curl gnupg \
+                    lsb-release pbzip2 lbzip2 \
+                    psmisc procps jq coreutils \
+                    ca-certificates apt-utils \
+                    apt-transport-https cgroupfs-mount apparmor; \
+    curl --location --silent "$LIB_URL" > /var/www/library.sh; \
+    /bin/bash -C "source /library.sh"; \
+    git clone "$REPO_URL" "$REPO_DIR"; \
+    mkdir -m 0755 -p /etc/apt/keyrings; \
+    curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg; \
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian \
+  $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null; \
+  apt-get update --assume-yes; \
+  apt-get install --quiet \
+                  --assume-yes \
+                  --no-show-upgraded \
+                  --auto-remove=true \
+                  --no-install-recommends \
+  docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin; \
+  service docker start
+CMD ["/bin/bash","-C"]

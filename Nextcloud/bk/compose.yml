@@ -1,0 +1,82 @@
+version: '2'
+
+# most of this is taken from here: https://github.com/nextcloud/docker / https://hub.docker.com/_/nextcloud
+# changes and additions are documented in the comments below
+# see also: https://github.com/nextcloud/docker/issues/1414
+
+services:
+  db:
+    # see: https://github.com/nextcloud/docker/issues/1536
+    image: mariadb:10.5
+    restart: always
+    command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
+    volumes:
+      - db:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=
+      - MYSQL_PASSWORD=
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+    networks:
+      caddy:
+        ipv4_address: 172.16.0.8
+
+  app:
+    image: nextcloud:stable
+    restart: always
+    networks:
+      caddy:
+        ipv4_address: 172.16.0.7
+        
+    # see: https://github.com/nextcloud/documentation/blob/master/admin_manual/configuration_server/reverse_proxy_configuration.rst  
+    labels:
+      #caddy: 
+      caddy.reverse_proxy: "{{upstreams}}"
+      # see: https://github.com/lucaslorentz/caddy-docker-proxy/issues/114
+      caddy.header: /*
+      # see: https://docs.nextcloud.com/server/23/admin_manual/installation/harden_server.html#enable-http-strict-transport-security
+      caddy.header.Strict-Transport-Security: '"max-age=15552000;"'
+      # see: https://docs.nextcloud.com/server/23/admin_manual/issues/general_troubleshooting.html#service-discovery
+      # https://github.com/lucaslorentz/caddy-docker-proxy/issues/222
+      caddy.rewrite_0: /.well-known/carddav /remote.php/dav
+      caddy.rewrite_1: /.well-known/caldav /remote.php/dav
+    volumes:
+      - nextcloud:/var/www/html
+    environment:
+      - MYSQL_PASSWORD=
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+      - MYSQL_HOST=db
+      # See: https://hub.docker.com/_/nextcloud/
+      - APACHE_DISABLE_REWRITE_IP=1
+      # See: https://github.com/nextcloud/documentation/issues/7005
+      # and: https://old.reddit.com/r/NextCloud/comments/s3skdn/nextcloud_behind_caddy_as_a_reverse_proxy_using/hsnj5wh/
+      #- TRUSTED_PROXIES=172.16.0.6
+      - TRUSTED_PROXIES=127.0.0.1
+      - APACHE_IP_BINDING=127.0.0.1
+    links:
+      - db
+  cron:
+  # Nextcloud cron functionality with Docker deployments is not well documented:
+  # https://github.com/nextcloud/docker/blob/master/.examples/docker-compose/with-nginx-proxy/mariadb/apache/docker-compose.yml#L39
+  # https://github.com/nextcloud/docker/blob/master/.examples/docker-compose/insecure/mariadb/apache/docker-compose.yml#L35
+  # https://github.com/nextcloud/docker/issues/1695
+  # https://docs.nextcloud.com/server/latest/admin_manual/configuration_server/background_jobs_configuration.html
+    image: nextcloud:stable
+    restart: always
+    volumes:
+      - nextcloud:/var/www/html
+    networks:
+      caddy:
+        ipv4_address: 172.16.0.9
+    entrypoint: /cron.sh
+    depends_on:
+      - db
+
+volumes:
+  db:
+  nextcloud:
+
+networks:
+  caddy:
+    external: true

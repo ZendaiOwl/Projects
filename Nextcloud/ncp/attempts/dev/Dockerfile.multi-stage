@@ -1,0 +1,27 @@
+# syntax=docker/dockerfile:1
+ARG VERSION=2.6.2
+FROM caddy:${VERSION}-builder-alpine AS builder
+RUN xcaddy build --with github.com/greenpau/caddy-security \
+                 --with github.com/caddyserver/transform-encoder \
+                 --with github.com/mholt/caddy-webdav \
+                 --with github.com/hairyhenderson/caddy-teapot-module \
+                 --with github.com/abiosoft/caddy-json-parse \
+                 --with github.com/mastercactapus/caddy2-proxyprotocol \
+                 --with github.com/porech/caddy-maxmind-geolocation \
+                 --with github.com/gamalan/caddy-tlsredis \
+                 --with github.com/mholt/caddy-dynamicdns \
+                 --with github.com/caddy-dns/cloudflare \
+                 --with github.com/ggicci/caddy-jwt \
+                 --with github.com/ueffel/caddy-basic-auth-filter 
+
+ARG VERSION=2.6.2
+FROM caddy:"$VERSION"-alpine AS web
+COPY --from=builder /usr/bin/caddy /usr/bin/caddy
+COPY "$PWD"/Caddyfile /etc/caddy/Caddyfile
+# ADD https://raw.githubusercontent.com/ZendaiOwl/Build/master/Docker/Nextcloud/ncp/attempts/Caddyfile /etc/caddy/Caddyfile
+RUN apk --no-cache add nss curl
+
+
+FROM nextcloud:fpm-alpine AS app
+COPY --from=web /usr/bin/caddy /usr/bin/caddy
+COPY --from=web /etc/caddy/Caddyfile /etc/caddy/Caddyfile

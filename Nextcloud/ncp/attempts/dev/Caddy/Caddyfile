@@ -1,0 +1,87 @@
+{
+	# email 
+	# http_port 80
+	# https_port 443
+	# skip_install_trust
+	# debug
+	local_certs
+	# auto_https off
+	# Development certificates from letsencrypt, not as rate-limited as the regular one
+	acme_ca https://acme-staging-v02.api.letsencrypt.org/directory
+	log {
+		format json {
+			message_key msg
+			level_key level
+			time_key ts
+			name_key name
+		}
+	}
+	servers {
+		protocols h1 h2 h2c h3
+		strict_sni_host insecure_off
+	}
+}
+
+:80 {
+	redir /.well-known/carddav /remote.php/dav 301
+	redir /.well-known/caldav /remote.php/dav 301
+
+	header {
+		# enable HSTS
+		# Strict-Transport-Security max-age=31536000;
+	}
+
+	# .htaccess / data / config / ... shouldn't be accessible from outside
+	@forbidden {
+		path /.htaccess
+		path /data/*
+		path /config/*
+		path /db_structure
+		path /.xml
+		path /README
+		path /3rdparty/*
+		path /lib/*
+		path /templates/*
+		path /occ
+		path /console.php
+	}
+	respond @forbidden 404
+
+	root * /var/www/html
+	php_fastcgi app:9000
+	file_server
+}
+
+# For local IP to work with HTTPS & HSTS,
+# the local IP of the device & the IP of the Docker container,
+# is required to be added after the port ':443'
+:443 192.168.178.34 172.36.1.4 {
+	redir /.well-known/carddav /remote.php/dav 301
+	redir /.well-known/caldav /remote.php/dav 301
+
+	header {
+		enable HSTS
+		Strict-Transport-Security max-age=15552000;
+		# Strict-Transport-Security max-age=31536000;
+	}
+
+	# .htaccess / data / config / ... shouldn't be accessible from outside
+	@forbidden {
+		path /.htaccess
+		path /data/*
+		path /config/*
+		path /db_structure
+		path /.xml
+		path /README
+		path /3rdparty/*
+		path /lib/*
+		path /templates/*
+		path /occ
+		path /console.php
+	}
+	respond @forbidden 404
+
+	root * /var/www/html
+	php_fastcgi app:9000
+	file_server
+}

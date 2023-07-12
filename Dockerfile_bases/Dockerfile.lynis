@@ -1,0 +1,12 @@
+# syntax=docker/dockerfile:1
+FROM --platform=$BUILDPLATFORM alpine:3.17
+LABEL author="Victor-ray, S. victorray91@pm.me"
+ARG TARGETPLATFORM
+ARG BUILDPLATFORM
+RUN apk add --no-cache git; git clone https://github.com/CISOfy/lynis
+WORKDIR /lynis
+ENV LANGUAGE=en
+ENV LANG=en
+ENV _=none
+ENTRYPOINT ["./lynis"]
+
