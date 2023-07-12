@@ -1,0 +1,23 @@
+[package]
+name = "risky"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+# riscv64gc-unknown-linux-gnu
+# riscv64gc-unknown-none-elf
+# cargo build --target riscv64gc-unknown-none-elf
+
+# Alternatively, we can compile it for the host system by passing additional linker arguments:
+# Linux
+# cargo rustc -- -C link-arg=-nostartfiles
+
+[profile.dev]
+panic = "abort"
+
+[profile.release]
+panic = "abort"
+
+[dependencies]
