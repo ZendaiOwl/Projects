@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Debugging</string>
+    <string name="set_text">Hello, debugging!</string>
+</resources>
