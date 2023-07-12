@@ -1,4 +1,6 @@
 #!/usr/bin/java --source 17
+# Author § Victor-ray, S.
+
 public class ScriptJava {
 
   public static void main(String[] args) {
