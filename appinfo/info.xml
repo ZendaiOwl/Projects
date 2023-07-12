@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<info xmlns:xsi= "http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
+    <!--
+    SPDX-FileCopyrightText: Victor-ray, S. <zendaiowl@skiff.com>
+    SPDX-License-Identifier: CC0-1.0
+    -->
+    <id>translate</id>
+    <name>Translate</name>
+    <summary>A local translation tool</summary>
+    <description><![CDATA[# Translate
+
+WiP - _Work in progress_
+
+Recently created the repository.
+
+A local translation app for Nextcloud using Argos-Translate or possibly LibreTranslate. 
+
+I&#x27;ve had this idea for a while now and decided to create the repository and slowly start working on it. I&#x27;m currently at the end of my undergraduate degree and so it will take a while but I haven&#x27;t seen anyone else starting on this idea since I started thinking about approximately a year or so ago, as such here it is. 
+
+[Argos-Translate](https://github.com/argosopentech/argos-translate)
+
+[Argos-Translate Files](https://github.com/dingedi/argos-translate-files)
+
+[Argos-Translate Translate-HTML](https://github.com/argosopentech/translate-html)
+
+[Argos-Translate Pre-Trained Models](https://www.argosopentech.com/argospm/index/)
+
+[LibreTranslate](https://github.com/LibreTranslate/LibreTranslate)
+
+[LibreTranslate-Models](https://github.com/argosopentech/LibreTranslate-Models)
+
+[LibreTranslate-sh](https://github.com/argosopentech/LibreTranslate-sh)
+
+[Tinytranslate](https://github.com/argosopentech/tinytranslate)]]></description>
+    <version>0.0.1</version>
+    <licence>agpl</licence>
+    <author mail="zendaiowl@skiff.com" >Victor-ray, S.</author>
+    <namespace>Translate</namespace>
+    <category>tools</category>
+    <bugs>https://github.com/ZendaiOwl/translate/issues</bugs>
+    <dependencies>
+        <nextcloud min-version="25" max-version="25"/>
+    </dependencies>
+    <navigations>
+        <navigation>
+            <name>Translate</name>
+            <route>translate.page.index</route>
+        </navigation>
+    </navigations>
+</info>
