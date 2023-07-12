@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Talkative Android</string>
+    <string name="hint_tts_text">Enter a text that will be read out loud.</string>
+    <string name="button1">Speak</string>
+    <string name="tag_mainActivity">MainActivity</string>
+    <string name="msg_tts_init_error">An error occurred when initiating Text-To-Speech!</string>
+    <string name="course_welcome">Welcome to the IK 10 95 Android application development course. See you in Learn!</string>
+    <string name="hello_android">Hello Android!</string>
+    <string name="err_noText">No text entered! Write something and try again</string>
+    <string name="err_cancelled">Cancelled</string>
+    <string name="err_lang_unsupported">Default language for this phone is not supported</string>
+</resources>
