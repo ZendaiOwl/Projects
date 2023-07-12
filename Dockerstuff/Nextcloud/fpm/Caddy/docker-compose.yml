@@ -1,0 +1,86 @@
+version: '3.7'
+services:
+  db:
+    image: mariadb:10.5
+    restart: always
+    command: --transaction-isolation=READ-COMMITTED --log-bin=mysqld-bin --binlog-format=ROW
+#    network_mode: bridge
+#    networks:
+#      - dual-stack
+    volumes:
+      - db:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD="$MYSQL_ROOT_PASSWORD"
+      - MYSQL_PASSWORD="$MYSQL_PASSWORD"
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+
+  app:
+    image: nextcloud:fpm-alpine
+    restart: always
+    links:
+      - db
+#    network_mode: bridge
+#    networks:
+#      - dual-stack
+    volumes:
+      - nextcloud:/var/www/html
+    environment:
+      - MYSQL_PASSWORD="$MYSQL_PASSWORD"
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+      - MYSQL_HOST=db
+      # See: https://hub.docker.com/_/nextcloud/
+      - APACHE_DISABLE_REWRITE_IP=1
+      # See: https://github.com/nextcloud/documentation/issues/7005
+      # and: https://old.reddit.com/r/NextCloud/comments/s3skdn/nextcloud_behind_caddy_as_a_reverse_proxy_using/hsnj5wh/
+      - TRUSTED_DOMAINS=192.168.178.12
+      #- TRUSTED_DOMAINS="$DOMAIN"
+      #- TRUSTED_PROXIES="$DOCKER_GATEWAY"
+      - TRUSTED_PROXIES=127.0.0.1
+      - TRUSTED_PROXIES=web
+    links:
+      - db
+
+    # see: https://github.com/nextcloud/documentation/blob/master/admin_manual/configuration_server/reverse_proxy_configuration.rst  
+    labels:
+      # caddy: 192.68.178.12:8080
+      caddy.reverse_proxy: "{{upstreams}}"
+      # see: https://github.com/lucaslorentz/caddy-docker-proxy/issues/114
+      caddy.header: /*
+      # see: https://docs.nextcloud.com/server/23/admin_manual/installation/harden_server.html#enable-http-strict-transport-security
+      caddy.header.Strict-Transport-Security: '"max-age=15552000;"'
+      # see: https://docs.nextcloud.com/server/23/admin_manual/issues/general_troubleshooting.html#service-discovery
+      # https://github.com/lucaslorentz/caddy-docker-proxy/issues/222
+      caddy.rewrite_0: /.well-known/carddav /remote.php/dav
+      caddy.rewrite_1: /.well-known/caldav /remote.php/dav
+
+  web:
+    image: zendai/caddy:2.6.2
+    ports:
+#      - 80:80
+#      - 443:443
+      - 8080:80
+      - 8443:443
+    links:
+      - app
+#    network_mode: bridge
+#    networks:
+#      - dual-stack
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+#      - /var/run/docker.sock:/var/run/docker.sock
+    volumes_from:
+      - app
+    restart: always
+
+#networks:
+#  dual-stack:
+#    external: true
+
+volumes:
+  db:
+  nextcloud:
+  caddy_data: {}
+
