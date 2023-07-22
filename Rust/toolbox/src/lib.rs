@@ -619,7 +619,7 @@ impl Tree {
                 match line {
                     Ok(line) => {
                         if line.contains(pattern) {
-                            writeln!(writer, "{}: {}", name, line.trim_start()).expect("Unable to write line");
+                            writeln!(writer, "{}: {}", name.green(), line.trim_start()).expect("Unable to write line");
                         }
                     },
                     Err(_) => break 'read_lines,
