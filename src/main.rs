@@ -7,7 +7,7 @@ use crate::commands::list::*;
 use crate::commands::rd::*;
 use crate::commands::run_cmd::*;
 use crate::commands::search::*;
-use rusty::*;
+use toolbox::*;
 // use glob::glob;
 
 mod commands;
