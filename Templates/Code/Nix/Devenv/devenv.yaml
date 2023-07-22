@@ -1,0 +1,7 @@
+  inputs:
+    myproject:
+      url: github:myorg/myproject
+  imports:
+    - ./frontend
+    - ./backend
+    - myproject
