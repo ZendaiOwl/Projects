@@ -1,0 +1,17 @@
+version: '3'
+services:
+    github-pages:
+      image: jekyll/jekyll:pages
+      environment:
+        - "JEKYLL_GITHUB_TOKEN=${JEKYLL_GITHUB_TOKEN}"
+      volumes:
+        - ./:/srv/jekyll:Z
+      ports:
+        - 4000:4000
+      command: bundle add webrick && jekyll serve
+      tty: true
+
+# exclude:
+#   - docker-compose.yml
+#   - README.md
+#   - site.code-workspace 

@@ -3,8 +3,15 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-
-{% seo %}
+    <meta name="subtitle" content="">
+    <meta name="description" content=""> <!-- 150 words or less -->
+    <meta name="author" content="Victor-ray, S.">
+    <meta name="copyright" content="MIT License © 2023">
+    <meta name="robots" content="noindex,nofollow">
+    <meta name="AdsBot-Google" content="noindex,nofollow">
+    <meta name="googlebot" content="noindex,nofollow">
+    <meta name="googlebot-news" content="noindex,nofollow"> 
+    {% seo %}
     <link rel="stylesheet" href="{{ '/assets/css/style.css?v=' | append: site.github.build_revision | relative_url }}">
     <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
     <script src="{{ '/assets/js/respond.js' | relative_url }}"></script>
@@ -21,15 +28,8 @@
   </head>
   <body>
       <div id="header">
-        <nav>
-          <ul>
-            <li class="fork"><a href="{{ site.github.repository_url }}">View on GitHub</a></li>
-            {% if site.show_downloads %}
-              <li class="downloads"><a href="{{ site.github.zip_url }}">ZIP</a></li>
-              <li class="downloads"><a href="{{ site.github.tar_url }}">TAR</a></li>
-              <li class="title">DOWNLOADS</li>
-            {% endif %}
-          </ul>
+        <nav class="scrollmenu">
+            {% include simple-menu.html %}
         </nav>
       </div><!-- end header -->
 
