@@ -1,48 +1,156 @@
-___Bash___
-
-My notes about Bash & functions I've written and a bunch of other stuff
-
-_Table of Contents_
 
 * TOC
 {:toc}
 
 ---
 
-# Aliases
+___Bash___
+
+My notes about Bash & functions I've written and a bunch of other stuff
+
+## Aliases
 
 ```bash
 # Changes the scrolling direction on a laptop with a touchpad
-alias changeScroll="synclient vertscrolldelta=-50"
+alias change_scroll="synclient vertscrolldelta=-50"
+
+# Rebuilds NixOS and switches to the new deriviation
+alias rebuild="sudo nixos-rebuild switch";
+
+# NixOS & Nix-store garbage collection
+alias nix-clean="sudo nix-collect-garbage";
+
+# Rebuilds NixOS and switches to the new deriviation then cleans up  
+alias nix-new="sudo nixos-rebuild switch && sudo nix-collect-garbage";
+
+# Executes a command using nix-shell & GCC as CC linker
+alias cmd="nix-shell -p gcc --command";
+
+# Cargo (Rust) with nix-shell
+alias cargo_update="nix-shell -p gcc --command 'cargo update'";
+alias cargo_check="nix-shell -p gcc --command 'cargo check'";
+alias cargo_run="nix-shell -p gcc --command 'cargo run'";
+alias cargo_build="nix-shell -p gcc --command 'cargo build'";
 ```
 
 ---
 
-# API Spider
+## Spider API
 
 Spider a website and save the URL's to a file.
 
 ```bash
-wget --spider --force-html -r -l5 \
-     https://$DOMAIN_NAME 2>&1 | \
-     grep '^--' | awk '{print $3}' > urls.txt
+wget --spider --force-html -r -l5 "https://$DOMAIN_NAME" 2>&1 | \
+grep '^--' | awk '{print $3}' > urls.txt
 ```
 
 ---
 
-# 16-bit Colours
+## /dev/tcp
+
+Uses `/dev/tcp` to send a TCP request and see if there is a response or not. 
+
+```bash
+# Redirects both STDOUT & STDERR to /dev/null
+if ( echo >/dev/tcp/"$HOST"/"$PORT" ) &>/dev/null
+then echo "open"
+else echo "closed"
+fi
+
+# No redirection
+if ( true >/dev/tcp/"$HOST"/"$PORT" )
+then echo "open"
+else echo "closed"
+fi
+
+# Redirect STDERR to /dev/null for no error message
+if ( true 2>/dev/null>/dev/tcp/"$HOST"/"$PORT" )
+then echo "open"
+else echo "closed"
+fi
+```
+
+Ex.
+
+```bash
+# IPv4 at Google.com
+if ( echo >/dev/tcp/ipv4.google.com/80 ) &>/dev/null
+then echo "open"
+else echo "closed"
+fi
+
+# IPv4 Loopback
+if ( echo >/dev/tcp/127.0.0.1/80 ) &>/dev/null
+then echo "open"
+else echo "closed"
+fi
+
+# IPv6 at Google.com
+if ( echo >/dev/tcp/ipv6.google.com/80 ) &>/dev/null
+then echo "open"
+else echo "closed"
+fi
+
+# IPv6 Loopback 
+if ( true >/dev/tcp/::1/443 )
+then echo "open"
+else echo "closed"
+fi
+
+# Ex. Test IPv4 & IPv6 ports 80 & 443 at Google.com
+# Note: The TCP device isn't really compatible with HTTPS, TLS & SSL
+for i in 80 443
+do
+    ( true 2>/dev/null>/dev/tcp/ipv4.google.com/"$i" ) && {
+	    echo "Port $i is open"
+	}
+    ( true 2>/dev/null>/dev/tcp/ipv6.google.com/"$i" ) && {
+	    echo "Port $i is open"
+	}
+done
+```
+
+---
+
+## Colour
+
+_16-bit ANSI colour codes_
+
++ `\e[0;34m` = *Normal*
++ `\e[1;34m` = *Bold*
++ `\e[2;34m` = *Light*
++ `\e[3;34m` = *Italic*
++ `\e[4;34m` = *Underlined*
++ `\e[5;34m` = *Blinking*
++ `\e[6;34m` = *Blinking*
++ `\e[7;34m` = *Background/Highlighted*
++ `\e[8;34m` = *Blank/Removed*
++ `\e[9;34m` = *Crossed over*
+
+These can be combined, ex. `\e[1;5;m` = Blinking Bold
 
 ```bash
 # 16-bit colours
-B='\e[34m' # Blue
-G='\e[32m' # Green
-O='\e[33m' # Yellow
-W='\e[37m' # White
-D='\e[39m' # Default foreground colour
-Z='\e[0m'  # Reset
+BLUE='\e[34m' 				# Blue
+GREEN='\e[32m' 				# Green
+YELLOW='\e[33m' 			# Yellow
+WHITE='\e[37m' 				# White
+DEFAULT_FOREGOUND='\e[39m' 	# Default foreground colour
+RESET='\e[0m'  				# Reset
+							# Other examples
+							# BOLD WHITE	\e[1;37m
+							# BOLD CYAN		\e[1;36m
+							# BOLD PURPLE	\e[1;35m
+							# BOLD BLUE		\e[1;34m
+							# BOLD YELLOW	\e[1;33m
+							# BOLD GREEN	\e[1;32m
+							# BOLD RED		\e[1;31m
+							# BOLD BLACK	\e[1;30m
+							# BLINK 	 	\e[5m
+							# RESET 	 	\e[0m
 ```
 
-See more codes on [Wikipedia](https://en.wikipedia.org/wiki/ANSI_escape_code#SGR).
+See more codes on [Wikipedia](https://en.wikipedia.org/wiki/ANSI_escape_code#SGR) or this [Gist](https://gist.githubusercontent.com/fnky/458719343aabd01cfb17a3a4f7296797/raw/7e502a89d1fbe32927b570298555953a6912c1c5/ANSI.md).
 
 An example for writing colored text with `echo`
 
@@ -57,85 +165,11 @@ Ex. `echo -e "\e[34mHello there, how are you?\e[0m"`
 | `COLOR_CODEm` | Color code + `m` at the end                |
 | `\e[0m`       | End the color modifications                |
 
-# Colour codes
-
-_16-bit ANSI colour codes_
-
-+ `\e[0;34m` = Normal
-+ `\e[1;34m` = Bold
-+ `\e[2;34m` = Light
-+ `\e[3;34m` = Italic
-+ `\e[4;34m` = Underlined
-+ `\e[5;34m` = Blinking
-+ `\e[6;34m` = Blinking
-+ `\e[7;34m` = Background/Highlighted
-+ `\e[8;34m` = Blank/Removed
-+ `\e[9;34m` = Crossed over
-
-These can be combined, ex. `\e[1;5;m = Blinking Bold`
-
-```bash
-WHITE 	\e[1;37m
-CYAN 	\e[1;36m
-PURPLE 	\e[1;35m
-BLUE 	\e[1;34m
-YELLOW 	\e[1;33m
-GREEN 	\e[1;32m
-RED 	\e[1;31m
-BLACK 	\e[1;30m
-BLINK 	\e[5m
-RESET 	\e[0m
-```
-
-_Links_
-
-[_Gist_](https://gist.githubusercontent.com/fnky/458719343aabd01cfb17a3a4f7296797/raw/7e502a89d1fbe32927b570298555953a6912c1c5/ANSI.md)
-
 ---
 
-# /dev/tcp
+## Functions
 
-Uses `/dev/tcp` to send a tcp request and see if there is a response or not. 
-
-```bash
-(echo >/dev/tcp/"$HOST"/"$PORT") &>/dev/null && echo "open" || echo "closed"
-```
-
-Ex.
-
-```bash
-( echo >/dev/tcp/ipv6.google.com/80 ) &>/dev/null && echo "open" || echo "closed"
-```
-
-Has error message on `STDOUT`, `STDERR` is not redirected
-
-```bash
-( true >/dev/tcp/::1/443 ) && echo "open" || echo "closed"
-
-( true >/dev/tcp/"$HOST"/"$PORT" ) && echo "open" || echo "closed"
-```
-
-Redirect `STDERR` to `/dev/null` for no error message
-
-```bash
-( true 2>/dev/null>/dev/tcp/"$HOST"/"$PORT" ) && echo "open" || echo "closed"
-```
-
-Ex. Test IPv4 & IPv6 ports `80` & `443` at Google.com
-
-```bash
-for i in 80 443
-do
-    ( true 2>/dev/null>/dev/tcp/ipv4.google.com/"$i" ) && { echo "Port $i is open"; }
-    ( true 2>/dev/null>/dev/tcp/ipv6.google.com/"$i" ) && { echo "Port $i is open"; }
-done
-```
-
----
-
-# Functions
-
-## Log
+### Log
 
 Many of the functions listed here will use this `log` function for printing log messages.
 
@@ -155,19 +189,19 @@ function log {
         if [[ "$1" =~ [(-2)-2] ]]; then
             if [[ "$#" -gt 1 ]]; then
                 case "$1" in
-                    -2) ( printf '\e[1;34mDEBUG\e[0m %s\n'   "${*:2}"        1>&2 ) ;;
-                    -1) ( printf '\e[1;36mINFO\e[0m %s\n'    "${*:2}"             ) ;;
-                     0) ( printf '\e[1;32mSUCCESS\e[0m %s\n' "${*:2}"             ) ;;
-                     1) ( printf '\e[1;33mWARNING\e[0m %s\n' "${*:2}"             ) ;;
-                     2) ( printf '\e[1;31mERROR\e[0m %s\n'   "${*:2}"        1>&2 ) ;;
+                    -2) ( printf '\e[1;34m%s\e[0m %s\n' "DEBUG"   "${*:2}" 1>&2 ) ;;
+                    -1) ( printf '\e[1;36m%s\e[0m %s\n' "INFO"    "${*:2}"      ) ;;
+                     0) ( printf '\e[1;32m%s\e[0m %s\n' "SUCCESS" "${*:2}"      ) ;;
+                     1) ( printf '\e[1;33m%s\e[0m %s\n' "WARNING" "${*:2}"      ) ;;
+                     2) ( printf '\e[1;31m%s\e[0m %s\n' "ERROR"   "${*:2}" 1>&2 ) ;;
                 esac
             else
                 case "$1" in
-                    -2) ( printf '\e[1;34mDEBUG\e[0m\n'                      1>&2 ) ;;
-                    -1) ( printf '\e[1;36mINFO\e[0m\n'                            ) ;;
-                     0) ( printf '\e[1;32mSUCCESS\e[0m\n'                         ) ;;
-                     1) ( printf '\e[1;33mWARNING\e[0m\n'                         ) ;;
-                     2) ( printf '\e[1;31mERROR\e[0m\n'                      1>&2 ) ;;
+                    -2) ( printf '\e[1;34m%s\e[0m\n' "DEBUG" 1>&2 ) ;;
+                    -1) ( printf '\e[1;36m%s\e[0m\n' "INFO"       ) ;;
+                     0) ( printf '\e[1;32m%s\e[0m\n' "SUCCESS"    ) ;;
+                     1) ( printf '\e[1;33m%s\e[0m\n' "WARNING"    ) ;;
+                     2) ( printf '\e[1;31m%s\e[0m\n' "ERROR" 1>&2 ) ;;
                 esac
             fi
         else
@@ -183,7 +217,7 @@ function log {
 
 ---
 
-## Print
+### Print
 
 Various printing functions using `printf` instead of using `echo` for compatibility and reducing unwanted behaviour
 
@@ -262,7 +296,7 @@ function println_float {
 
 ***Error printing***
 
-Uses the [log function](#logging) to print error messages to `STDERR` or a file.
+Uses the [log function](#log) to print error messages to `STDERR` or a file.
 
 ```bash
 # With timestamp to STDERR
@@ -283,7 +317,7 @@ function err_log {
 
 ---
 
-## Calculus
+### Calculus
 
 ***Basic calculator***
 
@@ -395,7 +429,7 @@ function Exponential {
 
 ---
 
-## Finance
+### Finance
 
 ```bash
 # Calculates the price difference and the percentile increase/decrease
@@ -416,7 +450,7 @@ function price_diff {
             "[ $(Calc "$(Calc "$(Calc "$2"-"$1")"/"$1")"*100)% ] Percentile"
     )
 }
-```
+README```
 
 ```bash
 # Calculates the percentile a value is of another value
@@ -434,7 +468,7 @@ function percentile {
 
 ---
 
-## Tests
+### Tests
 
 ```bash
 # Checks if a given variable is an array or not
@@ -668,22 +702,22 @@ function is_socket {
 # Checks what type a given variable is of:
 # alias, keyword, function, builtin, file or ''
 # Return codes
-# 0: Invalid number of arguments
 # 1: Alias
 # 2: Builtin
 # 3: File
 # 4: Function
 # 5: Keyword
 # 6: Unknown
+# 7: Invalid number of arguments
 function is_type {
-    [[ "$#" -ne 1 ]] && { log 2 "Invalid number of arguments"; return 0; }
+    [[ "$#" -ne 1 ]] && { return 7; }
     case "$(type -t "$1")" in
-           'alias') { println "alias";    return 1; } ;;
-         'builtin') { println "builtin";  return 2; } ;;
-            'file') { println "file";     return 3; } ;;
-        'function') { println "function"; return 4; } ;;
-         'keyword') { println "keyword";  return 5; } ;;
-                 *) { println "unknown";  return 6; } ;;
+           'alias') { return 1; } ;;
+         'builtin') { return 2; } ;;
+            'file') { return 3; } ;;
+        'function') { return 4; } ;;
+         'keyword') { return 5; } ;;
+                 *) { return 6; } ;;
     esac
 }
 ```
@@ -819,8 +853,8 @@ function has_apt_package {
 # 2: Package is not installed and is not available in apt
 # 3: Missing package argument to check
 function check_package {
-    [[ "$#" -ne 1 ]]     && { log  2 "Invalid number of arguments: $#/1"; return 3; }
-    has_pkg "$1"         && { log -1 "Installed: $1"; return 0; }
+    [[ "$#" -ne 1 ]] && { log 2 "Invalid number of arguments: $#/1"; return 3; }
+    has_pkg "$1" && { log -1 "Installed: $1"; return 0; }
     has_apt_package "$1" && { log -1 "Install available: $1"; return 1; }
     log -1 "Not found: $1"
     return 2
@@ -829,7 +863,7 @@ function check_package {
 
 ---
 
-## Installation
+### Installation
 
 ```bash
 # Update apt list and packages
@@ -839,7 +873,7 @@ function check_package {
 # 2: Invalid number of arguments
 function update_apt {
     [[ "$#" -ne 0 ]] && {
-        log 2 "Invalid number of arguments: $#/0"
+        ( log 2 "Invalid number of arguments: $#/0" )
         return 2
     }
     local -r OPTIONS=(
@@ -852,19 +886,19 @@ function update_apt {
     local -r SUDO_UPDATE=(sudo apt-get "${OPTIONS[@]}" update)
     local -r ROOT_UPDATE=(apt-get "${OPTIONS[@]}" update)
     if [[ "$EUID" -eq 0 ]]; then
-        log -1 "Updating apt lists"
+        ( log -1 "Updating apt lists" )
         if "${ROOT_UPDATE[@]}" &>/dev/null; then
-            log 0 "Apt list updated"
+            ( log 0 "Apt list updated" )
         else
-            log 2 "Couldn't update apt lists"
+            ( log 2 "Couldn't update apt lists" )
             return 1
         fi
     else
-        log -1 "Updating apt lists"
+        ( log -1 "Updating apt lists" )
         if "${SUDO_UPDATE[@]}" &>/dev/null; then
-            log 0 "Apt list updated"
+            ( log 0 "Apt list updated" )
         else
-            log 2 "Couldn't update apt lists"
+            ( log 2 "Couldn't update apt lists" )
             return 1
         fi
     fi
@@ -889,21 +923,21 @@ function install_package {
     local -r SUDO_INSTALL=(sudo apt-get "${OPTIONS[@]}" install)
     local -r ROOT_INSTALL=(apt-get "${OPTIONS[@]}" install)
     if [[ "$EUID" -eq 0 ]]; then
-        log -1 "Installing: $*"
+        ( log -1 "Installing: $*" )
         if DEBIAN_FRONTEND=noninteractive "${ROOT_INSTALL[@]}" "$@"; then
-            log 0 "Installation complete"
+            ( log 0 "Installation complete" )
             return 0
         else
-            log 2 "Something went wrong during installation"
+            ( log 2 "Something went wrong during installation" )
             return 1
         fi
     else
         log -1 "Installing: $*"
         if DEBIAN_FRONTEND=noninteractive "${SUDO_INSTALL[@]}" "$@"; then
-            log 0 "Installation complete"
+            ( log 0 "Installation complete" )
             return 0
         else
-            log 2 "Something went wrong during installation"
+            ( log 2 "Something went wrong during installation" )
             return 1
         fi
     fi
@@ -912,7 +946,7 @@ function install_package {
 
 ---
 
-## Git
+### Git
 
 ```bash
 # Updates a Git repository in the current working directory
@@ -920,10 +954,14 @@ function install_package {
 # Return codes
 # 0: Success
 # 1: Missing argument(s): Commit message
+# 2: Missing .git directory in current directory
 function Git {
     if [[ "$#" -lt 1 ]]; then
-        log 2 "No commit message provided"
+        ( log 2 "No commit message provided" )
         return 1
+    elif [[ ! -e "$PWD"/.git ]]; then
+        ( log 2 "No .git directory found in current directory" )
+        return 2
     else
         local -r GPG_KEY_ID="E2AC71651803A7F7"
         (
@@ -933,9 +971,9 @@ function Git {
                 --gpg-sign="$GPG_KEY_ID"
                 --message="$COMMIT_MESSAGE"
             )
-            git add "$PWD"
-            git commit "${GIT_COMMIT_ARGS[@]}"
-            git push
+            ( git add "$PWD" )
+            ( git commit "${GIT_COMMIT_ARGS[@]}" )
+            ( git push )
         )
         return 0
     fi
@@ -948,7 +986,7 @@ Some of the more simpler and day-to-day actions in functions
 # Signs a commit with a GPG key and then pushes to the remote repository
 function git_commit {
     if [[ "$#" -lt 1 ]]; then
-        log 2 "No commit message provided"
+        ( log 2 "No commit message provided" )
         return 1
     else
         local -r GPG_KEY_ID="E2AC71651803A7F7"
@@ -958,7 +996,7 @@ function git_commit {
                 --gpg-sign="$GPG_KEY_ID"
                 --message="࿓❯ $*"
             )
-            git commit "${GIT_COMMIT_ARGS[@]}"
+            ( git commit "${GIT_COMMIT_ARGS[@]}" )
         )
     fi
 }
@@ -966,61 +1004,109 @@ function git_commit {
 
 ```bash
 # Initiates a repository in the current working directory
-# Copies a license, readme & .gitignore template over to the directory
+# Copies my license, readme & .gitignore templates over to the directory
 # Adds them to the git history & commits them with a message
 function initiate_git {
-    ! has_cmd 'git' && { return 1; }
     (
-        git_init
-        cp -n "$HOME"/Templates/Licenses/2023/MIT "$PWD"/LICENSE
-        cp -n "$HOME"/Templates/Text/README.md \
-              "$HOME"/Templates/Code/Git/.gitignore "$PWD"/
-        git_add
-        git_commit "First commit"
+        ( git_init )
+        (
+            nix-shell --packages 'coreutils' --command '
+            [[ -f "$HOME"/Templates/Licenses/2023/MIT ]] && {
+                cp -n $HOME/Templates/Licenses/2023/MIT ${PWD}/LICENSE
+            }
+            [[ -f "$HOME"/Templates/Text/README.md ]] && {
+                cp -n $HOME/Templates/Text/README.md ${PWD}/README.md
+            }
+            [[ -f "$HOME"/Templates/Code/Git/.gitignore ]] && {
+                cp -n $HOME/Templates/Code/Git/.gitignore ${PWD}/.gitignore
+            }
+            '
+        )
+        ( git_add )
+        ( git_commit "First commit" )
     )
 }
 ```
 
 ```bash
+# Initiates the current working directory as a git repository
+# Return codes
+# 1: Missing command: git
+# 2: Git repository exists in the current working directory
 function git_init {
     ! has_cmd 'git' && { return 1; }
-    (
-        git init "$PWD"
-    )
+    [[ -e "$PWD"/.git ]] && {
+        ( log 1 "Git repository exists in the current working directory" )
+        return 2
+    }
+    ( git init "$PWD" )
 }
 ```
 
 ```bash
 # Adds any changed files
+# Return codes
+# 1: Missing command: git
+# 2: No git repository in the current working directory
 function git_add {
     ! has_cmd 'git' && { return 1; }
-    (
-        git add "$PWD"
-    )
+    [[ ! -e "$PWD"/.git ]] && { return 2; }
+    ( git add "$PWD" )
+}
+```
+
+```bash
+# Checks the status of a given git repository path
+# Return codes
+# 1: No git repository in the given path
+# 2: Failed to change directory to the given path
+function git_status {
+    [[ ! -e "$1/.git" && "$1" != *".git"* ]] && { return 1; }
+    ( git --git-dir "$1" status --short --porcelain )
+}
+```
+
+```bash
+# Cleans a Git repository
+# Return codes
+# 1: Missing command: git
+# 2: Not a Git repository in the current working directory
+# 3: Invalid number of arguments
+function git_clean {
+    ! has_cmd 'git' && { return 1; }
+    [[ ! -e "$PWD/.git" ]] && { return 2; }
+    [[ "$#" -ne 0 ]] && { return 3; }
+    ( git gc )
 }
 ```
 
 ```bash
 # Pushes to a remote repository
+# Return codes
+# 1: Missing command: git
+# 2: No git repository in the current working directory
 function git_push {
     ! has_cmd 'git' && { return 1; }
-    (
-        git push
-    )
+    [[ ! -e "$PWD"/.git ]] && { return 2; }
+    ( git push )
 }
 ```
 
 ```bash
+# Adds a remote repository to the git repository in the current working directory
+# Return codes
+# 1: Missing command: git
+# 2: No git repository in the current working directory
+# 3: Invalid number of arguments
 function git_remote_add {
     ! has_cmd 'git' && { return 1; }
-    [[ "$#" -ne 2 ]] && { return 2; }
-    (
-        git remote add -f "$1" "$2"
-    )
+    [[ ! -e "$PWD"/.git ]] && { return 2; }
+    [[ "$#" -ne 2 ]] && { return 3; }
+    ( git remote add -f "$1" "$2" )
 }
 ```
 
-### Subtree
+***Git Subtree***
 
 ```bash
 # $1: Path
@@ -1028,13 +1114,12 @@ function git_remote_add {
 # $3: Branch
 function subtree_add {
     ! has_cmd 'git' && { return 1; }
+    [[ ! -e "$PWD"/.git ]] && { return 2; }
     if [[ "$#" -eq 3 ]]
     then
-        (
-            git subtree add --prefix="$1" "$2" "$3"
-        )
+        ( git subtree add --prefix="$1" "$2" "$3" )
     else
-        return 2
+        return 3
     fi
 }
 ```
@@ -1045,13 +1130,12 @@ function subtree_add {
 # $3: Branch
 function subtree_add_squash {
     ! has_cmd 'git' && { return 1; }
+    [[ ! -e "$PWD"/.git ]] && { return 2; }
     if [[ "$#" -eq 3 ]]
     then
-        (
-            git subtree add --prefix="$1" "$2" "$3" --squash
-        )
+        ( git subtree add --prefix="$1" "$2" "$3" --squash )
     else
-        return 2
+        return 3
     fi
 }
 ```
@@ -1062,19 +1146,15 @@ function subtree_add_squash {
 # $3: Merge message
 function subtree_merge {
     ! has_cmd 'git' && { return 1; }
+    [[ ! -e "$PWD"/.git ]] && { return 2; }
     if [[ "$#" -eq 2 ]]
     then
-        (
-            git subtree merge --prefix="$1" "$2"
-        )
+        ( git subtree merge --prefix="$1" "$2" )
     elif [[ "$#" -gt 2 ]]
     then
-        (
-            git subtree merge --prefix="$1" "$2" \
-                --message="࿓❯ ${*:3}"
-        )
+        ( git subtree merge --prefix="$1" "$2" --message="࿓❯ ${*:3}" )
     else
-        return 2
+        return 3
     fi
 }
 ```
@@ -1086,19 +1166,15 @@ function subtree_merge {
 # $4: Merge message
 function subtree_pull {
     ! has_cmd 'git' && { return 1; }
+    [[ ! -e "$PWD"/.git ]] && { return 2; }
     if [[ "$#" -eq 3 ]]
     then
-        (
-            git subtree pull --prefix="$1" "$2" "$3"
-        )
+        ( git subtree pull --prefix="$1" "$2" "$3" )
     elif [[ "$#" -gt 3 ]]
     then
-        (
-            git subtree pull --prefix="$1" "$2" "$3" \
-                --message="࿓❯ ${*:4}"
-        )
+        ( git subtree pull --prefix="$1" "$2" "$3" --message="࿓❯ ${*:4}" )
     else
-        return 2
+        return 3
     fi
 }
 ```
@@ -1110,6 +1186,7 @@ function subtree_pull {
 # $4: Merge message
 function subtree_pull_squash {
     ! has_cmd 'git' && { return 1; }
+    [[ ! -e "$PWD"/.git ]] && { return 2; }
     if [[ "$#" -eq 3 ]]
     then
         (
@@ -1126,7 +1203,7 @@ function subtree_pull_squash {
                 --message="࿓❯ ${*:4}"
         )
     else
-        return 2
+        return 3
     fi
 }
 ```
@@ -1136,13 +1213,12 @@ function subtree_pull_squash {
 # $2: Repository
 function subtree_split {
     ! has_cmd 'git' && { return 1; }
-    (
-        git subtree split --prefix="$1" "$2"
-    )
+    [[ ! -e "$PWD"/.git ]] && { return 2; }
+    ( git subtree split --prefix="$1" "$2" )
 }
 ```
 
-### Subtree - GitHub
+***Subtree - GitHub***
 
 ```bash
 # $1: GitHub username
@@ -1151,19 +1227,15 @@ function subtree_split {
 # $4: Branch
 function github_subtree_add {
     ! has_cmd 'git' && { return 1; }
+    [[ ! -e "$PWD"/.git ]] && { return 2; }
     if [[ "$#" -eq 3 ]]
     then
-        (
-            git subtree add --prefix="$2" git@github.com:"$1"/"$2" "$3"
-        )
+        ( git subtree add --prefix="$2" git@github.com:"$1"/"$2" "$3" )
     elif [[ "$#" -eq 4 ]]
     then
-        (
-            git subtree add --prefix="$2" git@github.com:"$1"/"$3" "$4"
-        )
-    
+        ( git subtree add --prefix="$2" git@github.com:"$1"/"$3" "$4" )
     else
-        return 2
+        return 3
     fi
 }
 ```
@@ -1171,16 +1243,13 @@ function github_subtree_add {
 ```bash
 function github_subtree_pull {
     ! has_cmd 'git' && { return 1; }
+    [[ ! -e "$PWD"/.git ]] && { return 2; }
     if [[ "$#" -eq 3 ]]
     then
-        (
-            git subtree pull --prefix="$2" git@github.com:"$1"/"$2" "$3"
-        )
+        ( git subtree pull --prefix="$2" git@github.com:"$1"/"$2" "$3" )
     elif [[ "$#" -eq 4 ]]
     then
-        (
-            git subtree pull --prefix="$2" git@github.com:"$1"/"$3" "$4"
-        )
+        ( git subtree pull --prefix="$2" git@github.com:"$1"/"$3" "$4" )
     elif [[ "$#" -gt 4 ]]
     then
         (
@@ -1189,7 +1258,7 @@ function github_subtree_pull {
                 --message="࿓❯ ${*:4}"
         )
     else
-        return 2
+        return 3
     fi
 }
 ```
@@ -1197,16 +1266,13 @@ function github_subtree_pull {
 ```bash
 function github_subtree_pull_squash {
     ! has_cmd 'git' && { return 1; }
+    [[ ! -e "$PWD"/.git ]] && { return 2; }
     if [[ "$#" -eq 3 ]]
     then
-        (
-            git subtree pull --prefix="$2" git@github.com:"$1"/"$2" "$3" --squash
-        )
+        ( git subtree pull --prefix="$2" git@github.com:"$1"/"$2" "$3" --squash )
     elif [[ "$#" -eq 4 ]]
     then
-        (
-            git subtree pull --prefix="$2" git@github.com:"$1"/"$3" "$4" --squash
-        )
+        ( git subtree pull --prefix="$2" git@github.com:"$1"/"$3" "$4" --squash )
     elif [[ "$#" -gt 4 ]]
     then
         (
@@ -1216,7 +1282,7 @@ function github_subtree_pull_squash {
                 --message="࿓❯ ${*:5}"
         )
     else
-        return 2
+        return 3
     fi
 }
 ```
@@ -1224,19 +1290,16 @@ function github_subtree_pull_squash {
 ```bash
 function github_subtree_push {
     ! has_cmd 'git' && { return 1; }
+    [[ ! -e "$PWD"/.git ]] && { return 2; }
     if [[ "$#" -eq 2 ]]
     then
-        (
-            git subtree push --prefix="$2" git@github.com:"$1"/"$2" "$3"
-        )
+        ( git subtree push --prefix="$2" git@github.com:"$1"/"$2" "$3" )
     elif [[ "$#" -eq 4 ]]
     then
-        (
-            git subtree push --prefix="$2" git@github.com:"$1"/"$3" "$4"
-        )
+        ( git subtree push --prefix="$2" git@github.com:"$1"/"$3" "$4" )
     
     else
-        return 2
+        return 3
     fi
 }
 ```
@@ -1244,17 +1307,16 @@ function github_subtree_push {
 ```bash
 function github_remote_add {
     ! has_cmd 'git' && { return 1; }
-    (
-        git remote add -f "$1" git@github.com:"$2"/"$1".git
-    )
+    [[ ! -e "$PWD"/.git ]] && { return 2; }
+    ( git remote add -f "$1" git@github.com:"$2"/"$1".git )
 }
 ```
 
 ---
 
-## Utility
+### Utility
 
-### Colour
+***Colour*** 
 
 ```bash
 # Displays 8 × 16-bit ANSI bold colours and a blinking effect
@@ -1269,17 +1331,17 @@ function colour {
 }
 ```
 
-### Sorting
+***Sorting***
 
 ```bash
 # Sorts the words provided as arguments
 function sorting {
     [[ "$#" -eq 0 ]] && { log 2 "Invalid number of arguments: $#/0"; return 1; }
-    printf '%s\n' "$@" | sort --dictionary-order
+    ( printf '%s\n' "$@" | sort --dictionary-order )
 }
 ```
 
-### Environment
+***Environment***
 
 ```bash
 # Shows the current environment
@@ -1291,49 +1353,57 @@ function show_environment {
     then printenv
     elif has_cmd 'sed'
     then
-        set | sed -n '1,/ () / {
-            / () /n
-            p
-        }'
-    else { log 2 "Missing commands"; return 1; }
+        (
+            set | sed -n '1,/ () / {
+                / () /n
+                p
+            }'
+        )
+    else { ( log 2 "Missing commands" ); return 1; }
     fi
 }
 ```
 
-### System information
+***System information***
 
 ```bash
 # Get system information
 # Return codes
-# 1: No such command: inxi
+# 1: Missing command: inxi
 # 2: Too many arguments provided
 function system_info {
-    [[ "$#" -ne 0 ]] && { log 2 "Invalid number of arguments: $#/0"; return 2; }
-    ! has_cmd 'inxi' && { log 2 "Missing command: inxi"; return 1; }
-    inxi -Fxzr
+    [[ "$#" -ne 0 ]] && { ( log 2 "Invalid number of arguments: $#/0" ); return 2; }
+    ! has_cmd 'inxi' && { ( log 2 "Missing command: inxi" ); return 1; }
+    ( inxi -Fxzr )
 }
 ```
 
-### Record command
+***Record command***
 
 ```bash
 # Records the output of a command to a file.
 # Return codes
 # 1: Missing argument: Command to record output of
 function rec_cmd {
-    [[ "$#" -eq 1 ]] && { log 2 "Requires: [ Command to record ]"; return 1; }
+    [[ "$#" -eq 1 ]] && { ( log 2 "Invalid number of commands" ); return 1; }
     local -r LOGFILE='log.txt'
     if [[ -f "$LOGFILE" ]]
-    then log -1 "$LOGFILE exists, appending to existing file"
-         echo "Appending new output from $1" | tee -a "$LOGFILE"
-         bash -c "$1" | tee -a "$LOGFILE"
-    else touch "$LOGFILE"; bash -c "$1" | tee -a "$LOGFILE"
-         log 0 "Command output recorded to $LOGFILE"
+    then
+        (
+            ( log -1 "$LOGFILE exists, appending to existing file" )
+            ( echo "Appending new output from $1" | tee -a "$LOGFILE" )
+            ( bash -c "$1" | tee -a "$LOGFILE" )
+        )
+    else
+        (
+            ( touch "$LOGFILE"; bash -c "$1" | tee -a "$LOGFILE" )
+            ( log 0 "Command output recorded to $LOGFILE" )
+        )
     fi
 }
 ```
 
-### Processes
+***Processes***
 
 ```bash
 # Checks for a running process
@@ -1341,10 +1411,10 @@ function rec_cmd {
 # 0: Running process exists
 # 1: No such running process
 # 2: Missing argument: process
-# 3: No such command: pgrep
+# 3: Missing command: pgrep
 function find_process {
-    [[ "$#" -ne 1 ]]  && { log 2 "Invalid number of arguments: $#/1 [ process ]"; return 2; }
-    ! has_cmd 'pgrep' && { log 2 "Command not found: pgrep"; return 3; }
+    [[ "$#" -ne 1 ]]  && { ( log 2 "Invalid number of arguments: $#/1" ); return 2; }
+    ! has_cmd 'pgrep' && { ( log 2 "Command not found: pgrep" ); return 3; }
     [[ "$(pgrep "$1" &>/dev/null; print_int "$?")" -eq 0 ]]
 }
 ```
@@ -1355,10 +1425,10 @@ function find_process {
 # 0: Running process exists
 # 1: No such running process
 # 2: Missing argument: process
-# 3: No such command: pgrep
+# 3: Missing command: pgrep
 function find_full_process {
-    [[ "$#" -ne 1 ]]  && { log 2 "Invalid number of arguments: $#/1 [ process ]"; return 2; }
-    ! has_cmd 'pgrep' && { log 2 "Command not found: pgrep"; return 3; }
+    [[ "$#" -ne 1 ]]  && { ( log 2 "Invalid number of arguments: $#/1" ); return 2; }
+    ! has_cmd 'pgrep' && { ( log 2 "Command not found: pgrep" ); return 3; }
     [[ "$(pgrep --full "$1" &>/dev/null; print_int "$?")" -eq 0 ]]
 }
 ```
@@ -1366,33 +1436,35 @@ function find_full_process {
 ```bash
 # Gets processes
 # Return codes
-# 1: No such command: ps
+# 1: Missing command: ps
 function get_processes {
-    ! has_cmd 'ps' && { log 2 "No such command: ps"; return 1; }
-    ps -A
+    ! has_cmd 'ps' && { ( log 2 "Missing command: ps" ); return 1; }
+    ( ps -A )
 }
 ```
 
 ```bash
 # Checks running processes
 function get_running_processes {
-    ! has_cmd 'jobs' && { log 2 "No such command: jobs"; return 1; }
-    jobs -r
+    ! has_cmd 'jobs' && { ( log 2 "Missing command: jobs" ); return 1; }
+    ( jobs -r )
 }
 ```
 
-### Time
+***Time***
 
 ```bash
 # Gets the current time in UNIX & regular time (human-readable format)
 # Return codes
 # 1: Error: Too many arguments provided
 function get_time {
-    [[ "$#" -gt 0 ]] && { log 2 "Invalid number of arguments: $#/0"; return 1; }
-    printf '%s\n' "Regular: $(date -d @"$(date +%s)")" \
+    [[ "$#" -gt 0 ]] && { ( log 2 "Invalid number of arguments: $#/0" ); return 1; }
+    (
+        printf '%s\n' "Regular: $(date -d @"$(date +%s)")" \
                   "Unix: $(date +%s)" \
                   "Date by locale: $(date +%x)" \
                   "Time by locale: $(date +%X)"
+    )
 }
 ```
 
@@ -1401,8 +1473,8 @@ function get_time {
 # Return codes
 # 1: Missing argument: UNIX Timestamp
 function unix_to_regular_time {
-    [[ "$#" -ne 1 ]] && { log 2 "Invalid number of arguments: $#/1 [ UNIX Timestamp ]"; return 1; }
-    println "$(date -d @"$1")"
+    [[ "$#" -ne 1 ]] && { ( log 2 "Invalid number of arguments: $#/1" ); return 1; }
+    ( println "$(date -d @"$1")" )
 }
 ```
 
@@ -1411,8 +1483,8 @@ function unix_to_regular_time {
 # Return codes
 # 1: Invalid number of arguments
 function get_locale_time {
-    [[ "$#" -gt 0 ]] && { log 2 "Invalid number of arguments: $#/0"; return 1; }
-    date +%X
+    [[ "$#" -gt 0 ]] && { ( log 2 "Invalid number of arguments: $#/0" ); return 1; }
+    ( date +%X )
 }
 ```
 
@@ -1421,25 +1493,23 @@ function get_locale_time {
 # Return codes
 # 1: Invalid number of arguments
 function get_locale_date {
-    [[ "$#" -gt 0 ]] && { log 2 "Invalid number of arguments: $#/0"; return 1; }
-    date +%x
+    [[ "$#" -gt 0 ]] && { ( log 2 "Invalid number of arguments: $#/0" ); return 1; }
+    ( date +%x )
 }
 ```
 
-### Files, Search, Replace, Insert & Delete
+***Files, Search, Replace, Insert & Delete***
 
 ```bash
 # Uses $(<) to read a file to STDOUT, supposedly faster than cat.
 # Return codes
 # 0: Success
-# 1: Not a file
-# 2: Invalid number of arguments
-# 2: Missing argument: File
+# 1: Invalid number of arguments
+# 2: Not a file: $1
 function read_file {
-    [[ "$#" -eq 0 ]] && { log 2 "Requires argument: [ File ]"; return 3; }
-    [[ "$#" -gt 1 ]] && { log 2 "Invalid number of arguments: $#/1 [ File ]"; return 2; }
-    [[ ! -f "$1" ]]  && { log 2 "Not a file: $1"; return 1; }
-    println "$(<"$1")"
+    [[ "$#" -ne 1 ]] && { ( log 2 "Invalid number of arguments: $#/1"; return 1; }
+    [[ ! -f "$1" ]]  && { ( log 2 "Not a file: $1"; return 2; }
+    ( println "$(<"$1")" )
 }
 ```
 
@@ -1448,9 +1518,9 @@ function read_file {
 # Return codes
 # 1: Error: Arguments provided when none required
 function show_directory_files {
-    [[ "$#" -gt 0 ]] && { log 2 "Invalid number of arguments: $#/0"; return 1; }
+    [[ "$#" -gt 0 ]] && { ( log 2 "Invalid number of arguments: $#/0" ); return 1; }
     local -r ARGS=(--recursive --files-with-matches --exclude-dir=".*")
-    grep "${ARGS[@]}" .
+    ( grep "${ARGS[@]}" . )
 }
 ```
 
@@ -1459,278 +1529,282 @@ function show_directory_files {
 # Return codes
 # 1: Error: Arguments provided when none required
 function count_directory_files {
-    [[ "$#" -ne 0 ]] && { log 2 "Invalid number of arguments: $#/0"; return 1; }
+    [[ "$#" -ne 0 ]] && { ( log 2 "Invalid number of arguments: $#/0" ); return 1; }
     local -r ARGS=(--recursive --files-with-matches --exclude-dir=".*")
     # shellcheck disable=SC2126
-    grep "${ARGS[@]}" . | wc --lines
+    ( grep "${ARGS[@]}" . | wc --lines )
 }
 ```
 
 ```bash
 # Use sed to count the lines of a file
 # Return codes
-# 1: No such file: $1
-# 2: Invalid number of arguments
+# 1: Invalid number of arguments
+# 2: No such file: $1
 function count_lines {
-    [[ "$#" -ne 1 ]] && { return 2; }
-    [[ ! -f "$1" ]]  && { return 1; }
-    sed -n '$=' "$1"
+    [[ "$#" -ne 1 ]] && { return 1; }
+    [[ ! -f "$1" ]]  && { return 2; }
+    ( sed -n '$=' "$1" )
 }
 ```
 
 ```bash
 # Gets the name at the end of a path string after stripping the path
 # Return codes
-# 1: No such path exists
-# 2: Missing argument: Path
+# 1: Invalid number of arguments
+# 2: No such path exists
 function get_path_name {
-    [[ "$#" -ne 1 ]] && { log 2 "Requires: $#/1 [ Path ]"; return 2; }
-    [[ ! -e "$1" ]]  && { log 2 "No such path: $1"; return 1; }
-    println "${1##*/}"
+    [[ "$#" -ne 1 ]] && { ( log 2 "Invalid number of arguments: $#/1" ); return 1; }
+    [[ ! -e "$1" ]]  && { ( log 2 "No such path: $1" ); return 2; }
+    ( println "${1##*/}" )
 }
 ```
 
 ```bash
 # Search for a pattern recursively in files of current directory and its sub-directories
 # Return codes
-# 1: Missing argument: String
-# 2: No such command: grep
+# 1: Invalid number of arguments
+# 2: Missing command: grep
 function search {
-    [[ "$#" -eq 0 ]] && { log 2 "Requires: $#/1+ [ Pattern(s) ]"; return 1; }
-    ! has_cmd 'grep' && { log 2 "No such command: grep"; return 2; }
+    [[ "$#" -eq 0 ]] && { ( log 2 "Invalid number of arguments: $#/1+" ); return 1; }
+    ! has_cmd 'grep' && { ( log 2 "Missing command: grep" ); return 2; }
     local -r ARGS=(--recursive --exclude-dir=".*")
-    grep "${ARGS[@]}" "$*" 2>/dev/null
+    ( grep "${ARGS[@]}" "$*" 2>/dev/null )
 }
 ```
 
 ```bash
 # Search for pattern in a specific file
 # Return codes
-# 1: Not a file
-# 2: Missing arguments: String, File
-# 3: No such command: grep
+# 1: Missing command: grep
+# 2: Invalid number of arguments
+# 3: Not a file: $2
 function find_text {
-    ! has_cmd 'grep' && { log 2 "No such command: grep"; return 3; }
-    [[ "$#" -ne 2 ]] && { log 2 "Requires: [ Pattern to find ] [ File to search ]"; return 2; }
-    [[ ! -f "$2" ]]  && { log 2 "Not a file: $2"; return 1; }
-    grep "$1" "$2"
+    ! has_cmd 'grep' && { ( log 2 "Missing command: grep" ); return 1; }
+    [[ "$#" -ne 2 ]] && { ( log 2 "Invalid number of arguments: $#/2" ); return 2; }
+    [[ ! -f "$2" ]]  && { ( log 2 "Not a file: $2" ); return 1; }
+    ( grep "$1" "$2" )
 }
 ```
 
 ```bash
 # Search for pattern in a specific file
 # Return codes
-# 1: Not a file
-# 2: Missing arguments: String, File
-# 3: No such command: sed
+# 1: Missing command: sed
+# 2: Invalid number of arguments
+# 3: Not a file
 function find_pattern {
-    ! has_cmd 'sed'  && { log 2 "No such command: sed"; return 3; }
-    [[ "$#" -ne 2 ]] && { log 2 "Requires: [ Pattern to find ] [ File to search ]"; return 2; }
-    [[ ! -f "$2" ]]  && { log 2 "Not a file: $2"; return 1; }
-    sed -n '/'"$1"'/p' "$2"
+    ! has_cmd 'sed'  && { ( log 2 "Missing command: sed" ); return 1; }
+    [[ "$#" -ne 2 ]] && { ( log 2 "Invalid number of arguments: $#/2" ); return 2; }
+    [[ ! -f "$2" ]]  && { ( log 2 "Not a file: $2" ); return 2; }
+    ( sed -n '/'"$1"'/p' "$2" )
 }
 ```
 
 ```bash
 # Search for files with pattern(s) recursively
 # Return codes
-# 1: Missing argument: String
-# 2: Command not found: grep
+# 1: Missing command: grep
+# 2: Invalid number of arguments
 function get_files_with_text {
-    ! has_cmd 'grep' && { log 2 "Command not found: grep"; return 2; }
-    [[ "$#" -eq 0 ]] && { log 2 "Requires: [ Pattern(s) to locate ]"; return 1; }
+    ! has_cmd 'grep' && { ( log 2 "Missing command: grep" ); return 1; }
+    [[ "$#" -eq 0 ]] && { ( log 2 "Invalid number of arguments: $#/1" ); return 2; }
     local -r ARGS=(--recursive --files-with-matches --exclude-dir=".*")
-    grep "${ARGS[@]}" "$*" 2>/dev/null
+    ( grep "${ARGS[@]}" "$*" 2>/dev/null )
 }
 ```
 
 ```bash
 # Replaces a text pattern in a file with new text
 # Return codes
-# 1: Not a file
-# 2: Missing arguments: String, String, File
-# 3: No such command: sed
+# 1: Missing command: sed
+# 2: Invalid number of arguments
+# 3: Not a file
 function replace_text {
-    ! has_cmd 'sed'  && { log 2 "No such command: sed"; return 3; }
-    [[ "$#" -ne 3 ]] && { log 2 "Requires: [ Text to replace ] [ New text ] [ File ]"; return 2; }
-    [[ ! -f "$3" ]]  && { log 2 "Not a file: $3"; return 1; }
-    sed -i "s|$1|$2|g" "$3"
+    ! has_cmd 'sed'  && { ( log 2 "Missing command: sed" ); return 1; }
+    [[ "$#" -ne 3 ]] && { ( log 2 "Invalid number of arguments: $#/3" ); return 2; }
+    [[ ! -f "$3" ]]  && { ( log 2 "Not a file: $3" ); return 3; }
+    ( sed -i "s|$1|$2|g" "$3" )
 }
 ```
 
 ```bash
 # Replaces given text pattern with a new one in all files recursively from current working directory
 # Return codes
-# 1: Missing arguments: String, String
-# 2: No such command: sed
+# 1: Missing command: sed
+# 2: Invalid number of arguments
 function replace_all_text {
-    ! has_cmd 'sed'  && { log 2 "No such command: sed"; return 2; }
-    [[ "$#" -ne 2 ]] && { log 2 "Requires: [ Text to replace ] [ New text ]"; return 1; }
-    for F in $(get_files_with_text "$1")
-    do sed -i "s|$1|$2|g" "$F"
-    done
+    ! has_cmd 'sed'  && { ( log 2 "Missing command: sed" ); return 1; }
+    [[ "$#" -ne 2 ]] && { ( log 2 "Invalid number of arguments: $#/2" ); return 2; }
+    (
+        for F in $(get_files_with_text "$1")
+        do ( sed -i "s|$1|$2|g" "$F" )
+        done
+    )
 }
 ```
 
 ```bash
 # Makes all matching text patterns into camel case String in a file
 # Return codes
-# 1: Not a file
-# 2: Missing arguments: String, File
-# 3: No such command: sed
+# 1: Missing command: sed
+# 2: Invalid number of arguments
+# 3: Not a file: $2
 function make_camel_case {
-    ! has_cmd 'sed'  && { log 2 "No such command: sed"; return 3; }
-    [[ "$#" -ne 2 ]] && { log 2 "Requires: [ Text pattern ] [ File ]"; return 2; }
-    [[ ! -f "$2" ]]  && { log 2 "Not a file: $2"; return 1; }
-    sed -i "s|$1|${1,}|g" "$2"
+    ! has_cmd 'sed'  && { ( log 2 "Missing command: sed" ); return 1; }
+    [[ "$#" -ne 2 ]] && { ( log 2 "Invalid number of arguments: $#/2" ); return 2; }
+    [[ ! -f "$2" ]]  && { ( log 2 "Not a file: $2" ); return 3; }
+    ( sed -i "s|${1}|${1,}|g" "${2}" )
 }
 ```
 
 ```bash
 # Makes all matching text patterns into camel case String recursively in all files from current working directory
 # Return codes
-# 1: Missing argument: String
-# 2: No such command: sed
+# 1: Missing command: sed
+# 2: Invalid number of arguments
 function make_all_camel_case {
-    ! has_cmd 'sed'  && { log 2 "No such command: sed"; return 2; }
-    [[ "$#" -ne 1 ]] && { log 2 "Requires: [ Text pattern ]"; return 1; }
-    for F in $(get_files_with_text "$1")
-    do sed -i "s|$1|${1,}|g" "$F"
-    done
+    ! has_cmd 'sed'  && { ( log 2 "Missing command: sed" ); return 1; }
+    [[ "$#" -ne 1 ]] && { ( log 2 "Invalid number of arguments: $#/1" ); return 2; }
+    (
+        for F in $(get_files_with_text "$1")
+        do ( sed -i "s|$1|${1,}|g" "$F" )
+        done
+    )
 }
 ```
 
 ```bash
 # Appends text after line number
 # Return codes
-# 1: Not a positive integer digit
-# 2: Not a file
-# 3: Missing arguments: Integer, String, File
-# 4: No such command: sed
+# 1: Missing command: sed
+# 2: Invalid number of arguments
+# 3: Not a file
+# 4: Not a positive integer digit
 function append_at_line {
-    ! has_cmd 'sed'  && { log 2 "No such command: sed"; return 4; }
-    [[ "$#" -ne 3 ]] && { log 2 "Requires: [ Line number ] [ Text to append ] [ File ]"; return 3; }
-    [[ ! -f "$3" ]]  && { log 2 "Not a file: [ $3 ]"; return 2; }
-    [[ "$1" -lt 0 ]] && { log 2 "Not a positive integer digit: $1"; return 1; }
-    sed -i ''"$1"'a '"$2"'' "$3"
+    ! has_cmd 'sed'  && { ( log 2 "Missing command: sed" ); return 1; }
+    [[ "$#" -ne 3 ]] && { ( log 2 "Invalid number of arguments: $#/3" ); return 2; }
+    [[ ! -f "$3" ]]  && { ( log 2 "Not a file: $3" ); return 3; }
+    [[ "$1" -lt 0 ]] && { ( log 2 "Not a positive integer digit: $1" ); return 4; }
+    ( sed -i ''"$1"'a '"$2"'' "$3" )
 }
 ```
 
 ```bash
 # Appends text after matching text pattern
 # Return codes
-# 1: Not a file
-# 2: Missing arguments: String, String, File
-# 3: No such command: sed
+# 1: Missing command: sed
+# 2: Invalid number of arguments
+# 3: Not a file: $3
 function append_at_pattern {
-    ! has_cmd 'sed'  && { log 2 "No such command: sed"; return 3; }
-    [[ "$#" -ne 3 ]] && { log 2 "Requires: [ Locate String ] [ Append String ] [ File ]"; return 2; }
-    [[ ! -f "$3" ]]  && { log 2 "Not a file: $3"; return 1; }
-    sed -i '/'"$1"'/a '"$2"'' "$3"
+    ! has_cmd 'sed'  && { ( log 2 "Missing command: sed" ); return 1; }
+    [[ "$#" -ne 3 ]] && { ( log 2 "Invalid number of arguments: $#/3" ); return 2; }
+    [[ ! -f "$3" ]]  && { ( log 2 "Not a file: $3" ); return 3; }
+    ( sed -i '/'"$1"'/a '"$2"'' "$3" )
 }
 ```
 
 ```bash
 # Appends text after the last line
 # Return codes
-# 1: Not a file
-# 2: Missing arguments: String, File
-# 3: No such command: sed
+# 1: Missing command: sed
+# 2: Invalid number of arguments
+# 3: Not a file
 function append_at_last_line {
-    ! has_cmd 'sed'  && { log 2 "No such command: sed"; return 3; }
-    [[ "$#" -ne 2 ]] && { log 2 "Requires: [ Text to append ] [ File ]"; return 2; }
-    [[ ! -f "$2" ]]  && { log 2 "Not a file: $2"; return 1; }
-    sed -i '$a '"$1"'' "$2"
+    ! has_cmd 'sed'  && { ( log 2 "Missing command: sed" ); return 1; }
+    [[ "$#" -ne 2 ]] && { ( log 2 "Invalid number of arguments: $#/2" ); return 2; }
+    [[ ! -f "$2" ]]  && { ( log 2 "Not a file: $2" ); return 3; }
+    ( sed -i '$a '"$1"'' "$2" )
 }
 ```
 
 ```bash
 # Insert text before line number
 # Return codes
-# 1: Not a file
-# 2: Not a positive integer digit
-# 3: Missing arguments: Integer, String, File
-# 4: No such command: sed
+# 1: Missing command: sed
+# 2: Invalid number of arguments
+# 3: Not a positive integer digit
+# 4: Not a file
 function insert_at_line {
-    ! has_cmd 'sed'  && { log 2 "No such command: sed"; return 4; }
-    [[ "$#" -ne 3 ]] && { log 2 "Requires: [ Line number ] [ Text to insert ] [ File ]"; return 3; }
-    [[ "$1" -lt 0 ]] && { log 2 "Not a positive integer digit: $1"; return 2; }
-    [[ ! -f "$3" ]]  && { log 2 "Not a file: $3"; return 1; }
-    sed -i ''"$1"'i '"$2"'' "$3"
+    ! has_cmd 'sed'  && { ( log 2 "Missing command: sed" ); return 1; }
+    [[ "$#" -ne 3 ]] && { ( log 2 "Invalid number of arguments: $#/3" ); return 2; }
+    [[ "$1" -lt 0 ]] && { ( log 2 "Not a positive integer digit: $1" ); return 3; }
+    [[ ! -f "$3" ]]  && { ( log 2 "Not a file: $3" ); return 4; }
+    ( sed -i ''"$1"'i '"$2"'' "$3" )
 }
 ```
 
 ```bash
 # Insert text before matching text pattern
 # Return codes
-# 1: Not a file
-# 2: Missing arguments: String, String, File
-# 3: No such command: sed
+# 1: Missing command: sed
+# 2: Invalid number of arguments
+# 3: Not a file
 function insert_at_pattern {
-    ! has_cmd 'sed'  && { log 2 "No such command: sed"; return 3; }
-    [[ "$#" -ne 3 ]] && { log 2 "Requires: [ Text pattern ] [ Text to insert ] [ File ]"; return 2; }
-    [[ ! -f "$3" ]]  && { log 2 "Not a file: $3"; return 1; }
-    sed -i '/'"$1"'/i '"$2"'' "$3"
+    ! has_cmd 'sed'  && { ( log 2 "Missing command: sed" ); return 3; }
+    [[ "$#" -ne 3 ]] && { ( log 2 "Invalid number of arguments: $#/3" ); return 2; }
+    [[ ! -f "$3" ]]  && { ( log 2 "Not a file: $3" ); return 1; }
+    ( sed -i '/'"$1"'/i '"$2"'' "$3" )
 }
 ```
 
 ```bash
 # Inserts text before the last line
 # Return codes
-# 1: Not a file
-# 2: Missing arguments: String, File
-# 3: No such command: sed
+# 1: Missing command: sed
+# 2: Invalid number of arguments
+# 3: Not a file
 function insert_at_last_line {
-    ! has_cmd 'sed'  && { log 2 "No such command: sed"; return 3; }
-    [[ "$#" -ne 2 ]] && { log 2 "Requires: [ Text to insert ] [ File ]"; return 2; }
-    [[ ! -f "$2" ]]  && { log 2 "Not a file: $2"; return 1; }
-    sed -i '$i '"$1"'' "$2"
+    ! has_cmd 'sed'  && { ( log 2 "Missing command: sed" ); return 1; }
+    [[ "$#" -ne 2 ]] && { ( log 2 "Invalid number of arguments: $#/2" ); return 2; }
+    [[ ! -f "$2" ]]  && { ( log 2 "Not a file: $2" ); return 3; }
+    ( sed -i '$i '"$1"'' "$2" )
 }
 ```
 
 ```bash
 # Deletes a specified line in a file
 # Return codes
-# 1: Not a file
-# 2: Not a positive integer digit
-# 3: Missing arguments: Integer, File
-# 4: No such command: sed
+# 1: Missing command: sed
+# 2: Invalid number of arguments
+# 3: Not a positive integer digit
+# 4: Not a file
 function delete_line {
-    ! has_cmd 'sed'  && { log 2 "No such command: sed"; return 4; }
-    [[ "$#" -ne 2 ]] && { log 2 "Requires: [ Line number ] [ File ]"; return 3; }
-    [[ "$1" -lt 0 ]] && { log 2 "Not a positive integer digit: $1"; return 2; }
-    [[ ! -f "$2" ]]  && { log 2 "Not a file: $2"; return 1; }
-    sed -i ''"$1"'d' "$2"
+    ! has_cmd 'sed'  && { ( log 2 "Missing command: sed" ); return 1; }
+    [[ "$#" -ne 2 ]] && { ( log 2 "Invalid number of arguments: $#/2" ); return 2; }
+    [[ "$1" -lt 0 ]] && { ( log 2 "Not a positive integer digit: $1" ); return 3; }
+    [[ ! -f "$2" ]]  && { ( log 2 "Not a file: $2" ); return 4; }
+    ( sed -i ''"$1"'d' "$2" )
 }
 ```
 
 ```bash
 # Deletes a specified line in a file
 # Return codes
-# 1: Not a file
-# 2: Missing arguments: File
-# 3: No such command: sed
+# 1: Missing command: sed
+# 2: Invalid number of arguments
+# 3: Not a file
 function delete_last_line {
-    ! has_cmd 'sed'  && { log 2 "No such command: sed"; return 3; }
-    [[ "$#" -ne 1 ]] && { log 2 "Requires: [ File ]"; return 2; }
-    [[ ! -f "$2" ]]  && { log 2 "Not a file: $2"; return 1; }
-    sed -i '$d' "$2"
+    ! has_cmd 'sed'  && { ( log 2 "Missing command: sed" ); return 1; }
+    [[ "$#" -ne 1 ]] && { ( log 2 "Invalid number of arguments: $#/1" ); return 2; }
+    [[ ! -f "$2" ]]  && { ( log 2 "Not a file: $2" ); return 3; }
+    ( sed -i '$d' "$2" )
 }
 ```
 
 ```bash
 # Deletes a specified range in a file
 # Return codes
-# 1: Not a file
-# 2: Not a positive integer digit range
-# 3: Missing arguments: Integer, Integer, File
-# 4: No such command: sed
+# 1: Missing command: sed
+# 2: Invalid number of arguments
+# 3: Not a positive integer digit range
+# 4: Not a file
 function delete_range {
-    ! has_cmd 'sed'  && { log 2 "No such command: sed"; return 4; }
-    [[ "$#" -ne 3 ]] && { log 2 "Requires: [ Start ] [ End ] [ File ]"; return 3; }
-    [[ ! -f "$3" ]]  && { log 2 "Not a file: $3"; return 2; }
-    [[ "$1" -lt 0 || "$2" -lt 0 ]] && { log 2 "Not a positive integer digit range: $1 & $2"; return 1; }
-    sed -i ''"$1"','"$2"'d' "$3"
+    ! has_cmd 'sed'  && { ( log 2 "Missing command: sed" ); return 1; }
+    [[ "$#" -ne 3 ]] && { ( log 2 "Invalid number of arguments: $#/3" ); return 2; }
+    [[ ! -f "$3" ]]  && { ( log 2 "Not a file: $3" ); return 3; }
+    [[ "$1" -lt 0 || "$2" -lt 0 ]] && { ( log 2 "Not a positive integer digit range: $1 & $2" ); return 4; }
+    ( sed -i ''"$1"','"$2"'d' "$3" )
 }
 ```
 
@@ -1738,34 +1812,32 @@ function delete_range {
 function replace_in {
     [[ "$#" -ne 2 ]] && { return 1; }
     [[ -p /dev/stdin ]] && {
-        sed 's|'"$1"'|'"$2"'|g' /dev/stdin
+        ( sed 's|'"$1"'|'"$2"'|g' /dev/stdin )
     }
 }
 ```
 
-### Print a function
+***Print a function***
 
 ```bash
 # Prints a function() to STDOUT
 # Return codes
-# 1: Not a function: $1
-# 2: Invalid number of arguments
+# 1: Invalid number of arguments
 function show_function {
-    [[ "$#" -ne 1 ]]   && { return 2; }
-    ! is_function "$1" && { return 1; }
-    local -f "$1"
+    [[ "$#" -ne 1 ]] && { return 1; }
+    ( local -f "$1" )
 }
 ```
 
-### Upper/Lower case
+***Upper/Lower case***
 
 ```bash
 # Converts a String to uppercase
 # Return codes
 # 1: Missing argument: String
 function upper_case {
-    [[ "$#" -eq 0 ]] && { log 2 "Requires: $#/1+ [ String(s) ]"; return 1; }
-    println "${*^^}"
+    [[ "$#" -eq 0 ]] && { ( log 2 "Invalid number of arguments: $#/1+" ); return 1; }
+    ( println "${*^^}" )
 }
 ```
 
@@ -1799,7 +1871,7 @@ function lower_first_letter {
 }
 ```
 
-### Length or number of variables
+***Length or number of variables***
 
 ```bash
 # Returns the length or number of variables passed to function
@@ -1812,7 +1884,7 @@ function get_length {
 }
 ```
 
-### Password generation
+***Password generation***
 
 ```bash
 # This function() uses /dev/urandom to generate a password randomly.
@@ -1840,14 +1912,14 @@ function gen_passwd {
 ```bash
 # Generates a password using OpenSSL, default length is 36.
 # Return codes
-# 1: No such command: openssl
+# 1: Missing command: openssl
 function gen_ssl_passwd {
     ! has_cmd 'openssl' && { log 2 "OpenSSL not available"; return 1; }
     openssl rand -base64 "${1:-36}"
 }
 ```
 
-### Encryption/Decryption
+***Encryption/Decryption***
 
 ```bash
 # Encrypts a file using GPG2
@@ -1893,7 +1965,7 @@ function decrypt_string {
 }
 ```
 
-### Usergroup
+***Usergroup***
 
 ```bash
 # Retrieves the members of a group
@@ -1931,7 +2003,7 @@ function get_user_groups_id {
 
 ---
 
-## Network
+### Network
 
 ```bash
 # Test if a port is open or closed on a remote host
@@ -1963,9 +2035,9 @@ function get_dns_record {
 ```bash
 # Gets the public IP for the network
 # Return codes
-# 1: No such command: curl
+# 1: Missing command: curl
 function get_all_public_ip {
-    ! has_cmd 'curl' && { log 2 "No such command: curl"; return 1; }
+    ! has_cmd 'curl' && { log 2 "Missing command: curl"; return 1; }
     local -r URLv4="https://ipv4.icanhazip.com" \
                URLv6="https://ipv6.icanhazip.com" \
                ARGS=(--silent --max-time 4)
@@ -1978,9 +2050,9 @@ function get_all_public_ip {
 # Gets the public IP for the network
 # Return codes
 # 1: Fail - No public IPv4
-# 2: No such command: curl
+# 2: Missing command: curl
 function get_public_ipv4 {
-    ! has_cmd 'curl' && { log 2 "No such command: curl"; return 2; }
+    ! has_cmd 'curl' && { log 2 "Missing command: curl"; return 2; }
     local -r URLv4="https://ipv4.icanhazip.com" \
                ARGS=(--silent --max-time 4)
     curl "${ARGS[@]}" --ipv4 "$URLv4" 2>/dev/null || return 1
@@ -1991,9 +2063,9 @@ function get_public_ipv4 {
 # Gets the public IP for the network
 # Return codes
 # 1: Fail - No public IPv6
-# 2: No such command: curl
+# 2: Missing command: curl
 function get_public_ipv6 {
-    ! has_cmd 'curl' && { log 2 "No such command: curl"; return 2; }
+    ! has_cmd 'curl' && { log 2 "Missing command: curl"; return 2; }
     local -r URLv6="https://ipv6.icanhazip.com" \
                ARGS=(--silent --max-time 4)
     curl "${ARGS[@]}" --ipv6 "$URLv6" 2>/dev/null || return 1
@@ -2005,9 +2077,9 @@ function get_public_ipv6 {
 # Return codes
 # 0: Public IPv4 Available
 # 1: Public IPv4 Unavailable
-# 2: No such command: curl
+# 2: Missing command: curl
 function test_public_ipv4 {
-    ! has_cmd 'curl' && { log 2 "No such command: curl"; return 2; }
+    ! has_cmd 'curl' && { log 2 "Missing command: curl"; return 2; }
     local -r URL="https://ipv4.icanhazip.com" \
              ARGS=(--silent --max-time 4 --ipv4)
     if curl "${ARGS[@]}" "$URL" &>/dev/null
@@ -2022,9 +2094,9 @@ function test_public_ipv4 {
 # Return codes
 # 0: Public IPv6 Available
 # 1: Public IPv6 Unavailable
-# 2: No such command: curl
+# 2: Missing command: curl
 function test_public_ipv6 {
-    ! has_cmd 'curl' && { log 2 "No such command: curl"; return 2; }
+    ! has_cmd 'curl' && { log 2 "Missing command: curl"; return 2; }
     local -r URL="https://ipv6.icanhazip.com" \
              ARGS=(--silent --max-time 4 --ipv6)
     if curl "${ARGS[@]}" "$URL" &>/dev/null
@@ -2087,12 +2159,12 @@ function get_ip_info {
 ```bash
 # Gets the listening ports on the system
 # Return codes
-# 1: No such command: grep
-# 2: No such command: lsof
+# 1: Missing command: grep
+# 2: Missing command: lsof
 # 3: No root privileges
 function get_listening_services {
-    ! has_cmd 'lsof' && { log 2 "No such command: lsof"; return 2; }
-    ! has_cmd 'grep' && { log 2 "No such command: grep"; return 1; }
+    ! has_cmd 'lsof' && { log 2 "Missing command: lsof"; return 2; }
+    ! has_cmd 'grep' && { log 2 "Missing command: grep"; return 1; }
     if is_root
     then grep 'LISTEN' <(lsof -i -P -n)
     elif has_cmd 'sudo'
@@ -2105,10 +2177,10 @@ function get_listening_services {
 ```bash
 # Gets the services running on the network interfaces
 # Return code
-# 1: No such command: lsof
-# 2: No such command: sudo (No root privileges)
+# 1: Missing command: lsof
+# 2: Missing command: sudo (No root privileges)
 function network_interface_services {
-    ! has_cmd 'lsof' && { log 2 "No such command: lsof"; return 1; }
+    ! has_cmd 'lsof' && { log 2 "Missing command: lsof"; return 1; }
     if is_root
     then lsof -n -P -i
     elif has_cmd 'sudo'
@@ -2143,14 +2215,14 @@ function html_next {
 
 ---
 
-## Crypto
+### Crypto
 
 ```bash
 # Fetches the current price of Bitcoin in Euro € from Binance
 # Return codes
-# 1: No such command: curl
+# 1: Missing command: curl
 function get_btc {
-    ! has_cmd 'curl' && { log 2 "No such command: curl"; return 1; }
+    ! has_cmd 'curl' && { log 2 "Missing command: curl"; return 1; }
     local -r URL="https://api.binance.com/api/v3/ticker/price?symbol=BTCEUR" \
                ARGS=(--silent --location)
     if ! has_cmd 'jq'
@@ -2298,7 +2370,7 @@ function btc_rpc_auth {
 
 ---
 
-## Audio
+### Audio
 
 ```bash
 # Converts an MP4 audio file to WAV audio format
@@ -2313,7 +2385,7 @@ function mp4_to_wav {
 
 ---
 
-## Permissions
+### Permissions
 
 ```bash
 # Changes permissions on a given file
@@ -2435,7 +2507,7 @@ function make_executable_recursive {
 
 ---
 
-## Docker
+### Docker
 
 ```bash
 # Get the images names, tag & repository
@@ -2519,7 +2591,7 @@ function remove_latest_image {
 
 ---
 
-## JSON
+### JSON
 
 ```bash
 # Tests a given variable what JQ recognizes it as by type: Object or String 
@@ -3265,7 +3337,7 @@ function json_key_rename {
 
 ---
 
-## Encoding/Decoding
+### Encoding/Decoding
 
 ```bash
 # Shows URL encoding equivalent for listed characters
@@ -3490,7 +3562,7 @@ function decode_char {
 
 ---
 
-## Swedish Law
+### Swedish Law
 
 ```bash
 # Sends a search query for Swedish legal documents (SFS) 
@@ -3517,7 +3589,7 @@ function sfs_dokument {
 
 ---
 
-## Dictionary
+### Dictionary
 
 ```bash
 # Queries a word for the dictionary definition
@@ -3528,10 +3600,3 @@ function dictionary {
     curl --silent --location "$base_url" | jq
 }
 ```
-
----
-
-<!-- START OF LINKS -->
-
-<!-- END OF LINKS -->
-
