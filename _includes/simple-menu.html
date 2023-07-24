@@ -1,32 +1,18 @@
 <div class="scrollmenu header">
     <ul class="header">
         <li><a href="{{ site.url }}">Home</a></li>
-        <li {% if page.url contains '/page/code' %}
-                class="inactive"
-            {% endif %}><a href="/page/arc.html">ARC</a></li>
-        <li {% if page.url contains '/page/code' %}
-                class="inactive"
-            {% endif %}><a href="/page/notes.html">Notes</a></li>
-        <li><a href="/page/code.html">Code</a></li>
-        <li {% if page.url contains '/page/code' %}
-                class="active"
-            {% else %}
-                class="inactive"
-            {% endif %}><a href="/page/code/bash.html">Bash</a></li>
-        <li {% if page.url contains '/page/code' %}
-                class="active"
-            {% else %}
-                class="inactive"
-            {% endif %}><a href="/page/code/caddy.html">Caddy</a></li>
-        <li {% if page.url contains '/page/code' %}
-                class="active"
-            {% else %}
-                class="inactive"
-            {% endif %}><a href="/page/code/git.html">Git</a></li>
-        <li {% if page.url contains '/page/code' %}
-                class="active"
-            {% else %}
-                class="inactive"
-            {% endif %}><a href="/page/code/python.html">Python</a></li>
+        <li><a href="/pages/arc.html">ARC</a></li>
+        <li><a href="/pages/notes.html">Notes</a></li>
+        <li><a href="/pages/code.html">Code</a></li>
+        <li><a href="/pages/bash.html">Bash</a></li>
+        <li><a href="/pages/caddy.html">Caddy</a></li>
+        <li><a href="/pages/git.html">Git</a></li>
+        <li><a href="/pages/python.html">Python</a></li>
     </ul>
 </div>
+
+<!-- {% if page.url contains '/page/topics' %}
+                class="active"
+            {% else %}
+                class="inactive"
+            {% endif %} -->

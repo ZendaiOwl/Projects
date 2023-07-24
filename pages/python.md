@@ -1,23 +1,22 @@
-___Python___
-
-_Random information about Python I've found and gathered_
-
 * TOC
 {:toc}
 
 ---
+___Python___
 
-# Virtual environment
+_Random information about Python I've found and gathered_
+
+### Virtual environment
 
 Check if the virtual environment is active for the shell session.
 
 `echo "$VIRTUAL_ENV"`
 
-# Socket library
+### Socket library
 
 Test for dual-stack support: `socket.has_dualstack_ipv6()`
 
-Example with sanic webserver
+Example with `sanic` webserver
 
 ```python
 @app.get('/test_dual-stack')

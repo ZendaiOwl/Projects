@@ -24,7 +24,7 @@ _Table of Contents_
 
 ---
 
-# The Future: Vision and Invitation | EP 339
+### The Future: Vision and Invitation | EP 339
 
 [_Jordan B. Peterson_][youtube-jordan-peterson]
 
@@ -35,7 +35,7 @@ _Table of Contents_
 
 ---
 
-# Vision and Story
+### Vision and Story
 
 _Can we find a unifying story that will guide us as we make our way forward?<br><br>What destiny might we envision and pursue, such that we are maximally fortified against anxiety and despair, motivated by faith and hope, and voluntarily united in our pursuit of a flourishing and abundant world?_
 
@@ -43,7 +43,7 @@ I don't know 🙏 but yes, I have hope, everything is in balance.
 
 ---
 
-# Responsible Citizenship
+### Responsible Citizenship
 
 _How do we facilitate the development of a responsible and educated citizenry?<br><br>How might we encourage individuals to reflect and to act so that they adopt full voluntary responsibility for themselves, present and future, as well as their families and communities?_
 
@@ -58,7 +58,7 @@ I don't know, these are some of the things that come to mind for me so far
 
 ---
 
-# Family and Social Fabric
+### Family and Social Fabric
 
 _What is the proper role for the family, the community, and the nation in creating the conditions for prosperity?<br><br>How might we effectively conceptualize, value and reward the sacrificial, long-term, peaceful, child-centered intimate relationships upon which psychological integrity and social stability most fundamentally depend?_
 
@@ -66,7 +66,7 @@ I don't know, another complicated question...
 
 Here is some of my fragmented thoughts
 
-## Family
+#### Family
 
 _A home_
 
@@ -75,7 +75,7 @@ _A home_
 + **§** Brings the next generation into this world & with it, our species survival
 + **§** Passes on our values & virtues to live on within the next generation
 
-## Community
+#### Community
 
 _”A unified body of individuals”_
 
@@ -83,7 +83,7 @@ A way to describe many individuals by a distinct commonality or unity, can also 
 
 To be honest I was a little stumped about the "community" part in this question and I think I need more time to think about it.
 
-## Nation
+#### Nation
 
 The country of which we live and often times are born in, that protects our way of life, which our ancestors in previous generations handed off to us as a legacy, that we in turn will shape for future generations to come.
 
@@ -95,7 +95,7 @@ Family is necessary for the prosperity of the nation, our species and provides t
 
 ---
 
-# Free Exchange and Good Governance
+### Free Exchange and Good Governance
 
 _How do we govern our corporate, social and political organizations so that we promote free exchange and abundance while protecting ourselves against the ever-present danger of cronyism and corruption?<br><br>How can we continue to gain from the genius of unbridled human innovation and the productive reciprocity of voluntary production and free exchange, while protecting ourselves against the tendency of successful organizations to degenerate into a state of wilfully blind and narrowly self-serving authoritarianism?_
 
@@ -109,7 +109,7 @@ With too much consolidation of authority at a centralised institution or figure 
 
 I keep coming back to a thought that we need to distribute the responsibility and authority to the people more. I've listed some points below which I think are important for us to understand and incorporate into our societies as we are moving forward together. 
 
-## Financial stability
+#### Financial stability
 
 + [ ] TODO Get link to the sources
 
@@ -117,19 +117,19 @@ Peg the financial system to something which is difficult for people to arbitrari
 
 Facilitate an environment that allows people to gain a long-term view into the future so we can collectively make the world a better place instead of all struggling just to get through the day with a short-term view.
 
-## English Common Law
+#### English Common Law
 
 + [ ] TODO Gather information
 
-## Free markets
+#### Free markets
 
 + [ ] TODO Gather information
 
-## Austrian school of economics
+#### Austrian school of economics
 
 + [ ] TODO Gather information
 
-## The soil
+#### The soil
 
 I don't know, but I think there is a point in that a large part of the coming issues that we face as a species and civilization can be alleviated by incentivizing a different kind of soil management, one that increases the organic content in the soil.
 
@@ -139,7 +139,7 @@ To what degree though?
 
 + [ ] TODO Gather the references to the published research papers from [consciousplanet](https://consciousplanet.org) website & gather links to the research papers
 
-## Distributed networks
+#### Distributed networks
 
 + [ ] TODO Gather information
 
@@ -152,7 +152,7 @@ To what degree though?
 + Increase participation in the democratic governing process & the meaning of the interaction
 + Distribute & disperse the governing authority to the people
 
-## Distributed democratic governance
+#### Distributed democratic governance
 
 + [ ] TODO Gather information
 
@@ -163,7 +163,7 @@ To what degree though?
 I don't know, but the model of having one vote of influence every 4 years where we are presented with the "same choices" every time is, it doesn't have the appearance of working properly to its fullest potential anymore, seemingly not keeping up in the age of information and leaving people feeling uneasy.
 
 
-## Estonias e-governance model
+#### Estonias e-governance model
 
 + [ ] TODO Gather information
 
@@ -179,7 +179,7 @@ I don't know, but the model of having one vote of influence every 4 years where 
 
 ---
 
-# Energy and Resources
+### Energy and Resources
 
 _How do we provide the energy and other resources upon which all economies depend in a manner that is inexpensive, reliable, safe and efficient, including in the developing world?<br><br>How do we ensure provision of the energy and other resources crucial to our shared security and opportunity in a manner that is inexpensive, reliable, safe, efficient and widely and universally accessible?_
 
@@ -194,7 +194,7 @@ I've realized I need to look into this area a lot more
 
 ---
 
-# Environmental Stewardship 
+### Environmental Stewardship 
 
 _How should we take the responsibility of environmental stewardship seriously?<br><br>How might we properly pursue the environmental stewardship that most truly serves the needs and wants of all individuals today, tomorrow and into the foreseeable future?_
 
@@ -210,7 +210,7 @@ Incentives for our farmers to increase the organic content in the soil to minimu
 
 I don't know but it seems this can alleviate or significantly reduce many issues at the same time after reading much of the material I could find, I think something like this is a good first step. 
 
-## Soil
+#### Soil
 
 + [ ] TODO Gather information
 

@@ -21,9 +21,8 @@ grep -E "(0\s?0|1\s?1|2\s?2|3\s?3|4\s?4|5\s?5|6\s?6|7\s?7|8\s?8|9\s?9)"
 
 # Soldering temperatures
 
-| Soldering Temperature Chart |  |  |
-| :-- | :-- | :-- |
 | Solder Type | Lead / Non-Lead | Temperature (°C) |
+| :-- | :-- | :-- |
 | 63/37 | lead | 183 |
 | 60/40 | lead | 183-188 |
 | 50/50 | lead | 183-212 |
@@ -47,9 +46,9 @@ Source: https://www.petervis.com/Education/Soldering_Guide_for_Electronics_Stude
 
 ---
 
-# YouTube Videos
+### YouTube Videos
 
-## AI Revolution - Raoul Pal | Tom Bilyeu
+#### AI Revolution - Raoul Pal | Tom Bilyeu
 
 [_Tom Bilyeu_][youtube-tom-bilyeu]
 
@@ -60,7 +59,7 @@ Source: https://www.petervis.com/Education/Soldering_Guide_for_Electronics_Stude
 
 ---
 
-## Saifedean Ammous: Bitcoin, Anarchy, and Austrian Economics | Lex Fridman Podcast #284
+#### Saifedean Ammous: Bitcoin, Anarchy, and Austrian Economics | Lex Fridman Podcast #284
 
 <div class="yt">
     <iframe width="908" height="511" src="https://www.youtube.com/embed/gp4U5aH_T6A" title="Saifedean Ammous: Bitcoin, Anarchy, and Austrian Economics | Lex Fridman Podcast #284" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
@@ -68,7 +67,7 @@ Source: https://www.petervis.com/Education/Soldering_Guide_for_Electronics_Stude
 
 ---
 
-## 12 Ways the Planet Could Truly Be Saved - Bjørn Lomborg. EP 345 | Jordan B Peterson
+#### 12 Ways the Planet Could Truly Be Saved - Bjørn Lomborg. EP 345 | Jordan B Peterson
 
 [_Jordan B. Peterson_][youtube-jordan-peterson]
 
@@ -78,7 +77,7 @@ Source: https://www.petervis.com/Education/Soldering_Guide_for_Electronics_Stude
 
 ---
 
-## 5 Easy Ways to Save the World - Bjørn Lomborg | Triggernometry
+#### 5 Easy Ways to Save the World - Bjørn Lomborg | Triggernometry
 
 [_Triggernometry_][youtube-triggernometry]
 
@@ -88,7 +87,7 @@ Source: https://www.petervis.com/Education/Soldering_Guide_for_Electronics_Stude
 
 ---
 
-## Eric Weinstein - All Hell Is About to Break Loose | Triggernometry
+#### Eric Weinstein - All Hell Is About to Break Loose | Triggernometry
 
 [_Triggernometry_][youtube-triggernometry]
 
@@ -98,7 +97,7 @@ Source: https://www.petervis.com/Education/Soldering_Guide_for_Electronics_Stude
 
 ---
 
-## "We're Not Thinking, We're Emoting" - John Anderson, Former Deputy Prime Minister of Australia | Triggernometry
+#### "We're Not Thinking, We're Emoting" - John Anderson, Former Deputy Prime Minister of Australia | Triggernometry
 
 [_Triggernometry_][youtube-triggernometry]
 
@@ -108,7 +107,7 @@ Source: https://www.petervis.com/Education/Soldering_Guide_for_Electronics_Stude
 
 ---
 
-## Holland in crisis | Jordan B Peterson
+#### Holland in crisis | Jordan B Peterson
 
 [_Jordan B. Peterson_][youtube-jordan-peterson]
 
@@ -118,7 +117,7 @@ Source: https://www.petervis.com/Education/Soldering_Guide_for_Electronics_Stude
 
 ---
 
-## The Madness of Crowds - Douglas Murray | John Anderson
+#### The Madness of Crowds - Douglas Murray | John Anderson
 
 [_John Anderson_][youtube-john-anderson]
 
@@ -128,7 +127,7 @@ Source: https://www.petervis.com/Education/Soldering_Guide_for_Electronics_Stude
 
 ---
 
-## Principles for Dealing with the Changing World Order by Ray Dalio
+#### Principles for Dealing with the Changing World Order by Ray Dalio
 
 [_Ray Dalio_][youtube-ray-dalio]
 
@@ -138,7 +137,7 @@ Source: https://www.petervis.com/Education/Soldering_Guide_for_Electronics_Stude
 
 ---
 
-##  Guido van Rossum: Python and the Future of Programming | Lex Fridman Podcast #341 
+####  Guido van Rossum: Python and the Future of Programming | Lex Fridman Podcast #341 
 
 [_Lex Fridman_][youtube-led-fridman]
 

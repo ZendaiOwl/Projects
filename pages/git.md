@@ -1,15 +1,15 @@
 ___Git___
 
-_Random information about Git I've found and gathered_
+***Random information about Git I've found and gathered***
 
 * TOC
 {:toc}
 
 ---
 
-# Commit message
+### Commit message
 
-_Conventional Git commit message structure_
+***Conventional Git commit message structure***
 
 ```
 <type>[optional scope]: <description>
@@ -19,7 +19,13 @@ _Conventional Git commit message structure_
 [optional footer(s)]
 ```
 
-# Git Subtree
+### Commit 
+
+```git
+࿓❯ <type>[optional scope]: <description> 
+```
+
+### Git Subtree
 
 Check existing subtree's in a repository
 
@@ -33,7 +39,7 @@ Number of git subtree's in a repository
 git log | grep 'git-subtree-dir' | awk '{ print $2 }' | sort | uniq | wc -l
 ```
 
-# Resources
+### Resources
 
 + **§** [_Conventional commits_](https://www.conventionalcommits.org/en/v1.0.0/)
 + **§** [_Conventional commits - Specification_](https://www.conventionalcommits.org/en/v1.0.0/#specification)

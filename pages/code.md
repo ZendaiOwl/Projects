@@ -1,229 +1,27 @@
-___Code___
-
-_Table of Contents_
 
 * TOC
 {:toc}
 
 ---
 
-# Nix
+___Code___
 
-_From the manual_
-
-Shebang
-
-_Examples_
-
-```sh
-#! /usr/bin/env nix-shell
-#! nix-shell -i python -p python pythonPackages.prettytable
-#! nix-shell -i perl -p perl perlPackages.HTMLTokeParserSimple perlPackages.LWP
-#! nix-shell -i bash -p "terraform.withPlugins (plugins: [ plugins.openstack ])"
-
-Note: You must use double quotes (") when passing a simple Nix expression in a nix-shell shebang.
-```
-
-```sh
-Options
-•  --packages / -p packages…
-          Set up an environment in which the specified packages are present.  The
-          command line arguments are interpreted as attribute  names  inside  the
-          Nix  Packages collection. Thus, nix-shell -p libjpeg openjdk will start
-          a shell in which the packages denoted by the  attribute  names  libjpeg
-          and openjdk are present.
-
-•  -i interpreter
-          The  chained script interpreter to be invoked by nix-shell. Only appli‐
-          cable in #!-scripts (described below).
-```
-
-Execute `cargo` in NixOS
-
-```sh
-nix-shell -p gcc --command 'cargo build'
-nix-shell -p gcc --command 'cargo check'
-nix-shell -p gcc --command 'cargo update'
-nix-shell -p gcc --command 'cargo run'
-```
-
-Use software or application that requires `cc` linker
-
-```sh
-nix-shell -p gcc --command ''
-nix-shell -p musl --command ''
-```
-
-# Docker
-
-## Commands
-
-
-```bash
-# Gets the ID-hash for all images present on the system
-docker image ls | awk '(NR!=1) {print $3}'
-
-# Attempts to remove all images present on the system
-for I in $(docker image ls | awk '(NR!=1) {print $3}')
-do
-    docker rmi "$I"
-done
-```
-
-A stupid but fun command
-
-```bash
-# Tries to run all images available on the system
-for I in $(docker image ls | awk '(NR!=1) {print $3}')
-do
-    docker run --rm -it "$I"
-done
-
-# Same but detached and without removing containers as they exit
-for I in $(docker image ls | awk '(NR!=1) {print $3}')
-do
-    docker run -d=true "$I"
-done
-```
-
-## Check IP using Docker
-
-```bash
-# Public IPv4
-docker run --rm -it curlimages/curl:latest -s -m4 -4 https://ipv4.icanhazip.com
-
-# Public IPv6
-docker run --rm -it curlimages/curl:latest -s -m4 -6 https://ipv6.icanhazip.com
-
-# Local IPv4
-ip -j address | docker run --rm -i zendai/jq:1 '.[1] | .addr_info | .[0].local'
-
-# Local IPv6
-ip -j address | docker run --rm -i zendai/jq:1 '.[1] | .addr_info | .[1].local'
-```
-
-
-## Multi-architecture
-
-Install binaries
-
-```bash
-docker run --privileged --rm tonistiigi/binfmt --install all
-```
-
-## Enable IPv6 for Docker Engine
-
-To get IPv6 to function you need to designate a subnet for the Docker Engine to use when assigning IPv6 addresses to the containers and creating a network.
-
-Docker `daemon.json`
-
-```json
-{
-  "default-address-pools": [
-    {
-      "base": "172.××.0.0/16",
-      "size": 24
-    },
-    {
-      "base": "××××:××××:××××:××××:1::/48",
-      "size": 64
-    },
-    {
-      "base": "××××:××××:××××:××××:2::/48",
-      "size": 64
-    },
-    {
-      "base": "××××:××××:××××:××××:3::/48",
-      "size": 64
-    },
-    {
-      "base": "××××:××××:××××:××××:4::/48",
-      "size": 64
-    },
-    {
-      "base": "××××:××××:××××:××××:5::/48",
-      "size": 64
-    },
-    {
-      "base": "××××:××××:××××:××××:6::/48",
-      "size": 64
-    }
-  ],
-  "features": {
-    "buildkit": true
-  },
-  "ipv6": true,
-  "fixed-cidr-v6": "××××:××××:××××:××××::/64"
-}
-```
-
-Create a network from the available pool set in the `daemon.json` file
-
-```bash
-# IPv4 & IPv6 (dual-stack)
-docker network create \
-               --driver="bridge" \
-               --subnet="172.××.0.0/16" \
-               --gateway="172.××.0.1" \
-               --ipv6 \
-               --subnet="××××:××××:××××:××××::/64" \
-               --gateway="××××:××××:××××:××××::1" \
-               --ipam-driver="default" \
-               --attachable \
-               dual-stack
-
-# IPv4 Network
-docker network create \
-               --driver bridge \
-               --subnet="172.××.0.0/16" \
-               --gateway="172.××.0.1" \
-               --attachable \
-               ipv4
-
-# IPv6 Network
-docker network create \
-               --driver bridge \
-               --ipv6 \
-               --subnet="××××:××××:××××:××××:1a1a:/64" \
-               --gateway="××××:××××:××××:××××:1a1a:1" \
-               --ipam-driver="default" \
-               --attachable \
-               ipv6
-```
-
----
-
-# NixOS
-
-+ Lenovo config
-
-`default.nix`
+### Author
 
 ```
-{
-  imports = [ ../../common/pc/laptop ];
-}
+# ======================================================
+# Author ࿓❯ § Victor-ray, S.
+# Email  ࿓❯ § <12261439+ZendaiOwl@users.noreply.github.com>
+# ------------------------------------------------------
 ```
 
-_Source:_ [NixOS Hardware](https://github.com/NixOS/nixos-hardware)
-
-+ Enable openbox on nixos
-
-If you're not using a custom xsession:
-
-`services.xserver.windowManager.openbox.enable = true;`
-
-And then choose openbox in lightdm
-
----
-
-# IP from 'messages' log
+### IP from 'messages' log
 
 ```bash
 sudo cat /var/log/messages | awk '{print $12}' | cut -d"=" -f2
 ```
 
-# Get IP from UFW log
+### IP from UFW log
 
 ```bash
 sudo cat /var/log/ufw.log | cut -c 47-155
@@ -233,7 +31,7 @@ sudo awk '{print $12}' /var/log/ufw.log
 
 ---
 
-# Redis Docker
+### Redis Docker
 
 ```bash
 docker run --detach \
@@ -249,7 +47,7 @@ docker exec -it redis redis-server /usr/local/etc/redis/redis.conf
 
 ---
 
-# Socat
+### Socat
 
 Listen on local port
 
@@ -296,7 +94,7 @@ echo 'Hello, how are you?' | socat UNIX:$FILE_NAME -
 
 ---
 
-# Regex
+### Regex
 
 Hostnames Regex
 
@@ -321,7 +119,7 @@ Source: https://html.spec.whatwg.org/multipage/forms.html#e-mail-state-(type=ema
 
 ---
 
-# Nextcloud OCC command
+### Nextcloud OCC command
 
 ```bash
 # Start command with
@@ -333,7 +131,7 @@ sudo -u www-data php /var/www/nextcloud/occ list
 
 ---
 
-# Process signals
+### Process signals
 
 In Docker make sure the Entrypoint handles the process signals.
 

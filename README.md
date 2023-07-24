@@ -1,5 +1,5 @@
 # Research 
 
-This is a repository to hold my research material, information or topics that I find interesting
+This is a place for me to gather material & information on topics I find interesting.
 
 This will always be a work-in-progress
