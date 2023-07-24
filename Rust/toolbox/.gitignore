@@ -1,3 +1,6 @@
+# VSCodium settings
+.vscode/
+
 # Fly.io toml file
 fly.toml
 
