@@ -176,31 +176,12 @@ fn cors_head() -> warp::filters::cors::Cors {
 /*
  * Warp Routes/Endpoints
  */
-/*
-/* Index */
-/*
-fn index_route() -> impl Filter<Extract = (impl Reply,), Error = Rejection> + Clone {
-    /* Index */
-    route_index()
-}
-*/
-fn route_index(
-) -> impl Filter<Extract = (impl Reply,), Error = Rejection> + Clone {
-    let index = r#"
-    "#;
-    warp::path!()
-        .and(warp::get())
-        .map(move || {
-            warp::reply::html(index)
-        })
-}
-*/
-
+ 
 fn index(
 ) -> impl Filter<Extract = (impl Reply,), Error = Rejection> + Clone {
     let err_msg_404: &str = "<!DOCTYPE html><head></head><body><h1>Error 404</h1></body></html>";
     warp::path::end().map(move || {
-            match std::fs::read_to_string("/home/zendai/Code/GitHub/Build/Rust/http_rust/backend/src/index.html") {
+            match std::fs::read_to_string("/home/owl/Code/local/Rust/dockr_dashboard/dashboard/index.html") {
                 Ok(body) => {
                     warp::reply::html(body)
                 },
