@@ -1,3 +1,4 @@
+#![recursion_limit = "256"]
 use hyper::{body::HttpBody, Body, Request, Response, StatusCode};
 use std::os::unix::net::UnixStream;
 use std::io::{Read, Write};
@@ -6,8 +7,8 @@ use serde_json::json;
 use crate::requests::*;
 use crate::routes::*;
 use crate::types::*;
-use common::types::Json;
 use crate::connect::*;
+
 pub mod types;
 pub mod routes;
 pub mod requests;
@@ -43,51 +44,3 @@ fn write_request_and_shutdown(unix_stream: &mut UnixStream) -> Result<(), std::i
         .expect("Could not shutdown writing on the stream");
     Ok(())
 }
-
-/*
- * Authentication
- * Endpoint Registry: /auth
- * Authentication for registries is handled client side.
- * The client has to send authentication details to various endpoints
- * that need to communicate with registries, such as POST /images/(name)/push.
- * These are sent as X-Registry-Auth header as a base64url encoded (JSON) string with the following structure:
- *
- * Headers
- * X-Registry-Auth: authentication details
- * ↑ base64url encoded (JSON) string
- * Content-Type: application/json
- *
- * Structure:
- * {
- *  "username": "string",
- *  "password": "string",
- *  "email": "string",
- *  "serveraddress": "string"
- * }
- *
- * The serveraddress is a domain/IP without a protocol.
- * Throughout this structure, double quotes are required.
- *
- * If you have already got an identity token from the /auth endpoint,
- * you can just pass this instead of credentials:
- * {
- *  "identitytoken": "9cbaf023786cd7..."
- * }
- *
- * Examples.
- *
- * Request.
- * Content-Type: application/json
- * {
- *  "username": "hannibal",
- *  "password": "xxxx",
- *  "serveraddress": "https://index.docker.io/v1/"
- * }
- *
- * Response.
- * Content-Type: application/json
- * {
- *  "Status": "Login Succeeded",
- *  "IdentityToken": "9cbaf023786cd7..."
- * }
- */
