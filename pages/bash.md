@@ -175,6 +175,7 @@ Many of the functions listed here will use this `log` function for printing log 
 
 ```bash
 # A log that uses log levels for logging different outputs
+# Author § Victor-ray, S.
 # Return codes
 # 1: Invalid log level
 # 2: Invalid number of arguments
@@ -868,7 +869,7 @@ function check_package {
 ```bash
 # Update apt list and packages
 # Return codes
-# 0: install_pkg completed
+# 0: Update APT is done
 # 1: Coudn't update apt list
 # 2: Invalid number of arguments
 function update_apt {
@@ -908,7 +909,7 @@ function update_apt {
 ```bash
 # Install package(s) using the package manager and pre-configured options
 # Return codes
-# 0: install_pkg completed
+# 0: Installation complete
 # 1: Error during installation
 # 2: Missing package argument
 function install_package {

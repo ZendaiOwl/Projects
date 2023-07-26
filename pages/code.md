@@ -10,8 +10,8 @@ ___Code___
 
 ```
 # ======================================================
-# Author ࿓❯ § Victor-ray, S.
-# Email  ࿓❯ § <12261439+ZendaiOwl@users.noreply.github.com>
+# Author § Victor-ray, S.
+# Email  § <12261439+ZendaiOwl@users.noreply.github.com>
 # ------------------------------------------------------
 ```
 

@@ -35,7 +35,7 @@ Options
           Only applicable in shebang scripts #!-scripts
 ```
 
-Execute `cargo` in NixOS
+Execute `cargo` using `nix-shell`
 
 ```sh
 nix-shell -p gcc --command 'cargo build'
