@@ -13,7 +13,7 @@ _Questions_
 
 The questions are from a [survey][survey] that can be found at the [ARC Forum][arc-forum].
 
-I'm just trying to answer them, when I have some time to spare, to the best of my abilities.
+I'm just trying to answer them, when I have some time to spare.
 
 ---
 
@@ -220,7 +220,7 @@ The soil is everything, the very source of all our lives, it is also the source 
 
 The micro-organisms and earth worms in the soil are the ones that breaks down the organic material into nutrients and food for the plants, which we later consume.
 
-They are the foundation of the carbon-cycle on this planet, the cycle which is often called "The Cycle of Life", something which seems to have been forgotten in the environmental "debate".
+They are the foundation of the carbon-cycle on this planet, the cycle which was called or referenced to as "The Cycle of Life" when I went to school, something which seems to have been forgotten in the environmental "debate".
 
 A large amount of carbon can, and is, captured in the soil during this process but we release it all again with our current methods of plowing & tilling the soils which releases all the captured carbon back into the atmosphere again.
 
@@ -234,6 +234,10 @@ Increasing the organic content in the soil:
 Which will increase the resistance to pests and diseases, helping to fight off harmful bacteria and viruses, meaning we can reduce our use of pesticides by an even greater degree.
 
 Something which the Dutch farmers here are already world champions at doing if we compare the agricultural output of the country to other countries, the fact that the government here went the literal opposite direction and instead tried to implement punitive measures instead made me think about the meaning of "anti-truth".
+
+The farmers however needs financial support to figure out these methods that work on their lands and soil, as one place is not the same as another. 
+
+There is a guideline available on the conscious planet website and lots of more references to source material. 
 
 Sources can be referenced at: https://consciousplanet.org/
 
