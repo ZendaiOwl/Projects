@@ -5,20 +5,72 @@ ___YouTube videos___
 
 ---
 
-# YouTube Videos
+### The eye-opening truth about western civilisation
 
-#### AI Revolution - Raoul Pal | Tom Bilyeu
-
-[_Tom Bilyeu_][youtube-tom-bilyeu]
+[_Triggernometry_][youtube-triggernometry]
 
 <div class="yt">
-    <iframe width="908" height="511" src="https://www.youtube.com/embed/S0DHI0DGOIw"
-    title="AI REVOLUTION: The #1 MEGATHREAT to Our Economy &amp; How To PREPARE NOW | Raoul Pal" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+<iframe width="912" 
+		height="513" 
+		src="https://www.youtube.com/embed/3Nkg86dlK6o" 
+		title="The Eye-Opening Truth About Western Civilisation" 
+		frameborder="0" 
+		allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+		allowfullscreen></iframe>
 </div>
 
 ---
 
-#### Saifedean Ammous: Bitcoin, Anarchy, and Austrian Economics | Lex Fridman Podcast #284
+### # How AI Will DISRUPT The Entire World In 3 Years (Prepare Now While Others Panic) | Emad Mostaque
+
+[_Tom Bilyeu_][youtube-tom-bilyeu]
+
+<div class="yt">
+<iframe width="912" 
+		height="513" 
+		src="https://www.youtube.com/embed/Se91Pn3xxSs" 
+		title="How AI Will DISRUPT The Entire World In 3 Years (Prepare Now While Others Panic) | Emad Mostaque" 
+		frameborder="0" 
+		allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+		allowfullscreen></iframe>
+</div>
+
+---
+
+### AI Revolution - Raoul Pal | Tom Bilyeu
+
+[_Tom Bilyeu_][youtube-tom-bilyeu]
+
+<div class="yt">
+    <iframe 
+        width="908" 
+        height="511" 
+        src="https://www.youtube.com/embed/S0DHI0DGOIw"
+        title="AI REVOLUTION: The #1 MEGATHREAT to Our Economy &amp; How To PREPARE NOW | Raoul Pal" 
+        frameborder="0" 
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+        allowfullscreen></iframe>
+</div>
+
+---
+
+#### AMERICA'S COLLAPSE: Raoul Pal's Warning For The Dollar, Housing Market & Upcoming Recession
+
+[_Tom Bilyeu_][youtube-tom-bilyeu]
+
+<div class="yt">
+<iframe width="912" 
+		height="513" 
+		src="https://www.youtube.com/embed/9UzMNewP5pc" 
+		title="AMERICA&#39;S COLLAPSE: Raoul Pal&#39;s Warning For The Dollar, Housing Market &amp; Upcoming Recession" 
+		frameborder="0" 
+		allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+		allowfullscreen></iframe>
+</div>
+
+---
+
+### Saifedean Ammous: Bitcoin, Anarchy, and Austrian Economics | Lex Fridman Podcast #284
 
 <div class="yt">
     <iframe width="908" height="511" src="https://www.youtube.com/embed/gp4U5aH_T6A" title="Saifedean Ammous: Bitcoin, Anarchy, and Austrian Economics | Lex Fridman Podcast #284" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
@@ -26,7 +78,7 @@ ___YouTube videos___
 
 ---
 
-#### 12 Ways the Planet Could Truly Be Saved - Bjørn Lomborg. EP 345 | Jordan B Peterson
+### 12 Ways the Planet Could Truly Be Saved - Bjørn Lomborg. EP 345 | Jordan B Peterson
 
 [_Jordan B. Peterson_][youtube-jordan-peterson]
 
@@ -36,7 +88,7 @@ ___YouTube videos___
 
 ---
 
-#### 5 Easy Ways to Save the World - Bjørn Lomborg | Triggernometry
+### 5 Easy Ways to Save the World - Bjørn Lomborg | Triggernometry
 
 [_Triggernometry_][youtube-triggernometry]
 
@@ -46,7 +98,7 @@ ___YouTube videos___
 
 ---
 
-#### Eric Weinstein - All Hell Is About to Break Loose | Triggernometry
+### Eric Weinstein - All Hell Is About to Break Loose | Triggernometry
 
 [_Triggernometry_][youtube-triggernometry]
 
@@ -56,7 +108,7 @@ ___YouTube videos___
 
 ---
 
-#### "We're Not Thinking, We're Emoting" - John Anderson, Former Deputy Prime Minister of Australia | Triggernometry
+### "We're Not Thinking, We're Emoting" - John Anderson, Former Deputy Prime Minister of Australia | Triggernometry
 
 [_Triggernometry_][youtube-triggernometry]
 
@@ -66,7 +118,7 @@ ___YouTube videos___
 
 ---
 
-#### Holland in crisis | Jordan B Peterson
+### Holland in crisis | Jordan B Peterson
 
 [_Jordan B. Peterson_][youtube-jordan-peterson]
 
@@ -76,7 +128,7 @@ ___YouTube videos___
 
 ---
 
-#### The Madness of Crowds - Douglas Murray | John Anderson
+### The Madness of Crowds - Douglas Murray | John Anderson
 
 [_John Anderson_][youtube-john-anderson]
 
@@ -86,7 +138,7 @@ ___YouTube videos___
 
 ---
 
-#### Principles for Dealing with the Changing World Order by Ray Dalio
+### Principles for Dealing with the Changing World Order by Ray Dalio
 
 [_Ray Dalio_][youtube-ray-dalio]
 
@@ -96,7 +148,7 @@ ___YouTube videos___
 
 ---
 
-####  Guido van Rossum: Python and the Future of Programming | Lex Fridman Podcast #341 
+###  Guido van Rossum: Python and the Future of Programming | Lex Fridman Podcast #341 
 
 [_Lex Fridman_][youtube-led-fridman]
 

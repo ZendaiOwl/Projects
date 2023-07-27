@@ -131,23 +131,23 @@ These can be combined, ex. `\e[1;5;m` = Blinking Bold
 
 ```bash
 # 16-bit colours
-BLUE='\e[34m' 				# Blue
-GREEN='\e[32m' 				# Green
-YELLOW='\e[33m' 			# Yellow
-WHITE='\e[37m' 				# White
-DEFAULT_FOREGOUND='\e[39m' 	# Default foreground colour
-RESET='\e[0m'  				# Reset
-							# Other examples
-							# BOLD WHITE	\e[1;37m
-							# BOLD CYAN		\e[1;36m
-							# BOLD PURPLE	\e[1;35m
-							# BOLD BLUE		\e[1;34m
-							# BOLD YELLOW	\e[1;33m
-							# BOLD GREEN	\e[1;32m
-							# BOLD RED		\e[1;31m
-							# BOLD BLACK	\e[1;30m
-							# BLINK 	 	\e[5m
-							# RESET 	 	\e[0m
+BLUE='\e[34m'              # Blue
+GREEN='\e[32m'             # Green
+YELLOW='\e[33m'            # Yellow
+WHITE='\e[37m'             # White
+DEFAULT_FOREGOUND='\e[39m' # Default foreground colour
+RESET='\e[0m'              # Reset
+# Other examples
+# BOLD WHITE    \e[1;37m
+# BOLD CYAN     \e[1;36m
+# BOLD PURPLE   \e[1;35m
+# BOLD BLUE     \e[1;34m
+# BOLD YELLOW   \e[1;33m
+# BOLD GREEN    \e[1;32m
+# BOLD RED      \e[1;31m
+# BOLD BLACK    \e[1;30m
+# BLINK         \e[5m
+# RESET         \e[0m
 ```
 
 See more codes on [Wikipedia](https://en.wikipedia.org/wiki/ANSI_escape_code#SGR) or this [Gist](https://gist.githubusercontent.com/fnky/458719343aabd01cfb17a3a4f7296797/raw/7e502a89d1fbe32927b570298555953a6912c1c5/ANSI.md).
@@ -175,7 +175,6 @@ Many of the functions listed here will use this `log` function for printing log 
 
 ```bash
 # A log that uses log levels for logging different outputs
-# Author § Victor-ray, S.
 # Return codes
 # 1: Invalid log level
 # 2: Invalid number of arguments
@@ -1011,17 +1010,15 @@ function initiate_git {
     (
         ( git_init )
         (
-            nix-shell --packages 'coreutils' --command '
             [[ -f "$HOME"/Templates/Licenses/2023/MIT ]] && {
-                cp -n $HOME/Templates/Licenses/2023/MIT ${PWD}/LICENSE
+                cp -n "$HOME"/Templates/Licenses/2023/MIT "$PWD"/LICENSE
             }
             [[ -f "$HOME"/Templates/Text/README.md ]] && {
-                cp -n $HOME/Templates/Text/README.md ${PWD}/README.md
+                cp -n "$HOME"/Templates/Text/README.md "$PWD"/README.md
             }
             [[ -f "$HOME"/Templates/Code/Git/.gitignore ]] && {
-                cp -n $HOME/Templates/Code/Git/.gitignore ${PWD}/.gitignore
+                cp -n "$HOME"/Templates/Code/Git/.gitignore "$PWD"/.gitignore
             }
-            '
         )
         ( git_add )
         ( git_commit "First commit" )
@@ -2508,90 +2505,6 @@ function make_executable_recursive {
 
 ---
 
-### Docker
-
-```bash
-# Get the images names, tag & repository
-# Return codes
-# 1: Command not found: docker
-# 2: Command not found: awk
-# 3: Invalid number of arguments
-function get_images {
-    ! has_cmd 'docker' && { return 2; }
-    ! has_cmd 'sed'    && { return 1; }
-    docker images | sed -n 's|/*||p' | tail -n +2
-}
-```
-
-```bash
-# Get the Container ID & Name of running containers
-# Return codes
-# 1: Command not found: docker
-# 2: Command not found: awk
-# 3: Invalid number of arguments
-function get_containers {
-    ! has_cmd 'docker' && { return 2; }
-    ! has_cmd 'sed'    && { return 1; }
-    docker ps | sed -n 's|/*||p' | tail -n +2
-}
-```
-
-```bash
-# Get the Container ID of all running containers
-# Return codes
-# 1: Command not found: docker
-# 2: Command not found: awk
-# 3: Invalid number of arguments
-function container_id_all {
-    not_equal "$#" 0   && { return 3; }
-    ! has_cmd 'awk'    && { return 2; }
-    ! has_cmd 'docker' && { return 1; }
-    docker ps | awk '{print $1}' | tail -n +2
-}
-```
-
-```bash
-# Gets the latest Container ID of the running containers
-# Return codes
-# 1: Command not found: awk
-# 2: Command not found: docker
-# 3: Invalid number of arguments
-function container_id_latest {
-    not_equal "$#" 0   && { return 3; }
-    ! has_cmd 'docker' && { return 2; }
-    ! has_cmd 'awk'    && { return 1; }
-    docker ps | awk '{print $1}' | tail -n +2 | head -1
-}
-```
-
-```bash
-# Checks if the executing user is a member of the docker group
-# 0: Is a member of group: docker
-# 1: Not a member of group: docker
-# 2: Invalid number of arguments
-function in_docker_group {
-    not_equal "$#" 0 && { return 2; }
-    if is_member "$EUID" 'docker'
-    then return 0
-    else return 1
-    fi
-}
-```
-
-```bash
-# Removes the latest Docker image
-function remove_latest_image {
-    ! has_cmd 'docker' && { return 2; }
-    ! has_cmd 'awk'    && { return 1; }
-    if is_root || in_docker_group
-    then docker rmi "$(docker images | awk '{print $3}' | tail -n +2 | head -1)"
-    else sudo docker rmi "$(sudo docker images | awk '{print $3}' | tail -n +2 | head -1)"
-    fi
-}
-```
-
----
-
 ### JSON
 
 ```bash
@@ -3601,3 +3514,107 @@ function dictionary {
     curl --silent --location "$base_url" | jq
 }
 ```
+
+---
+
+### Docker
+
+```bash
+# Get the images names, tag & repository
+# Return codes
+# 1: Missing command: curl
+# 2: Missing command: jq
+# 3: Invalid number of arguments
+function docker_GET {
+    ! has_cmd 'curl' && { return 2; }
+    ! has_cmd 'jq'    && { return 1; }
+    curl --silent \
+	     --unix-socket /var/run/docker.sock \
+	     -H "Content-Type: application/json" \
+	     "localhost/v1.42/${1}"
+}
+```
+
+With `docker` CLI
+
+```bash
+# Get the images names, tag & repository
+# Return codes
+# 1: Missing command: docker
+# 2: Missing command: sed
+# 3: Invalid number of arguments
+function get_images {
+    ! has_cmd 'docker' && { return 2; }
+    ! has_cmd 'sed'    && { return 1; }
+    docker images | sed -n 's|/*||p' | tail -n +2
+}
+```
+
+```bash
+# Get the Container ID & Name of running containers
+# Return codes
+# 1: Command not found: docker
+# 2: Command not found: sed
+# 3: Invalid number of arguments
+function get_containers {
+    ! has_cmd 'docker' && { return 2; }
+    ! has_cmd 'sed' && { return 1; }
+    docker ps | sed -n 's|/*||p' | tail -n +2
+}
+```
+
+```bash
+# Get the Container ID of all running containers
+# Return codes
+# 1: Command not found: docker
+# 2: Command not found: awk
+# 3: Invalid number of arguments
+function container_id_all {
+    not_equal "$#" 0   && { return 3; }
+    ! has_cmd 'awk'    && { return 2; }
+    ! has_cmd 'docker' && { return 1; }
+    docker ps | awk '{print $1}' | tail -n +2
+}
+```
+
+```bash
+# Gets the latest Container ID of the running containers
+# Return codes
+# 1: Command not found: awk
+# 2: Command not found: docker
+# 3: Invalid number of arguments
+function container_id_latest {
+    not_equal "$#" 0   && { return 3; }
+    ! has_cmd 'docker' && { return 2; }
+    ! has_cmd 'awk'    && { return 1; }
+    docker ps | awk '{print $1}' | tail -n +2 | head -1
+}
+```
+
+```bash
+# Checks if the executing user is a member of the docker group
+# 0: Is a member of group: docker
+# 1: Not a member of group: docker
+# 2: Invalid number of arguments
+function in_docker_group {
+    not_equal "$#" 0 && { return 2; }
+    if is_member "$EUID" 'docker'
+    then return 0
+    else return 1
+    fi
+}
+```
+
+```bash
+# Removes the latest Docker image
+function remove_latest_image {
+    ! has_cmd 'docker' && { return 2; }
+    ! has_cmd 'awk'    && { return 1; }
+    if is_root || in_docker_group
+    then docker rmi "$(docker images | awk '{print $3}' | tail -n +2 | head -1)"
+    else sudo docker rmi "$(sudo docker images | awk '{print $3}' | tail -n +2 | head -1)"
+    fi
+}
+```
+
+---
