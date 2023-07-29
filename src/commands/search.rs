@@ -1,4 +1,4 @@
-use toolbox::*;
+use library::*;
 
 pub fn search(args: &Vec<String>) {
     match args.len() {

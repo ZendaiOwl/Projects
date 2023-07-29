@@ -1,9 +1,17 @@
 [package]
-name = "toolbox"
+name = "tools"
 version = "0.1.0"
 edition = "2021"
 authors = ["Victor-ray, S."]
 publish = false
+
+[[bin]]
+name = "tools"
+path = "src/main.rs"
+
+[lib]
+name = "library"
+path = "src/lib/lib.rs"
 
 # description = ""
 # documentation = ""
