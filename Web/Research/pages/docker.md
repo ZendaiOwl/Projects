@@ -130,7 +130,7 @@ To get IPv6 to function you need to designate a subnet for the Docker Engine to 
 
 Docker `daemon.json`
 
-*The IP-addresses are examples for documentation in accordance with [RFC3849](https://datatracker.ietf.org/doc/rfc3849) & [RFC5737](https://datatracker.ietf.org/doc/rfc5737).*
+*The IP-addresses are examples for documentation from [RFC3849](https://datatracker.ietf.org/doc/rfc3849) & [RFC5737](https://datatracker.ietf.org/doc/rfc5737).*
 
 ```json
 {
@@ -206,4 +206,66 @@ docker network create \
                ipv6
 ```
 
+Docker documentation: https://docs.docker.com/engine/api/v1.42/#tag/Network/operation/NetworkCreate
+
+```bash
+# Creates a network using curl
+curl --silent \
+     --unix-socket /var/run/docker.sock \
+     --header "Content-Type: application/json" \
+     --data '{
+  "Name": "isolated_nw",
+  "CheckDuplicate": true,
+  "Driver": "bridge",
+  "EnableIPv6": true,
+  "IPAM": {
+    "Driver": "default",
+    "Config": [
+      {
+        "Subnet": "172.20.0.0/16",
+        "IPRange": "172.20.10.0/24",
+        "Gateway": "172.20.10.11"
+      },
+      {
+        "Subnet": "2001:db8:abcd::/64",
+        "Gateway": "2001:db8:abcd::1011"
+      }
+    ],
+    "Options": {}
+  },
+  "Internal": true,
+  "Attachable": false,
+  "Ingress": false,
+  "Options": {
+    "com.docker.network.bridge.default_bridge": "true",
+    "com.docker.network.bridge.enable_icc": "t```
+{"Subnet": <CIDR>, "IPRange": <CIDR>, "Gateway": <IP address>, "AuxAddress": <device_name:IP address>}
+```rue",
+    "com.docker.network.bridge.host_binding_ipv4": "0.0.0.0",
+    "com.docker.network.bridge.name": "docker12",
+    "com.docker.network.driver.mtu": "1500"
+  },
+  "Labels": {
+    "com.example.version": "0",
+    "com.example.some-other-label": "some-other-value"
+  }
+}' localhost/v1.42/networks/create
+```
+
+```bash
+# IPAM Options
+{
+  "Subnet": <CIDR>,
+  "IPRange": <CIDR>,
+  "Gateway": <IP address>,
+  "AuxAddress": <device_name:IP address>
+}
+```
+
+```
+# Invalid option(s)
+    "com.docker.network.bridge.enable_ip_masquerade": "true",
+```
+
 ---
+
