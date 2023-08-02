@@ -5,7 +5,25 @@ authors = ["Victor-ray, S."]
 edition = "2021"
 # description = ""
 # documentation = ""
-publish = false
+# readme = ""
+# homepage = ""
+# repository = ""
+# license = ""
+# license-file = ""
+# keywords = [""]
+# categories = [""]
+# workspace = ""
+# build = ""
+# exclude = [""]
+# include = [""]
+publish = ["false"]
+
+# [profile.dev]
+# opt-level = 0
+
+# [profile.release]
+# opt-level = 3
+
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
@@ -17,5 +35,3 @@ serde_json = "1.0.94"
 serde = { version = "1", features = ["derive"] }
 tokio = { version = "1", features = ["full"] }
 warp = "0.3.3"
-# common = { path = "./common" }
-

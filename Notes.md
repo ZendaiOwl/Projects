@@ -34,3 +34,5 @@ Access-Control-Allow-Methods: <method> | [<method>]
 Access-Control-Allow-Headers: <header> | [<header>]
 Access-Control-Max-Age: <delta-seconds>
 ```
+
+

@@ -237,7 +237,9 @@ pub mod images_handler {
     use crate::*;
     use std::convert::Infallible;
 
-    pub async fn fetch_images_list(client: Connect) -> Result<Box<dyn warp::Reply>, Infallible> {
+    pub async fn fetch_images_list(
+        client: Connect
+    ) -> Result<Box<dyn warp::Reply>, Infallible> {
         let r = client.list_images().await;
         Ok(Box::new(warp::reply::json(&r)))
     }
@@ -381,7 +383,9 @@ pub mod networks_handler {
     use crate::*;
     use std::convert::Infallible;
 
-    pub async fn fetch_networks_list(client: Connect) -> Result<Box<dyn warp::Reply>, Infallible> {
+    pub async fn fetch_networks_list(
+        client: Connect
+    ) -> Result<Box<dyn warp::Reply>, Infallible> {
         let r = client.list_networks().await;
         Ok(Box::new(warp::reply::json(&r)))
     }
@@ -449,7 +453,9 @@ pub mod volumes_handler {
     use crate::*;
     use std::convert::Infallible;
 
-    pub async fn fetch_volumes_list(client: Connect) -> Result<Box<dyn warp::Reply>, Infallible> {
+    pub async fn fetch_volumes_list(
+        client: Connect
+    ) -> Result<Box<dyn warp::Reply>, Infallible> {
         let r = client.list_volumes().await;
         Ok(Box::new(warp::reply::json(&r)))
     }
@@ -534,5 +540,18 @@ pub mod exec_handler {
     ) -> Result<Box<dyn warp::Reply>, Infallible> {
         let r = client.inspect_exec(&id).await;
         Ok(Box::new(warp::reply::json(&r)))
+    }
+}
+
+/* System */
+pub mod system_handlers {
+    use crate::*;
+    use std::convert::Infallible;
+    
+    pub async fn system_info_req(
+        client: Connect,
+    ) -> Result<Box<dyn warp::Reply>, Infallible> {
+        let response = client.system_info().await;
+        Ok(Box::new(warp::reply::json(&response)))
     }
 }
