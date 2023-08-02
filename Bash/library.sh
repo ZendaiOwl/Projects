@@ -3,7 +3,6 @@
 # Author § Victor-ray, S.
 # -----------------------
 
-
 # Displays 8 × 16-bit ANSI bold colours and a blinking effect
 # \e[0;34m = Normal
 # \e[1;34m = Bold
@@ -28,8 +27,208 @@ function colour {
                    "BLINK"  "RESET" "EXPAND")
     local -r LENGTH="${#NAME[@]}"
     for (( C = 0; C < "$LENGTH"; C++ ))
-    do printf "${COLOUR[$C]}%s${Z} \t%s\n" "${NAME[$C]}" "${COLOUR[$C]}"
+    do ( printf "${COLOUR[$C]}%s${Z} \t%s\n" "${NAME[$C]}" "${COLOUR[$C]}" )
     done
+}
+
+
+# Runs a command with packages using nix-shell
+# Return codes
+# 0: Success / OK!
+# 1: Invalid number of arguments
+# 2: Missing command: nix-shell
+function nix-cmd {
+    [[ "$#" -lt 1 ]] && { return 1; }
+    ! has_cmd 'nix-shell' && { return 2; }
+    local -r PACKAGES="${1}" # ex. bash curl wget
+    if [[ -p /dev/stdin ]]
+    then
+        local COMMAND
+        COMMAND="$(cat /dev/stdin)"
+    else
+        local -r COMMAND="${2}"
+    fi
+    (
+        nix-shell --expr 'with import <nixpkgs> { }; 
+        pkgs.mkShell {
+            buildInputs = with pkgs; [ '"$PACKAGES"' ];
+        }' --command '
+            '"$(printf '%s' "${COMMAND}")"'
+        '
+    )
+}
+
+function filesize {
+  [[ "$#" -eq 0 ]] && { return 1; }
+  ! has_cmd 'du' && { return 2; }
+  du --human-readable --summarize --total "$@"
+}
+
+# Counts pages of file contents being resident in memory (in core), 
+# and reports the numbers.
+function file_in_memory {
+  [[ "$#" -eq 0 || ! -f "$1" ]] && { return 1; }
+  ! has_cmd 'fincore' && { return 2; }
+  fincore --json "$1"
+}
+
+# Search the block devices in the system looking for a 
+# filesystem or partition with specified tag.
+# If the filesystem or partition is found, 
+# the device name will be printed on stdout.
+# - Tags -
+# LABEL=<label>
+# UUID=<uuid>
+# PARTUUID=<uuid>
+# PARTLABEL=<label>
+function find_filesystem {
+  [[ "$#" -eq 0 ]] && { return 1; }
+  ! has_cmd 'findfs' && { return 2; }
+  findfs "$1"="$2"
+}
+
+# partx --show <disk>
+function show_partitions {
+  [[ "$#" -eq 0 ]] && { printf '%s\n' "Needs a disk as argument, ex. '/dev/sda'"; return 1; }
+  ! has_cmd 'partx' && { return 2; }
+  partx --show "$1"
+}
+
+# List information about block devices.
+# OPTIONS
+# --json
+function show_filesystem {
+  [[ "$#" -gt 0 ]] && { return 1; }
+  ! has_cmd 'lsblk' && { return 2; }
+  lsblk --fs
+}
+
+# locate/print block device attributes
+# ↓ - From the manual - ↓
+# It is recommended to use lsblk(8) command to get information 
+# about block devices, or 'lsblk --fs' to get an overview of 
+# filesystems, or findmnt(8) to search in already mounted filesystems.
+function show_disk_blocks {
+  [[ "$#" -gt 0 ]] && { return 1; }
+  ! has_cmd 'blkid' && { return 2; }
+  blkid
+}
+
+# findmnt will list all mounted filesystems or search for a filesystem. 
+# The findmnt command is able to search in 
+# '/etc/fstab', '/etc/mtab' or '/proc/self/mountinfo'. 
+# If device or mountpoint is not given, all filesystems are shown.
+# 
+# OPTIONS
+# --all   : Disable all built-in filters and print all filesystems.
+# --ascii : Use ascii characters for tree formatting.
+# --tree  : Enable tree-like output if possible. 
+# --json  : Use JSON output format
+function show_mounts {
+  [[ "$#" -gt 0 ]] && { return 1; }
+  ! has_cmd 'findmnt' && { return 2; }
+  findmnt --all
+}
+
+# Get the images names, tag & repository
+# Return codes
+# 1: Missing command: curl
+# 2: Missing command: jq
+# 3: Invalid number of arguments
+function docker_GET {
+    ! has_cmd 'curl' && { return 2; }
+    ! has_cmd 'jq'   && { return 1; }
+    curl --silent \
+    	--unix-socket /var/run/docker.sock \
+	    --header "Content-Type: application/json" \
+	    "localhost/v1.42/${1}"
+}
+
+function emoji {
+    for I in "$@"
+    do
+        case "$I" in
+            rose)                 ( println "✿ڿڰۣ—"; ) ;;
+            skull)                ( println "☠"; ) ;;
+            sigma|sum)            ( println "Σ"; ) ;;
+            omega)                ( println "Ω"; ) ;;
+            alpha)                ( println "α"; ) ;;
+            beta)                 ( println "β"; ) ;;
+            delta)                ( println "Δ"; ) ;;
+            lamda)                ( println "λ" ) ;;
+            epsilon)              ( println "ɛ" ) ;;
+            snowman)              ( println "☃"; ) ;;
+            spade)                ( println "♠"; ) ;;
+            club)                 ( println "♣"; ) ;;
+            heart)                ( println "♥"; ) ;;
+            big-heart)            ( println "❤"; ) ;;
+            diamond)              ( println "♦"; ) ;;
+            star)                 ( println "★"; ) ;;
+            empty-star)           ( println "☆"; ) ;;
+            sun)                  ( println "☀"; ) ;;
+            flower)               ( println "✿"; ) ;;
+            cloud)                ( println "☁"; ) ;;
+            triangle)             ( println "▲"; ) ;;
+            empty-triangle)       ( println "△"; ) ;;
+            yinyang)              ( println "☯"; ) ;;
+            infinity)             ( println "∞"; ) ;;
+            yolo)                 ( println "Yᵒᵘ Oᶰˡʸ Lᶤᵛᵉ Oᶰᶜᵉ"; ) ;;
+            onsen)                ( println "ツ" ) ;;
+            note)                 ( println "♫" ) ;;
+            sharp)                ( println "♯" ) ;;
+            double-sharp)         ( println "𝄪" ) ;;
+            flat)                 ( println "♭" ) ;;
+            double-flat)          ( println "𝄫" ) ;;
+            dice)                 ( println "⚄" ) ;;
+            d1|dice1)             ( println "⚀" ) ;;
+            d2|dice2)             ( println "⚁" ) ;;
+            d3|dice3)             ( println "⚂" ) ;;
+            d4|dice4)             ( println "⚃" ) ;;
+            d5|dice5)             ( println "⚄" ) ;;
+            d6|dice6)             ( println "⚅" ) ;;
+            envelope|letter)      ( println "✉︎" ) ;;
+            pi)                   ( println "π" ) ;;
+            opt|option|alt)       ( println "⌥" ) ;;
+            cmd)                  ( println "⌘" ) ;;
+            nuclear)              ( println "☢" ) ;;
+            load|loading)         ( println "███▒▒▒▒▒▒▒" ) ;;
+            load_on|loading_on)   ( printf '%s' "█" ) ;;
+            load_off|loading_off) ( printf '%s' "▒" ) ;;
+            interrobang)          ( println "‽" ) ;;
+            hammerandsickle|hs)   ( println "☭" ) ;;
+            int)                  ( println "∫" ) ;;
+            flower-smile)         ( println "(✿◠‿◠)" ) ;;
+            ellipsis)             ( println "…" ) ;;
+            cross)                ( println "†" ) ;;
+            check|checkmark)      ( println "✔" ) ;;
+            bitcoin|btc)          ( println "₿" ) ;;
+            all)                  ( println "" ) ;;
+            *)                    ( log 2 "Invalid: $I" ) ;;
+        esac
+    done
+}
+
+# Password check against haveibeenpwned API using k-anonymity
+# There is no rate-limit so it's possible to download all the passwords
+# should a local comparison be preffered.
+function check_password {
+    local PASS EXISTS
+    PASS="$(printf '%s' "$1" | sha1sum | tr '[:lower:]' '[:upper:]' | awk '{ print $1}')"
+    local -r URL="https://api.pwnedpasswords.com/range/${PASS:0:5}"
+    local -a RESPONSE
+    while read -rs LINE; do
+    	RESPONSE+=( "$LINE" )
+    done < <(curl --silent --location "$URL")
+    printf '%s\n' "SHA1-Hash: ${PASS:0:5} ${PASS:5:40}"
+    for i in "${RESPONSE[@]}"; do
+        if [[ "${i:0:35}" == "${PASS:5:40}" ]]; then
+            printf '\e[1;33m%s\e[0m %s\n' "WARNING" "Password is known, times used: ${i:36:50}"
+            EXISTS=1
+        fi
+    done
+    [[ -z "$EXISTS" ]] && {
+      printf '\e[1;32m%s\e[0m %s\n' "OK" "Password is unknown"
+    }
 }
 
 # -----
@@ -40,49 +239,55 @@ function colour {
 # For compatibility and reducing unwanted behaviour
 # String: Arguments appended to one line
 function print {
-    printf '%s\n' "$*"
+     ( printf "%s\n" "$*" )
 }
 
 # String: Each argument on a new line
 function println {
-    printf '%s\n' "$@"
+    ( printf '%s\n' "$@" )
 }
 
 # Digit: Arguments appended to one line
 function print_digit {
     [[ ! "$*" =~ ^[[:space:][:digit:]]*$ ]] && { return 1; }
-    printf '%d' "$@"
-    printf '\n'
+    (
+        ( printf '%d' "$@" )
+        ( printf '\n' )
+    )
 }
 
 # Digit: Each argument on a new line
 function println_digit {
     [[ ! "$*" =~ [[:space:][:digit:]]* ]] && { return 1; }
-    printf '%d\n' "$@"
+    ( printf '%d\n' "$@" )
 }
 
 # Integer: Arguments appended to one line
 function print_int {
     [[ ! "$*" =~ ^[[:space:][:digit:]]*$ ]] && { return 1; }
-    printf '%i' "$@"
-    printf '\n'
+    (
+        ( printf '%i' "$@" )
+        ( printf '\n' )
+    )
 }
 
 # Integer: Each argument on a new line
 function println_int {
     [[ ! "$*" =~ ^[[:space:][:digit:]]*$ ]] && { return 1; }
-    printf '%i\n' "$@"
+    ( printf '%i\n' "$@" )
 }
 
 # Float: Arguments appended to one line
 function print_float {
-    printf '%f' "$@"
-    printf '\n'
+    (
+        ( printf '%f' "$@" )
+        ( printf '\n' ) 
+    )
 }
 
 # Float: Each argument on a new line
 function println_float {
-    printf '%f\n' "$@"
+    ( printf '%f\n' "$@" )
 }
 
 # -----
@@ -91,16 +296,16 @@ function println_float {
 
 # With timestamp
 function print_err {
-    log 2 "$(date +%c) $*"
+    ( log 2 "$(date +%c) $*" )
 }
 
 # Prints an error log to a given file with timestamp
 function err_log {
     if [[ -f "$1" ]]
     then
-        log 2 "$(date +%c) ${*:2}" >> "$1"
+        ( log 2 "$(date +%c) ${*:2}" >> "$1" )
     else
-        log 2 "$(date +%c) ${*:2}" > "$1"
+        ( log 2 "$(date +%c) ${*:2}" > "$1" )
     fi
 }
 
@@ -109,27 +314,47 @@ function err_log {
 # 1: Invalid log level
 # 2: Invalid number of arguments
 # Log level   | colour
-# -2: Debug   | CYAN='\e[1;36m'
-# -1: Info    | BLUE='\e[1;34m'
+# -2: Debug   | BLUE='\e[1;34m'
+# -1: Info    | CYAN='\e[1;36m'
 #  0: Success | GREEN='\e[1;32m'
 #  1: Warning | YELLOW='\e[1;33m'
 #  2: Error   | RED='\e[1;31m'
 function log {
     if [[ "$#" -gt 0 ]]; then
         if [[ "$1" =~ [(-2)-2] ]]; then
-            case "$1" in
-                -2) printf '\e[1;36mDEBUG\e[0m %s\n'   "${*:2}" 1>&2 ;;
-                -1) printf '\e[1;34mINFO\e[0m %s\n'    "${*:2}"      ;;
-                 0) printf '\e[1;32mSUCCESS\e[0m %s\n' "${*:2}"      ;;
-                 1) printf '\e[1;33mWARNING\e[0m %s\n' "${*:2}"      ;;
-                 2) printf '\e[1;31mERROR\e[0m %s\n'   "${*:2}" 1>&2 ;;
-            esac
-        else log 2 "Invalid log level, use: -2|-1|0|1|2"
-             return 1
+            if [[ "$#" -gt 1 ]]; then
+                case "$1" in
+                    -2) ( printf '\e[1;34m%s\e[0m %s\n' "DEBUG"   "${*:2}" 1>&2 ) ;;
+                    -1) ( printf '\e[1;36m%s\e[0m %s\n' "INFO"    "${*:2}"      ) ;;
+                     0) ( printf '\e[1;32m%s\e[0m %s\n' "OK"      "${*:2}"      ) ;;
+                     1) ( printf '\e[1;33m%s\e[0m %s\n' "WARNING" "${*:2}"      ) ;;
+                     2) ( printf '\e[1;31m%s\e[0m %s\n' "ERROR"   "${*:2}" 1>&2 ) ;;
+                esac
+            else
+                case "$1" in
+                    -2) ( printf '\e[1;34m%s\e[0m\n' "DEBUG" 1>&2 ) ;;
+                    -1) ( printf '\e[1;36m%s\e[0m\n' "INFO"       ) ;;
+                     0) ( printf '\e[1;32m%s\e[0m\n' "OK"         ) ;;
+                     1) ( printf '\e[1;33m%s\e[0m\n' "WARNING"    ) ;;
+                     2) ( printf '\e[1;31m%s\e[0m\n' "ERROR" 1>&2 ) ;;
+                esac
+            fi
+        else
+            (
+                ( log 2 "Invalid log-level, use: -2, -1, 0, 1 or 2" )
+                ( log -1 "See with 'for x in -2 -1 0 1 2; do log \"\$x\"; done'" 1>&2 )
+            ); return 1
         fi
-    else log 2 "Invalid number of arguments: $#/2+"
-         return 2 
+    else ( log 2 "Invalid number of arguments: $#/1+" ); return 2 
     fi
+}
+
+function get_status_code {
+    #( curl --silent --location "https://httpstatuses.io/${1}.json" )
+    (
+        nix-shell --packages curl jq \
+        --command 'curl --silent --location "https://httpstatuses.io/'"$1"'.json" | jq'
+    )
 }
 
 # -----
@@ -186,6 +411,7 @@ function is_equal_or_greater {
 # 0: Is executable
 # 1: Not executable
 # 2: Invalid number of arguments
+# shellcheck disable=SC2317
 function is_executable {
     [[ "$#" -ne 1 ]] && { return 2; }
     [[ -x "$1" ]]
@@ -248,7 +474,6 @@ function is_member {
     [[ "$#" -ne 2 ]] && { return 2; }
     ! is_user "$1"   && { return 1; }
     [[ "$(id --groups --name "$1")" == *"$2"* ]]
-    
 }
 
 # Checks if a given path to a file exists
@@ -328,23 +553,25 @@ function is_socket {
 # Checks what type a given variable is of:
 # alias, keyword, function, builtin, file or ''
 # Return codes
-# 0: Invalid number of arguments
 # 1: Alias
 # 2: Builtin
 # 3: File
 # 4: Function
 # 5: Keyword
 # 6: Unknown
+# 7: Invalid number of arguments
 function is_type {
-    [[ "$#" -ne 1 ]] && { return 0; }
-    case "$(type -t "$1")" in
+    [[ "$#" -ne 1 ]] && { return 7; }
+    (
+        case "$(type -t "$1")" in
            'alias') { return 1; } ;;
          'builtin') { return 2; } ;;
             'file') { return 3; } ;;
         'function') { return 4; } ;;
          'keyword') { return 5; } ;;
                  *) { return 6; } ;;
-    esac
+        esac
+    )
 }
 
 # Checks if a user exists
@@ -419,7 +646,7 @@ function has_text {
     [[ "$2" == *"$1"* ]]
 }
 
-# Checks if a command exists on the system
+# Checks if a command exists on the system using 'command'
 # Return status codes
 # 0: Command exists on the system
 # 1: Command is unavailable on the system
@@ -428,6 +655,17 @@ function has_text {
 function has_cmd {
     [[ "$#" -ne 1 ]] && { return 2; }
     [[ "$(command -v "$1" &>/dev/null; print_int "$?")" -eq 0 ]]
+}
+
+# Checks if a command or executable exists on the system using 'type'
+# Return status codes
+# 0: Command exists on the system
+# 1: Command is unavailable on the system
+# 2: Invalid argument(s)
+# $1: Command
+function is_executable {
+    [[ "$#" -ne 1 ]] && { return 2; }
+    [[ "$(type -at "$1" &>/dev/null; print_int "$?")" -eq 0 ]]
 }
 
 #function is_email_html5_standard {
@@ -441,16 +679,13 @@ function has_cmd {
 
 # Calculation using bc
 function bC {
-    (
-        printf '%s\n' "$*" | bc -l
-    )
+    ( nix-shell --packages bc --command 'printf "%s\n" '"$*"' | bc -l' )
+    # ( printf '%s\n' "$*" | bc -l )
 }
 
 # Calculation using awk
 function Calc {
-    (
-        awk "BEGIN{print $*}"
-    )
+    ( awk "BEGIN{print $*}" )
 }
 
 # Arithmetic Addition
@@ -465,7 +700,7 @@ function Addition {
     [[ "$#" -eq 2 ]] && {
         ! is_digit "$1" || ! is_digit "$2" && { return 2; }
         [[ "$1" == *[.]* || "$2" == *[.]* ]] && { return 3; }
-        print_int "$(( "$1" + "$2" ))"
+        ( print_int "$(( "$1" + "$2" ))" )
     }
 }
 
@@ -479,7 +714,7 @@ function Addition {
 function Subtraction {
     [[ "$#" -ne 2 ]] && { return 1; }
     [[ "$1" == *[.]* || "$2" == *[.]* ]] && { return 2; }
-    print_int "$(( "$1" - "$2" ))"
+    ( print_int "$(( "$1" - "$2" ))" )
 }
 
 # Arithmetic Multiplication
@@ -492,7 +727,7 @@ function Subtraction {
 function Multiplication {
     [[ "$#" -ne 2 ]] && { return 1; }
     [[ "$1" == *[.]* || "$2" == *[.]* ]] && { return 2; }
-    print_int "$(( "$1" * "$2" ))"
+    ( print_int "$(( "$1" * "$2" ))" )
 }
 
 # Arithmetic Division
@@ -507,7 +742,7 @@ function Division {
     [[ "$#" -ne 2 ]] && { return 1; }
     [[ "$1" == *[.]* || "$2" == *[.]* ]] && { return 2; }
     [[ "$1" == 0 || "$2" == 0 ]] && { return 3; }
-    print_int "$(( "$1" / "$2" ))"
+    ( print_int "$(( "$1" / "$2" ))" )
 }
 
 # Arithmetic Exponential
@@ -520,7 +755,7 @@ function Division {
 function Exponential {
     [[ "$#" -ne 2 ]] && { return 1; }
     [[ "$1" == *[.]* || "$2" == *[.]* ]] && { return 2; }
-    print_int "$(( "$1" ** "$2" ))"
+    ( print_int "$(( "$1" ** "$2" ))" )
 }
 
 # ---------
@@ -537,26 +772,26 @@ function Exponential {
 function price_diff {
     [[ "$#" != 2 ]] && { return 1; }
     [[ "$1" == 0 || "$2" == 0 ]] && { return 2; }
-    println "[ $1 ] Old" \
+    (
+        println "[ $1 ] Old" \
             "[ $2 ] New" \
             "[ $(Calc "$2"-"$1") ] Difference" \
             "[ $(Calc "$(Calc "$2"-"$1")"/"$1") ] Decimal" \
-            "[ $(Calc "$(Calc "$(Calc "$2"-"$1")"/"$1")"*100)% ] Percentile" 
+            "[ $(Calc "$(Calc "$(Calc "$2"-"$1")"/"$1")"*100)% ] Percentile"
+    )
 }
 
 # Calculates the percentile a value is of another value
 function percentile {
     [[ "$#" != 2 ]] && { return 1; }
     [[ "$1" == 0 || "$2" == 0 ]] && { return 2; }
-    println "[ $1 ] Whole" \
+    (
+        println "[ $1 ] Whole" \
             "[ $2 ] Part" \
             "[ $(Calc "$2"/"$1") ] Decimal" \
             "[ $(Calc "$(Calc "$2"/"$1")"*100)% ] Percentage"
+    )
 }
-
-# TODO A function that calculates compound interest
-# on principal with recurring contributions with varying compounding periods
-
 
 
 # ---
@@ -567,96 +802,148 @@ function percentile {
 # signs the commit using GPG key before pushing with a message
 # Return codes
 # 0: Success
-# 1: Not a Git repository in the current working directory
-# 2: Missing argument(s): Commit message
+# 1: Missing command: git
+# 2: Not a Git repository in the current working directory
+# 3: Missing argument(s): Commit message
 function Git {
-    if [[ "$#" -lt 1 ]]
-    then
+    ! has_cmd 'git' && { return 1; }
+    if [[ "$#" -lt 1 ]]; then
         log 2 "No commit message provided"
         return 2
-    elif [[ ! -e "$PWD/.git" ]]
-    then
+    elif [[ ! -e "$PWD"/.git ]]; then
         log 2 "Not a Git repository"
-        return 1
+        return 3
     else
-        local -r GPG_KEY_ID="E2AC71651803A7F7"
         (
-            local -r COMMIT_MESSAGE="࿓❯ $*"
-            local -r GIT_COMMIT_ARGS=(
-                --signoff
-                --gpg-sign="$GPG_KEY_ID"
-                --message="$COMMIT_MESSAGE"
-            )
-            git add "$PWD"
-            git commit "${GIT_COMMIT_ARGS[@]}"
-            git push
+            ( git_add )
+            ( git_commit "$*" )
+            ( git_push )
         )
     fi
 }
 
+# Updates a Git repository in the current working directory 
+# and signs the commit using GPG key.
+# Return codes
+# 0: Success
+# 1: Missing command: git
+# 2: Missing argument(s): Commit message
+# 3: Not a Git repository in the current working directory
+function local_git {
+    ! has_cmd 'git' && { return 1; }
+    if [[ "$#" -lt 1 ]]; then
+        log 2 "No commit message provided"
+        return 2
+    elif [[ ! -e "$PWD"/.git ]]; then
+        log 2 "Not a Git repository"
+        return 3
+    else
+        (
+            ( git_add )
+            ( git_commit "$*" )
+        )
+    fi
+}
+
+# Initiates a repository in the current working directory
+# Copies my license, readme & .gitignore templates over to the directory
+# Adds them to the git history & commits them with a message
+# Return codes
+# 1: Missing command: git
 function initiate_git {
     ! has_cmd 'git' && { return 1; }
     (
-        git init "$PWD"
-        [[ -f "$HOME"/Templates/Licenses/2023/MIT ]] && {
-            cp -n "$HOME"/Templates/Licenses/2023/MIT "${PWD}/LICENSE"
-        }
-        [[ -f "$HOME"/Templates/Text/README.md ]] && {
-            cp -n "$HOME"/Templates/Text/README.md "${PWD}/README.md"
-        }
-        [[ -f "$HOME"/Templates/Code/Git/.gitignore ]] && {
-            cp -n "$HOME"/Templates/Code/Git/.gitignore "${PWD}/.gitignore"
-        }
-        git_add
-        git_commit "First commit"
+        ( git_init )
+        (
+            [[ -f "$HOME"/Templates/Licenses/2023/MIT ]] && {
+                cp -n "$HOME"/Templates/Licenses/2023/MIT "$PWD"/LICENSE
+            }
+            [[ -f "$HOME"/Templates/Text/README.md ]] && {
+                cp -n "$HOME"/Templates/Text/README.md "$PWD"/README.md
+            }
+            [[ -f "$HOME"/Templates/Code/Git/.gitignore ]] && {
+                cp -n "$HOME"/Templates/Code/Git/.gitignore "$PWD"/.gitignore
+            }
+        )
+        ( git_add )
+        ( git_commit "First commit" )
     )
 }
 
+# Initiates the current working directory as a git repository
+# Return codes
+# 1: Missing command: git
 function git_init {
     ! has_cmd 'git' && { return 1; }
-    (
-        git init "$PWD"
-    )
+    ( git init "$PWD" )
 }
 
+# Adds any changed files
+# Return codes
+# 1: Missing command: git
+# 2: No git repository in the current working directory
 function git_add {
     ! has_cmd 'git' && { return 1; }
     [[ ! -e "$PWD/.git" ]] && { return 2; }
+    ( git add "$PWD" )
+}
+
+# Checks the status of a given git repository path
+# Return codes
+# 2: No git repository in the given path
+# 3: Failed to change directory to the given path
+function git_status {
+    ! has_cmd 'git' && { return 1; }
+    [[ ! -e "$1/.git" && "$1" != *".git"* ]] && { return 2; }
     (
-        git add "$PWD"
+        cd "$1" || return 3
+        git status --short --porcelain
     )
 }
 
+function git_status_current_dir {
+    ! has_cmd 'git' && { return 1; }
+    [[ ! -e "$PWD"/.git ]] && { return 2; }
+    ( git status )
+}
+
+# Pushes to a remote repository
+# Return codes
+# 1: Missing command: git
+# 2: No git repository in the current working directory
 function git_push {
     ! has_cmd 'git' && { return 1; }
-    [[ ! -e "$PWD/.git" ]] && { return 2; }
-    (
-        git push
-    )
+    [[ ! -e "$PWD"/.git ]] && { return 2; }
+    ( git push )
+}
+
+function git_pull {
+    ! has_cmd 'git' && { return 1; }
+    [[ ! -e "$PWD"/.git ]] && { return 2; }
+    ( git pull )
 }
 
 # Signs & commits a Git change
 # Return codes
-# 1: No commit message provided
-# 2: Not a Git repository in the current working directory
+# 1: Missing command: git
+# 2: No commit message provided
+# 3: Not a Git repository in the current working directory
 function git_commit {
-    if [[ "$#" -lt 1 ]]
-    then
+    ! has_cmd 'git' && { return 1; }
+    if [[ "$#" -lt 1 ]]; then
         log 2 "No commit message provided"
-        return 1
-    elif [[ ! -e "$PWD/.git" ]]
-    then
-        log 2 "Not a Git repository"
         return 2
+    elif [[ ! -e "$PWD"/.git ]]; then
+        log 2 "Not a git repository"
+        return 3
     else
         (
-            local -r GPG_KEY_ID="E2AC71651803A7F7"
-            local -r GIT_COMMIT_ARGS=(
-                --signoff
-                --gpg-sign="$GPG_KEY_ID"
-                --message="࿓❯ $*"
-            )
-            git commit "${GIT_COMMIT_ARGS[@]}"
+            local -r KEY_ID="E2AC71651803A7F7"
+            local -r MESSAGE="࿓❯ $*"
+            git commit \
+                --signoff \
+                --gpg-sign="$KEY_ID" \
+                --message="$MESSAGE"
         )
     fi
 }
@@ -666,19 +953,45 @@ function git_commit {
 # 1: Not a Git repository in the current working directory
 # 2: Invalid number of arguments
 function git_clean {
-    [[ ! -e "$PWD/.git" ]] && { return 1; }
-    [[ "$#" -ne 0 ]] && { return 2; }
-    (
-        git gc "$PWD"
-    )
+    ! has_cmd 'git' && { return 1; }
+    [[ ! -e "$PWD"/.git ]] && { return 2; }
+    [[ "$#" -ne 0 ]] && { return 3; }
+    ( git gc )
 }
 
+# Adds a remote repository to the git repository in the current working directory
+# Return codes
+# 1: Missing command: git
+# 2: Invalid number of arguments
+# 3: No git repository in the current working directory
 function git_remote_add {
     ! has_cmd 'git' && { return 1; }
     [[ "$#" -ne 2 ]] && { return 2; }
-    (
-        git remote add -f "$1" "$2"
-    )
+    [[ ! -e "$PWD"/.git ]] && { return 3; }
+    ( git remote add -f "$1" "$2" )
+}
+
+# Return codes
+# 1: Missing command: git
+# 2: Invalid number of arguments
+# 3: No git repository found
+function git_last_commit {
+    ! has_cmd 'git' && { return 1; }
+    [[ "$#" -ne 1 ]] && { return 2; }
+    [[ "$1" != *".git"* && ! -e "${1}/.git" ]] && { return 3; }
+    if [[ -e "${1}/.git" ]]
+    then
+        ( git --git-dir "${1}/.git" log -1 --oneline )
+    else
+        ( git --git-dir "$1" log -1 --oneline )
+    fi
+}
+
+function git_last_commit_current_directory {
+    ! has_cmd 'git' && { return 1; }
+    [[ "$#" -ne 0 ]] && { return 2; }
+    [[ ! -e "$PWD"/.git ]] && { return 3; }
+    ( git log -1 --oneline )
 }
 
 # -----------
@@ -689,30 +1002,18 @@ function git_remote_add {
 # $2: Repository
 # $3: Branch
 function subtree_add {
-    ! has_cmd 'git' && { return 1; }
-    if [[ "$#" -eq 3 ]]
-    then
-        (
-            git subtree add --prefix="$1" "$2" "$3"
-        )
-    else
-        return 2
-    fi
+    [[ "$#" -eq 3 ]] && { return 1; }
+    ! has_cmd 'git' && { return 2; }
+    ( git subtree add --prefix="$1" "$2" "$3" )
 }
 
 # $1: Path
 # $2: Repository
 # $3: Branch
 function subtree_add_squash {
-    ! has_cmd 'git' && { return 1; }
-    if [[ "$#" -eq 3 ]]
-    then
-        (
-            git subtree add --prefix="$1" "$2" "$3" --squash
-        )
-    else
-        return 2
-    fi
+    [[ "$#" -eq 3 ]] && { return 1; }
+    ! has_cmd 'git' && { return 2; }
+    ( git subtree add --prefix="$1" "$2" "$3" --squash )
 }
 
 # 
@@ -723,15 +1024,10 @@ function subtree_merge {
     ! has_cmd 'git' && { return 1; }
     if [[ "$#" -eq 2 ]]
     then
-        (
-            git subtree merge --prefix="$1" "$2"
-        )
+        ( git subtree merge --prefix="$1" "$2" )
     elif [[ "$#" -gt 2 ]]
     then
-        (
-            git subtree merge --prefix="$1" "$2" \
-                --message="࿓❯ ${*:3}"
-        )
+        ( git subtree merge --prefix="$1" "$2" --message="࿓❯ ${*:3}" )
     else
         return 2
     fi
@@ -745,15 +1041,10 @@ function subtree_pull {
     ! has_cmd 'git' && { return 1; }
     if [[ "$#" -eq 3 ]]
     then
-        (
-            git subtree pull --prefix="$1" "$2" "$3"
-        )
+        ( git subtree pull --prefix="$1" "$2" "$3" )
     elif [[ "$#" -gt 3 ]]
     then
-        (
-            git subtree pull --prefix="$1" "$2" "$3" \
-                --message="࿓❯ ${*:4}"
-        )
+        ( git subtree pull --prefix="$1" "$2" "$3" --message="࿓❯ ${*:4}" )
     else
         return 2
     fi
@@ -789,73 +1080,9 @@ function subtree_pull_squash {
 # $2: Repository
 function subtree_split {
     ! has_cmd 'git' && { return 1; }
-    (
-        git subtree split --prefix="$1" "$2"
-    )
+    ( git subtree split --prefix="$1" "$2" )
 }
 
-# WiP ------------------------ WiP
-# function git_subtree_pull {
-#     ! has_cmd 'git' && { return 1; }
-#     local OPTIND p r b m OPTION PTH REPO BRANCH MESSAGE
-#     while getopts 'p:r:b:m:h:' OPTION
-#     do
-#         case "$OPTION" in
-#             p)
-#                 PTH="${OPTARG}"
-#             ;;
-#             r)
-#                 REPO="${OPTARG}"
-#             ;;
-#             b)
-#                 BRANCH="${OPTARG}"
-#             ;;
-#             m)
-#                 MESSAGE="${OPTARG}"
-#             ;;
-#             h)
-#                 printf '%s\n' "Usage:  [-p|-r|-b|-m|-h]"
-#                 printf '\t%s\n' "[-p]: Path to subtree directory (*)" \
-#                                 "[-r]: Repository name (*)" \
-#                                 "[-b]: Branch name (*)" \
-#                                 "[-m]: Merge message" \
-#                                 "[-h]: Help - Shows this message" \
-#                                 "* = Required"
-#                 return 0
-#             ;;
-#             :)
-#                 return 1
-#             ;;
-#             ?)
-#                 return 1
-#             ;;
-#         esac
-#     done
-#     if [[ -z "$PTH" ]] || [[ -z "$REPO" ]] || [[ -z "$BRANCH" ]]
-#     then
-#         printf '%s\n' "Missing argument"
-#         return 1
-#     fi
-#     if [[ -n "$MESSAGE" ]]
-#     then
-#         (
-#             git subtree pull \
-#                 --squash \
-#                 --prefix="$PTH" \
-#                 git@github.com:ZendaiOwl/"$REPO" "$BRANCH" \
-#                 --message="࿓❯ $MESSAGE"
-#         )
-#     else
-#         (
-#             git subtree pull \
-#                 --squash \
-#                 --prefix="$PTH" \
-#                 git@github.com:ZendaiOwl/"$REPO" "$BRANCH"
-#         )
-#     fi
-#     shift "$(($OPTIND -1))"
-# }
-# WiP ------------------ WiP
 
 # ----------------------
 # GitHub - Git & Subtree
@@ -865,15 +1092,10 @@ function github_subtree_add {
     ! has_cmd 'git' && { return 1; }
     if [[ "$#" -eq 2 ]]
     then
-        (
-            git subtree add --prefix="$1" git@github.com:ZendaiOwl/"$1" "$2"
-        )
+        ( git subtree add --prefix="$1" git@github.com:ZendaiOwl/"$1" "$2" )
     elif [[ "$#" -eq 3 ]]
     then
-        (
-            git subtree add --prefix="$1" git@github.com:ZendaiOwl/"$2" "$3"
-        )
-    
+        ( git subtree add --prefix="$1" git@github.com:ZendaiOwl/"$2" "$3" )
     else
         return 2
     fi
@@ -883,14 +1105,10 @@ function github_subtree_pull {
     ! has_cmd 'git' && { return 1; }
     if [[ "$#" -eq 2 ]]
     then
-        (
-            git subtree pull --prefix="$1" git@github.com:ZendaiOwl/"$1" "$2"
-        )
+        ( git subtree pull --prefix="$1" git@github.com:ZendaiOwl/"$1" "$2" )
     elif [[ "$#" -eq 3 ]]
     then
-        (
-            git subtree pull --prefix="$1" git@github.com:ZendaiOwl/"$2" "$3"
-        )
+        ( git subtree pull --prefix="$1" git@github.com:ZendaiOwl/"$2" "$3" )
     elif [[ "$#" -gt 3 ]]
     then
         (
@@ -907,14 +1125,10 @@ function github_subtree_pull_squash {
     ! has_cmd 'git' && { return 1; }
     if [[ "$#" -eq 2 ]]
     then
-        (
-            git subtree pull --prefix="$1" git@github.com:ZendaiOwl/"$1" "$2" --squash
-        )
+        ( git subtree pull --prefix="$1" git@github.com:ZendaiOwl/"$1" "$2" --squash )
     elif [[ "$#" -eq 3 ]]
     then
-        (
-            git subtree pull --prefix="$1" git@github.com:ZendaiOwl/"$2" "$3" --squash
-        )
+        ( git subtree pull --prefix="$1" git@github.com:ZendaiOwl/"$2" "$3" --squash )
     elif [[ "$#" -gt 3 ]]
     then
         (
@@ -932,15 +1146,10 @@ function github_subtree_push {
     ! has_cmd 'git' && { return 1; }
     if [[ "$#" -eq 2 ]]
     then
-        (
-            git subtree push --prefix="$1" git@github.com:ZendaiOwl/"$1" "$2"
-        )
+        ( git subtree push --prefix="$1" git@github.com:ZendaiOwl/"$1" "$2" )
     elif [[ "$#" -eq 3 ]]
     then
-        (
-            git subtree push --prefix="$1" git@github.com:ZendaiOwl/"$2" "$3"
-        )
-    
+        ( git subtree push --prefix="$1" git@github.com:ZendaiOwl/"$2" "$3" )
     else
         return 2
     fi
@@ -948,9 +1157,7 @@ function github_subtree_push {
 
 function github_remote_add {
     ! has_cmd 'git' && { return 1; }
-    (
-        git remote add -f "$1" git@github.com:ZendaiOwl/"$1".git
-    )
+    ( git remote add -f "$1" git@github.com:ZendaiOwl/"$1".git )
 }
 
 # -------
@@ -961,17 +1168,20 @@ function github_remote_add {
 # Return codes
 # 1: No such PATH to directory exists
 # 2: Invalid number of arguments
-# 3: Missing command: tar
 function create_archive {
-    ! has_cmd 'tar' && { log 2 "Missing command: tar"; return 3; }
     [[ "$#" -ne 2 ]] && { return 2; }
     [[ ! -e "$2" ]] && { return 1; }
     local -r ARCHIVE_FILE="$1"
     local -r DIRECTORY="$2"
-    tar --verbose \
-        --create \
-        --use-compress-program="xz --threads=$(nproc)" \
-        --file="$ARCHIVE_FILE".tar.xz "$DIRECTORY"
+    (
+        nix-shell -p gnutar xz --command '
+            tar --verbose \
+                --create \
+                --use-compress-program="xz --threads='"$(nproc)"'" \
+                --file='"$ARCHIVE_FILE"'.tar.xz '"$DIRECTORY"'
+        ';
+    )
+    
 }
 
 # Sorting function
@@ -979,17 +1189,19 @@ function create_archive {
 # 1: Invalid number of arguments
 function sorting {
     [[ "$#" -eq 0 ]] && { return 1; }
-    printf '%s\n' "$@" | sort --dictionary-order
+    ( printf '%s\n' "$@" | sort --dictionary-order )
 }
 
 # Return codes
 # 1: Invalid number of arguments
 function sed_environment {
     [[ "$#" -ne 0 ]] && { return 1; }
-    set | sed -n '1,/.* () .*/ {
-        /.* ().*/n
-        p
-    }'
+    (
+        set | sed -n '1,/.* () .*/ {
+            /.* ().*/n
+            p
+        }'
+    )
 }
 
 # Shows the current environment
@@ -1004,11 +1216,13 @@ function show_environment {
     then printenv
     elif has_cmd 'sed'
     then
-        set | sed -n '1,/ () / {
-            / () /n
-            p
-        }'
-    else { log 2 "Missing command: env, printenv & sed"; return 2; }
+        (
+            set | sed -n '1,/ () / {
+                / () /n
+                p
+            }'
+        )
+    else ( log 2 "Missing command: env, printenv or sed" ); return 2
     fi
 }
 
@@ -1023,40 +1237,51 @@ function clean-up_bash-history {
     done
 }
 
+
 # Get system information
 # Return codes
-# 1: Missing command: inxi
-# 2: Invalid number of arguments
+# 1: Invalid number of arguments
 function system_info {
-    [[ "$#" -ne 0 ]] && { log 2 "Invalid number of arguments: $#/0"; return 2; }
-    ! has_cmd 'inxi' && { log 2 "Missing command: inxi"; return 1; }
-    inxi -Fxzr
+    [[ "$#" -ne 0 ]] && { log 2 "Invalid number of arguments: $#/0"; return 1; }
+    ( nix-shell --packages 'inxi' --command 'inxi -Fxzr' )
 }
+
+# Gets the device ID for the VGA compatible controller
+function gpu_id {
+    [[ "$#" -ne 0 ]] && { log 2 "Invalid number of arguments: $#/0"; return 1; }
+    ( nix-shell -p pciutils --run "lspci -nn | grep VGA" )
+}
+
+# nix-shell -p pciutils --run "lspci -nn | grep VGA"
+# 00:02.0 VGA compatible controller [0300]: Intel Corporation HD Graphics 610 [8086:5906] (rev 02)
+
 
 # Get filesystem information
 # Return codes
-# 1: Missing command: inxi
-# 2: Invalid number of arguments
+# 1: Invalid number of arguments
 function filesystem_info {
-    [[ "$#" -ne 0 ]] && { log 2 "Invalid number of arguments: $#/0"; return 2; }
-    ! has_cmd 'df' && { log 2 "Missing command: df"; return 1; }
-    df --print-type --human-readable
+    [[ "$#" -ne 0 ]] && { ( log 2 "Invalid number of arguments: $#/0" ); return 1; }
+    ( df --print-type --human-readable )
 }
 
 # Records the output of a command to a file.
 # Return codes
 # 1: Missing argument: Command to record
 function record_command {
-    [[ "$#" -eq 1 ]] && { log 2 "Invalid number of arguments: $#/1"; return 1; }
+    [[ "$#" -eq 1 ]] && { ( log 2 "Invalid number of arguments: $#/1" ); return 1; }
     local -r LOGFILE='log.txt'
     if [[ -f "$LOGFILE" ]]
-    then 
-        log -1 "$LOGFILE exists, appending to existing file"
-        echo "Appending new output from $1" | tee -a "$LOGFILE"
-        bash -c "$1" | tee -a "$LOGFILE"
+    then
+    (
+        ( log -1 "$LOGFILE exists, appending to existing file" )
+        ( echo "Appending new output from $1" | tee -a "$LOGFILE" )
+        ( bash -c "$1" | tee -a "$LOGFILE" )
+    )
     else 
-        touch "$LOGFILE"; bash -c "$1" | tee -a "$LOGFILE"
-        log 0 "Command output recorded to $LOGFILE"
+    (
+        ( touch "$LOGFILE"; bash -c "$1" | tee -a "$LOGFILE" )
+        ( log 0 "Command output recorded to $LOGFILE" )
+    )
     fi
 }
 
@@ -1067,8 +1292,8 @@ function record_command {
 # 2: Missing argument: process
 # 3: Missing command: pgrep
 function find_process {
-    [[ "$#" -ne 1 ]]  && { log 2 "Invalid number of arguments: $#/1"; return 2; }
-    ! has_cmd 'pgrep' && { log 2 "Missing command: pgrep"; return 3; }
+    [[ "$#" -ne 1 ]]  && { ( log 2 "Invalid number of arguments: $#/1" ); return 2; }
+    ! has_cmd 'pgrep' && { ( log 2 "Missing command: pgrep" ); return 3; }
     [[ "$(pgrep "$1" &>/dev/null; print_int "$?")" -eq 0 ]]
 }
 
@@ -1079,8 +1304,8 @@ function find_process {
 # 2: Missing argument: process
 # 3: Missing command: pgrep
 function find_process_fullname {
-    [[ "$#" -ne 1 ]]  && { log 2 "Invalid number of arguments: $#/1"; return 2; }
-    ! has_cmd 'pgrep' && { log 2 "Missing command: pgrep"; return 3; }
+    [[ "$#" -ne 1 ]]  && { ( log 2 "Invalid number of arguments: $#/1" ); return 2; }
+    ! has_cmd 'pgrep' && { ( log 2 "Missing command: pgrep" ); return 3; }
     [[ "$(pgrep --full "$1" &>/dev/null; print_int "$?")" -eq 0 ]]
 }
 
@@ -1088,49 +1313,51 @@ function find_process_fullname {
 # Return codes
 # 1: Missing command: ps
 function get_processes {
-    ! has_cmd 'ps' && { log 2 "Missing command: ps"; return 1; }
-    ps -A
+    ! has_cmd 'ps' && { ( log 2 "Missing command: ps" ); return 1; }
+    ( ps -A )
 }
 
 # Checks running processes
 function get_running_processes {
-    ! has_cmd 'jobs' && { log 2 "Missing command: jobs"; return 1; }
-    jobs -r
+    ! has_cmd 'jobs' && { ( log 2 "Missing command: jobs" ); return 1; }
+    ( jobs -r )
 }
 
 # Gets the current time in UNIX & regular time (human-readable format)
 # Return codes
 # 1: Error: Too many arguments provided
 function get_time {
-    [[ "$#" -gt 0 ]] && { log 2 "Invalid number of arguments: $#/0"; return 1; }
-    printf '%s\n' "Regular: $(date -d @"$(date +%s)")" \
+    [[ "$#" -gt 0 ]] && { ( log 2 "Invalid number of arguments: $#/0" ); return 1; }
+    (
+        printf '%s\n' "Regular: $(date -d @"$(date +%s)")" \
                   "Unix: $(date +%s)" \
                   "Date by locale: $(date +%x)" \
                   "Time by locale: $(date +%X)"
+    )
 }
 
 # Converts UNIX timestamps to regular human-readable timestamp
 # Return codes
 # 1: Missing argument: UNIX Timestamp
 function unix_to_regular_time {
-    [[ "$#" -ne 1 ]] && { log 2 "Invalid number of arguments: $#/1"; return 1; }
-    println "$(date -d @"$1")"
+    [[ "$#" -ne 1 ]] && { ( log 2 "Invalid number of arguments: $#/1" ); return 1; }
+    ( println "$(date -d @"$1")" )
 }
 
 # Gets the time by locale's definition
 # Return codes
 # 1: Invalid number of arguments
 function get_locale_time {
-    [[ "$#" -gt 0 ]] && { log 2 "Invalid number of arguments: $#/0"; return 1; }
-    date +%X
+    [[ "$#" -gt 0 ]] && { ( log 2 "Invalid number of arguments: $#/0" ); return 1; }
+    ( date +%X )
 }
 
 # Gets the date by locale's definition
 # Return codes
 # 1: Invalid number of arguments
 function get_locale_date {
-    [[ "$#" -gt 0 ]] && { log 2 "Invalid number of arguments: $#/0"; return 1; }
-    date +%x
+    [[ "$#" -gt 0 ]] && { ( log 2 "Invalid number of arguments: $#/0" ); return 1; }
+    ( date +%x )
 }
 
 # Uses $(<) to read a file to STDOUT, supposedly faster than cat.
@@ -1140,19 +1367,19 @@ function get_locale_date {
 # 2: Invalid number of arguments
 # 2: Missing argument: File
 function read_file {
-    [[ "$#" -eq 0 ]] && { log 2 "Mising argument: File"; return 3; }
-    [[ "$#" -gt 1 ]] && { log 2 "Invalid number of arguments: $#/1"; return 2; }
-    [[ ! -f "$1" ]]  && { log 2 "Not a file: $1"; return 1; }
-    println "$(<"$1")"
+    [[ "$#" -eq 0 ]] && { ( log 2 "Mising argument: File" ); return 3; }
+    [[ "$#" -gt 1 ]] && { ( log 2 "Invalid number of arguments: $#/1" ); return 2; }
+    [[ ! -f "$1" ]]  && { ( log 2 "Not a file: $1" ); return 1; }
+    ( println "$(<"$1")" )
 }
 
 # Shows the files in the current working directory's directory & all its sub-directories excluding hidden directories.
 # Return codes
 # 1: Error: Arguments provided when none required
 function show_directory_files {
-    [[ "$#" -gt 0 ]] && { log 2 "Invalid number of arguments: $#/0"; return 1; }
+    [[ "$#" -gt 0 ]] && { ( log 2 "Invalid number of arguments: $#/0" ); return 1; }
     local -r ARGS=(--recursive --files-with-matches --exclude-dir=".*")
-    grep "${ARGS[@]}" .
+    ( grep "${ARGS[@]}" . )
 }
 
 # Prints a function() to STDOUT
@@ -1162,7 +1389,7 @@ function show_directory_files {
 function show_function {
     [[ "$#" -ne 1 ]] && { return 2; }
     ! is_function "$1" && { return 1; }
-    local -f "$1"
+    ( local -f "$1" )
 }
 
 # Show functions and their comments from a script file using 
@@ -1175,17 +1402,17 @@ function grep_functions {
     ! has_cmd 'grep' && { return 1; }
     [[ "$#" -ne 1 ]] && { return 2; }
     [[ ! -f "$1" ]] && { return 3; }
-    grep -e '[#.*function.*.*} ]' "$1"
+    ( grep -e '[#.*function.*.*} ]' "$1" )
 }
 
 # Counts the number of files recursively from current working directory
 # Return codes
 # 1: Error: Arguments provided when none required
 function count_directory_files {
-    [[ "$#" -ne 0 ]] && { log 2 "Invalid number of arguments: $#/0"; return 1; }
+    [[ "$#" -ne 0 ]] && { ( log 2 "Invalid number of arguments: $#/0" ); return 1; }
     local -r ARGS=(--recursive --files-with-matches --exclude-dir=".*")
     # shellcheck disable=SC2126
-    grep "${ARGS[@]}" . | wc --lines
+    ( grep "${ARGS[@]}" . | wc --lines )
 }
 
 # Use sed to count the lines of a file
@@ -1195,7 +1422,7 @@ function count_directory_files {
 function count_lines {
     [[ "$#" -ne 1 ]] && { return 2; }
     [[ ! -f "$1" ]]  && { return 1; }
-    sed -n '$=' "$1"
+    ( sed -n '$=' "$1" )
 }
 
 # Gets the name at the end of a path string after stripping the path
@@ -1203,41 +1430,41 @@ function count_lines {
 # 1: No such path exists
 # 2: Missing argument: Path
 function get_path_name {
-    [[ "$#" -ne 1 ]] && { log 2 "Invalid number of arguments: $#/1"; return 2; }
-    [[ ! -e "$1" ]]  && { log 2 "No such path: $1"; return 1; }
-    println "${1##*/}"
+    [[ "$#" -ne 1 ]] && { ( log 2 "Invalid number of arguments: $#/1" ); return 2; }
+    [[ ! -e "$1" ]]  && { ( log 2 "No such path: $1" ); return 1; }
+    ( println "${1##*/}" )
 }
 
 # Converts a String to uppercase
 # Return codes
 # 1: Missing argument: String
 function upper_case {
-    [[ "$#" -eq 0 ]] && { log 2 "Requires: $#/1+ [ String(s) ]"; return 1; }
-    println "${*^^}"
+    [[ "$#" -eq 0 ]] && { ( log 2 "Requires: $#/1+ [ String(s) ]" ); return 1; }
+    ( println "${*^^}" )
 }
 
 # Converts the first letter of a String to upper case
 # Return codes
 # 1: Missing argument: String
 function upper_first_letter {
-    [[ "$#" -eq 0 ]] && { log 2 "Requires: $#/1+ [ String(s) ]"; return 1; }
-    println "${*^}"
+    [[ "$#" -eq 0 ]] && { ( log 2 "Requires: $#/1+ [ String(s) ]" ); return 1; }
+    ( println "${*^}" )
 }
 
 # Converts a String to lower case
 # Return codes
 # 1: Missing argument: String
 function lower_case {
-    [[ "$#" -eq 0 ]] && { log 2 "Requires: $#/1+ [ String(s) ]"; return 1; }
-    println "${*,,}"
+    [[ "$#" -eq 0 ]] && { ( log 2 "Requires: $#/1+ [ String(s) ]" ); return 1; }
+    ( println "${*,,}" )
 }
 
 # Converts a String to lower case
 # Return codes
 # 1: Missing argument: String
 function lower_first_letter {
-    [[ "$#" -eq 0 ]] && { log 2 "Requires: $#/1+ [ String(s) ]"; return 1; }
-    println "${*,}"
+    [[ "$#" -eq 0 ]] && { ( log 2 "Requires: $#/1+ [ String(s) ]" ); return 1; }
+    ( println "${*,}" )
 }
 
 # Search for a pattern recursively in files of current directory and its sub-directories
@@ -1245,22 +1472,22 @@ function lower_first_letter {
 # 1: Missing argument: String
 # 2: Missing command: grep
 function search {
-    [[ "$#" -eq 0 ]] && { log 2 "Requires: $#/1+ [ Pattern(s) ]"; return 1; }
-    ! has_cmd 'grep' && { log 2 "Missing command: grep"; return 2; }
+    [[ "$#" -eq 0 ]] && { ( log 2 "Requires: $#/1+ [ Pattern(s) ]" ); return 1; }
+    ! has_cmd 'grep' && { ( log 2 "Missing command: grep" ); return 2; }
     local -r ARGS=(--recursive --exclude-dir=".*")
-    grep "${ARGS[@]}" "$*" 2>/dev/null
+    ( grep "${ARGS[@]}" "$*" 2>/dev/null )
 }
 
 # Search for pattern in a specific file
 # Return codes
 # 1: Not a file
-# 2: Missing arguments: String, File
+# 2: Missing arguments: String/Pattern, File
 # 3: Missing command: grep
 function find_text {
-    ! has_cmd 'grep' && { log 2 "Missing command: grep"; return 3; }
-    [[ "$#" -ne 2 ]] && { log 2 "Requires: [ Pattern to find ] [ File to search ]"; return 2; }
-    [[ ! -f "$2" ]]  && { log 2 "Not a file: $2"; return 1; }
-    grep "$1" "$2"
+    ! has_cmd 'grep' && { ( log 2 "Missing command: grep" ); return 3; }
+    [[ "$#" -ne 2 ]] && { ( log 2 "Invalid number of arguments" ); return 2; }
+    [[ ! -f "$2" ]]  && { ( log 2 "Not a file: $2" ); return 1; }
+    ( grep "$1" "$2" )
 }
 
 # Search for pattern in a specific file
@@ -1278,9 +1505,9 @@ function find_pattern {
 # Search for files with pattern(s) recursively
 # Return codes
 # 1: Missing argument: String
-# 2: Command not found: grep
+# 2: Missing command: grep
 function get_files_with_text {
-    ! has_cmd 'grep' && { log 2 "Command not found: grep"; return 2; }
+    ! has_cmd 'grep' && { log 2 "Missing command: grep"; return 2; }
     [[ "$#" -eq 0 ]] && { log 2 "Requires: [ Pattern(s) to locate ]"; return 1; }
     local -r ARGS=(--recursive --files-with-matches --exclude-dir=".*")
     grep "${ARGS[@]}" "$*" 2>/dev/null
@@ -1466,13 +1693,12 @@ function delete_range {
     sed -i ''"$1"','"$2"'d' "$3"
 }
 
-# Returns the length or number of variables passed to function
+# Returns the number of arguments passed
 # Return codes
 # 1: Invalid nr of arguments
-function get_length {
-    [[ "$#" -lt 1 ]] && { log 2 "Invalid args: $#/1"; return 1; }
-    local -r ARR=("$@")
-    printf '%d\n' "${#ARR[@]}"
+function arguments_nr {
+    [[ "$#" -lt 1 ]] && { log 2 "Invalid args: $#/1+"; return 1; }
+    printf '%d\n' "${#@}"
 }
 
 # Returns the length of a string
@@ -1755,7 +1981,7 @@ function get_url {
     
 }
 
-# Loops through HTML elements that are fed into the function through a pipe via STDIN
+# Loops through HTML elements that are fed through a pipe via STDIN
 function html_next {
     local IFS='>'
     # shellcheck disable=SC2034
@@ -1769,13 +1995,27 @@ function html_next {
 # Fetches the current price of Bitcoin in Euro € from Binance
 # Return codes
 # 1: Missing command: curl
+function get_crypto_price {
+    ! has_cmd 'curl' && { log 2 "Missing command: curl"; return 1; }
+    [[ "$#" -ne 1 ]] && { log 2 "Invalid number of arguments: $#/1"; return 2; }
+    local -r URL="https://api.binance.com/api/v3/ticker/price?symbol=${1^^}"
+    local -r ARGS=(--silent --location)
+    if ! has_cmd 'jq'
+    then curl "${ARGS[@]}" "$URL"
+    else curl "${ARGS[@]}" "$URL" | jq
+    fi
+}
+
+# Fetches the current price of Bitcoin in Euro € from Binance
+# Return codes
+# 1: Missing command: curl
 function get_btc {
     ! has_cmd 'curl' && { log 2 "Missing command: curl"; return 1; }
     local -r URL="https://api.binance.com/api/v3/ticker/price?symbol=BTCEUR" \
                ARGS=(--silent --location)
     if ! has_cmd 'jq'
     then curl "${ARGS[@]}" "$URL"
-    else curl "${ARGS[@]}" "$URL" | jq '.'
+    else curl "${ARGS[@]}" "$URL" | jq
     fi
 }
 
@@ -2020,86 +2260,6 @@ function make_executable_recursive {
     elif has_cmd 'sudo'
     then sudo chmod --recursive +x "$1" || { return 1; }
     else return 2
-    fi
-}
-
-# ------
-# Docker
-# ------
-# Template
-# Return codes
-# 0: 
-# 1:
-# 2:
-# 3:
-
-
-# Get the images names, tag & repository
-# Return codes
-# 1: Command not found: docker
-# 2: Command not found: awk
-# 3: Invalid number of arguments
-function get_images {
-    ! has_cmd 'docker' && { return 2; }
-    ! has_cmd 'sed'    && { return 1; }
-    docker images | sed -n 's|/*||p' | tail -n +2
-}
-
-# Get the Container ID & Name of running containers
-# Return codes
-# 1: Command not found: docker
-# 2: Command not found: awk
-# 3: Invalid number of arguments
-function get_containers {
-    ! has_cmd 'docker' && { return 2; }
-    ! has_cmd 'sed'    && { return 1; }
-    docker ps | sed -n 's|/*||p' | tail -n +2
-}
-
-# Get the Container ID of all running containers
-# Return codes
-# 1: Command not found: docker
-# 2: Command not found: awk
-# 3: Invalid number of arguments
-function container_id_all {
-    not_equal "$#" 0   && { return 3; }
-    ! has_cmd 'awk'    && { return 2; }
-    ! has_cmd 'docker' && { return 1; }
-    docker ps | awk '{print $1}' | tail -n +2
-}
-
-# Gets the latest Container ID of the running containers
-# Return codes
-# 1: Command not found: awk
-# 2: Command not found: docker
-# 3: Invalid number of arguments
-function container_id_latest {
-    not_equal "$#" 0   && { return 3; }
-    ! has_cmd 'docker' && { return 2; }
-    ! has_cmd 'awk'    && { return 1; }
-    docker ps | awk '{print $1}' | tail -n +2 | head -1
-}
-
-# Checks if the executing user is a member of the docker group
-# 0: Is a member of group: docker
-# 1: Not a member of group: docker
-# 2: Invalid number of arguments
-# shellcheck disable=SC2120
-function in_docker_group {
-    not_equal "$#" 0 && { return 2; }
-    if is_member "$EUID" 'docker'
-    then return 0
-    else return 1
-    fi
-}
-
-# Removes the latest Docker image
-function remove_latest_image {
-    ! has_cmd 'docker' && { return 2; }
-    ! has_cmd 'awk'    && { return 1; }
-    if is_root || in_docker_group
-    then docker rmi "$(docker images | awk '{print $3}' | tail -n +2 | head -1)"
-    else sudo docker rmi "$(sudo docker images | awk '{print $3}' | tail -n +2 | head -1)"
     fi
 }
 
@@ -2421,54 +2581,6 @@ function json_new {
             return 3
         ;;
     esac
-}
-
-# WiP - Work-in-Progress
-# Intended to build a JSON object using variables and argument options, incomplete
-function json_create_object {
-    local ARGS=("$@") KEYS=() VALUES=() OBJECT DIGIT
-    for (( X = 0; X < "${#@}"; X += 1 ))
-    do
-        case "${ARGS[$X]}" in
-            -k|--key)
-                DIGIT=$(( "$X" + 1 ))
-                KEYS+=("${ARGS[$DIGIT]}")
-            ;;
-            -v|--value)
-                DIGIT=$(( "$X" + 1 ))
-                VALUES+=("${ARGS[$DIGIT]}")
-            ;;
-            *)
-                if is_json_object "${ARGS[$X]}"
-                then
-                    VALUES+=("${ARGS[$X]}")
-                else
-                    continue
-                fi
-            ;;
-        esac
-    done
-    [[ "${#VALUES[@]}" -ne "${#KEYS[@]}" ]] && {
-        print "Keys and values don't match"
-    }
-    print "Keys: ${KEYS[*]}"
-    print "Values: ${VALUES[*]}"
-    for (( Y = 0; Y < "${#KEYS[@]}"; Y += 1 ))
-    do
-        if [[ "$Y" -eq $(("${#KEYS[@]}" - 1)) ]]
-        then
-            if is_json "${VALUES[$Y]}"
-            then
-                OBJECT+='{"'"${KEYS[$Y]}"'":'"${VALUES[$Y]}"'}'
-            else
-                OBJECT+='{"'"${KEYS[$Y]}"'":"'"${VALUES[$Y]}"'"}'
-            fi
-        else
-            OBJECT+='{"'"${KEYS[$Y]}"'":"'"${VALUES[$Y]}"'"},'
-        fi
-    done
-    json_new "[$OBJECT]"
-    #json_add "[]" "[$OBJECT]"
 }
 
 # Creates a JSON array object from given argument variables
@@ -3116,3 +3228,89 @@ function dictionary {
     local -r base_url="https://api.dictionaryapi.dev/api/v2/entries/en/$1"
     curl --silent --location "$base_url" | jq
 }
+
+
+# ------
+# Docker
+# ------
+# Template
+# Return codes
+# 0: 
+# 1:
+# 2:
+# 3:
+
+
+# Get the images names, tag & repository
+# Return codes
+# 1: Missing command: curl
+# 2: Missing command: jq
+# 3: Invalid number of arguments
+function get_images {
+    ! has_cmd 'curl' && { return 1; }
+    ! has_cmd 'jq' && { return 2; }
+    curl --silent --unix-socket /var/run/docker.sock \
+         -H "Content-Type: application/json" localhost/v1.42/images/json \
+         | jq -r '.[] as $in |  
+         $in."Id" | 
+         split("[:]"; "")[1] | 
+         split("") | .[0:12] | 
+         join("") as $i |
+         $in."Names"[] | 
+         split("[/]"; "") as $f | 
+         $f[1] + "/" + $f[2] + " " + $i'
+}
+
+# Get the Container ID & Name of running containers
+# Return codes
+# 1: Missing command: curl
+# 2: Missing command: awk
+# 3: Invalid number of arguments
+function get_containers {
+    ! has_cmd 'curl' && { return 1; }
+    docker ps | sed -n 's|/*||p' | tail -n +2
+}
+
+# Get the Container ID of all running containers
+# Return codes
+# 1: Missing command: curl
+# 2: Invalid number of arguments
+function container_id_all {
+    ! has_cmd 'curl' && { return 1; }
+    not_equal "$#" 0   && { return 2; }
+    docker ps | awk '{print $1}' | tail -n +2
+}
+
+# Gets the latest Container ID of the running containers
+# Return codes
+# 1: Missing command: curl
+# 2: Invalid number of arguments
+function container_id_latest {
+    ! has_cmd 'curl' && { return 1; }
+    not_equal "$#" 0   && { return 2; }
+    docker ps | awk '{print $1}' | tail -n +2 | head -1
+}
+
+# Checks if the executing user is a member of the docker group
+# 0: Is a member of group: docker
+# 1: Not a member of group: docker
+# 2: Invalid number of arguments
+# shellcheck disable=SC2120
+function in_docker_group {
+    not_equal "$#" 0 && { return 2; }
+    if is_member "$EUID" 'docker'
+    then return 0
+    else return 1
+    fi
+}
+
+# Removes the latest Docker image
+function remove_latest_image {
+    ! has_cmd 'docker' && { return 2; }
+    ! has_cmd 'awk'    && { return 1; }
+    if is_root || in_docker_group
+    then docker rmi "$(docker images | awk '{print $3}' | tail -n +2 | head -1)"
+    else sudo docker rmi "$(sudo docker images | awk '{print $3}' | tail -n +2 | head -1)"
+    fi
+}
+
