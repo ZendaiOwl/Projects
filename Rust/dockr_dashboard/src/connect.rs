@@ -733,7 +733,11 @@ impl Connect {
         })
     }
 
-    pub async fn start_exec(&mut self, id: &str, req_body: Json) -> Json {
+    pub async fn start_exec(
+        &mut self, 
+        id: &str, 
+        req_body: Json
+    ) -> Json {
         let req = ApiReq::create_request(
             "POST",
             Exec::Start(id).to_url(),
@@ -768,7 +772,12 @@ impl Connect {
         }
     }
 
-    pub async fn resize_exec(&mut self, id: &str, height: &str, width: &str) -> Json {
+    pub async fn resize_exec(
+        &mut self, 
+        id: &str, 
+        height: &str, 
+        width: &str
+    ) -> Json {
         let query = format!("height={height}&width={width}");
         let req = ApiReq::create_request("POST", Exec::Resize(id, &query).to_url(), Body::empty());
         let response = self.request_call(req).await;
@@ -807,15 +816,33 @@ impl Connect {
         }
     }
 
-    pub async fn inspect_exec(&mut self, id: &str) -> Json {
+    pub async fn inspect_exec(
+        &mut self, 
+        id: &str
+    ) -> Json {
         let req = ApiReq::create_request("POST", Exec::Inspect(id).to_url(), Body::empty());
         let response = self.request_call(req).await;
         ApiReq::res_to_json(response).await
     }
 
-    pub async fn inspect_exec_to_writer(&mut self, id: &str, writer: impl std::io::Write) {
+    pub async fn inspect_exec_to_writer(
+        &mut self, 
+        id: &str, 
+        writer: impl std::io::Write
+    ) {
         let req = ApiReq::create_request("POST", Exec::Inspect(id).to_url(), Body::empty());
         let response = self.request_call(req).await;
         ApiReq::into_writer(response, writer).await;
+    }
+}
+
+
+/* Sytstem commands */
+impl Connect {
+    pub async fn system_info(
+        &self
+    ) -> Json {
+        let response = self.get_request(System::Info.to_url()).await;
+        ApiReq::res_to_json(response).await
     }
 }

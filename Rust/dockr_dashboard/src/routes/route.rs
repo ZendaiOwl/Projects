@@ -7,14 +7,22 @@ pub fn get_routes(
     client: Connect,
 ) -> impl Filter<Extract = (impl Reply,), Error = Rejection> + Clone {
     index()
+        .or(htmx_endpoint())
+        .or(material_endpoint())
+        .or(css_endpoint())
+        .or(hyperscript_endpoint())
+        .or(alpine_endpoint())
         .or(ct_routes(client.clone()))
         .or(img_routes(client.clone()))
         .or(net_routes(client.clone()))
         .or(vol_routes(client.clone()))
-        .or(exec_routes(client))
+        .or(exec_routes(client.clone()))
+        .or(system_routes(client.clone()))
 }
 
-fn ct_routes(client: Connect) -> impl Filter<Extract = (impl Reply,), Error = Rejection> + Clone {
+fn ct_routes(
+    client: Connect
+) -> impl Filter<Extract = (impl Reply,), Error = Rejection> + Clone {
     /* Containers */
     list_containers(client.clone())
         .or(create_container(client.clone()))
@@ -44,7 +52,9 @@ fn ct_routes(client: Connect) -> impl Filter<Extract = (impl Reply,), Error = Re
         .or(prune_containers_with_filter(client))
 }
 
-fn img_routes(client: Connect) -> impl Filter<Extract = (impl Reply,), Error = Rejection> + Clone {
+fn img_routes(
+    client: Connect
+) -> impl Filter<Extract = (impl Reply,), Error = Rejection> + Clone {
     /* Images */
     list_images(client.clone())
         .or(build_image(client.clone()))
@@ -63,7 +73,9 @@ fn img_routes(client: Connect) -> impl Filter<Extract = (impl Reply,), Error = R
         .or(import_image(client))
 }
 
-fn net_routes(client: Connect) -> impl Filter<Extract = (impl Reply,), Error = Rejection> + Clone {
+fn net_routes(
+    client: Connect
+) -> impl Filter<Extract = (impl Reply,), Error = Rejection> + Clone {
     /* Networks */
     list_networks(client.clone())
         .or(create_network(client.clone()))
@@ -75,7 +87,9 @@ fn net_routes(client: Connect) -> impl Filter<Extract = (impl Reply,), Error = R
         .or(prune_networks_query(client))
 }
 
-fn vol_routes(client: Connect) -> impl Filter<Extract = (impl Reply,), Error = Rejection> + Clone {
+fn vol_routes(
+    client: Connect
+) -> impl Filter<Extract = (impl Reply,), Error = Rejection> + Clone {
     /* Volumes */
     list_volumes(client.clone())
         .or(create_volume(client.clone()))
@@ -85,12 +99,21 @@ fn vol_routes(client: Connect) -> impl Filter<Extract = (impl Reply,), Error = R
         .or(prune_volumes_query(client))
 }
 
-fn exec_routes(client: Connect) -> impl Filter<Extract = (impl Reply,), Error = Rejection> + Clone {
+fn exec_routes(
+    client: Connect
+) -> impl Filter<Extract = (impl Reply,), Error = Rejection> + Clone {
     /* Exec */
     create_exec(client.clone())
         .or(start_exec(client.clone()))
         .or(resize_exec(client.clone()))
         .or(inspect_exec(client))
+}
+
+fn system_routes(
+    client: Connect
+) -> impl Filter<Extract = (impl Reply,), Error = Rejection> + Clone {
+    /* System */
+    system_info(client.clone())
 }
 
 /* Helper function to pass the Connect client along to the async function calls */
@@ -111,17 +134,49 @@ fn get_cors(
     age: u32,
 ) -> warp::filters::cors::Cors {
     warp::cors()
+        .allow_origin("http://localhost")
         .allow_credentials(credentials)
         .allow_headers(headers)
         .allow_methods(methods)
         .max_age(age)
+        //.allow_any_origin()
+        .build()
+}
+
+fn cors_allow_all() -> warp::filters::cors::Cors {
+    warp::cors()
+        .max_age(MAX_AGE)
+        .allow_any_origin()
         .build()
 }
 
 fn cors_get() -> warp::filters::cors::Cors {
     get_cors(
         true,
-        vec!["X-Docker-Container-Path-Stat"],
+        vec![
+            "X-Docker-Container-Path-Stat",
+            "HX-Boosted",
+            "HX-Current-URL",
+            "HX-History-Restore-Request",
+            "HX-Prompt",
+            "HX-Request",
+            "HX-Trigger",
+            "HX-Trigger-Name",
+            "HX-Target",
+            "HX-Prompt",
+            "HX-Push-Url",
+            "HX-Push",
+            "HX-Redirect",
+            "HX-Location",
+            "HX-Replace-Url",
+            "HX-Reswap",
+            "HX-Retarget",
+            "HX-Reselect",
+            "HX-Refresh",
+            "HX-Trigger",
+            "HX-Trigger-After-Swap",
+            "HX-Trigger-After-Settle"
+        ],
         vec![
             "GET",
         ],
@@ -132,7 +187,9 @@ fn cors_get() -> warp::filters::cors::Cors {
 fn cors_post() -> warp::filters::cors::Cors {
     get_cors(
         true,
-        vec!["X-Docker-Container-Path-Stat"],
+        vec![
+            "X-Docker-Container-Path-Stat"
+        ],
         vec![
             "POST",
         ],
@@ -143,7 +200,9 @@ fn cors_post() -> warp::filters::cors::Cors {
 fn cors_put() -> warp::filters::cors::Cors {
     get_cors(
         true,
-        vec!["X-Docker-Container-Path-Stat"],
+        vec![
+            "X-Docker-Container-Path-Stat"
+        ],
         vec![
             "PUT",
         ],
@@ -154,7 +213,9 @@ fn cors_put() -> warp::filters::cors::Cors {
 fn cors_delete() -> warp::filters::cors::Cors {
     get_cors(
         true,
-        vec!["X-Docker-Container-Path-Stat"],
+        vec![
+            "X-Docker-Container-Path-Stat"
+        ],
         vec![
             "DELETE",
         ],
@@ -165,7 +226,9 @@ fn cors_delete() -> warp::filters::cors::Cors {
 fn cors_head() -> warp::filters::cors::Cors {
     get_cors(
         true,
-        vec!["X-Docker-Container-Path-Stat"],
+        vec![
+            "X-Docker-Container-Path-Stat"
+        ],
         vec![
             "HEAD",
         ],
@@ -176,10 +239,11 @@ fn cors_head() -> warp::filters::cors::Cors {
 /*
  * Warp Routes/Endpoints
  */
- 
+
+/* Index */
 fn index(
 ) -> impl Filter<Extract = (impl Reply,), Error = Rejection> + Clone {
-    let err_msg_404: &str = "<!DOCTYPE html><head></head><body><h1>Error 404</h1></body></html>";
+    let err_msg_404: &str = "<!DOCTYPE html><html><head></head><body><h1>Error 404</h1></body></html>";
     warp::path::end().map(move || {
             match std::fs::read_to_string("/home/owl/Code/local/Rust/dockr_dashboard/dashboard/index.html") {
                 Ok(body) => {
@@ -192,6 +256,60 @@ fn index(
         })
         .with(cors_get())
 }
+
+/* JavaScript */
+fn htmx_endpoint(
+) -> impl Filter<Extract = (impl Reply,), Error = Rejection> + Clone {
+  warp::path!("htmx.min.js")
+    .and(warp::get())
+    .and(warp::fs::file("./dashboard/htmx.min.js"))
+    .with(cors_allow_all())
+}
+
+fn hyperscript_endpoint(
+) -> impl Filter<Extract = (impl Reply,), Error = Rejection> + Clone {
+  warp::path!("hyperscript.min.js")
+    .and(warp::get())
+    .and(warp::fs::file("./dashboard/hyperscript.min.js"))
+    .with(cors_allow_all())
+}
+
+fn alpine_endpoint(
+) -> impl Filter<Extract = (impl Reply,), Error = Rejection> + Clone {
+  warp::path!("alpine.js")
+    .and(warp::get())
+    .and(warp::fs::file("./dashboard/alpine.js"))
+    .with(cors_allow_all())
+}
+
+/* Material Design Lite */
+fn material_endpoint(
+) -> impl Filter<Extract = (impl Reply,), Error = Rejection> + Clone {
+  warp::path!("material.min.js")
+    .and(warp::get())
+    .and(warp::fs::file("./dashboard/material.min.js"))
+    .with(cors_allow_all())
+}
+
+/* CSS */
+fn css_endpoint(
+) -> impl Filter<Extract = (impl Reply,), Error = Rejection> + Clone {
+  warp::path!("styles.css")
+    .and(warp::get())
+    .and(warp::fs::file("./dashboard/styles.css"))
+    .with(cors_allow_all())
+}
+
+/* Images */
+/*
+fn images_endpoint(
+) -> impl Filter<Extract = (impl Reply,), Error = Rejection> + Clone {
+  warp::path!("images")
+    .and(warp::get())
+    .and(warp::fs::dir("./dashboard/images/"))
+    .with(cors_allow_all())
+}
+*/
 
 /* Containers */
 fn list_containers(
@@ -604,7 +722,10 @@ fn import_image(
         .with(cors_post())
 }
 
-/* Networks */
+/* 
+ * Networks
+ */
+
 fn list_networks(
     client: Connect,
 ) -> impl Filter<Extract = (impl Reply,), Error = Rejection> + Clone {
@@ -784,5 +905,19 @@ fn inspect_exec(
         .and(warp::get())
         .and(with_connect(client))
         .and_then(exec_handler::inspect_exec_req)
+        .with(cors_get())
+}
+
+/* 
+ * System
+ */
+
+fn system_info(
+    client: Connect,
+) -> impl Filter<Extract = (impl Reply,), Error = Rejection> + Clone {
+    warp::path!("system" / "info")
+        .and(warp::get())
+        .and(with_connect(client))
+        .and_then(system_handlers::system_info_req)
         .with(cors_get())
 }
