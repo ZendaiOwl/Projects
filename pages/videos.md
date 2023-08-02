@@ -5,7 +5,80 @@ ___YouTube videos___
 
 ---
 
-### The eye-opening truth about western civilisation
+## Tom Scott vs Irving Finkel: The Royal Game of Ur | PLAYTHROUGH | International Tabletop Day 2017
+
+[The British Museum](https://www.youtube.com/@britishmuseum)
+
+<div class="yt">
+<iframe width="912" height="513" src="https://www.youtube.com/embed/WZskjLq040I" title="Tom Scott vs Irving Finkel: The Royal Game of Ur | PLAYTHROUGH | International Tabletop Day 2017" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+</div>
+
+
+## What Was Life Like in Ancient Mesopotamia?
+
+[Miniminuteman](https://www.youtube.com/@miniminuteman773)
+
+<div class="yt">
+<iframe width="912" height="513" src="https://www.youtube.com/embed/AlKKvJKBd3s" title="What Was Life Like in Ancient Mesopotamia?" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+</div>
+
+## I Watched Ancient Apocalypse So You Don't Have To (Part 1)
+
+[Miniminuteman](https://www.youtube.com/@miniminuteman773)
+
+<div class="yt">
+<iframe width="912" 
+		height="513" 
+		src="https://www.youtube.com/embed/-iCIZQX9i1A?list=PLXtMIzD-Y-bMHRoGKM7yD2phvUV59_Cvb" 
+		title="I Watched Ancient Apocalypse So You Don&#39;t Have To (Part 1)" 
+		frameborder="0" 
+		allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+		allowfullscreen></iframe>
+</div>
+
+## I Watched Ancient Apocalypse So You Don't Have To (Part 2)
+
+[Miniminuteman](https://www.youtube.com/@miniminuteman773)
+
+<div class="yt">
+<iframe width="912" 
+		height="513" 
+		src="https://www.youtube.com/embed/pfNgMAwsPWI?list=PLXtMIzD-Y-bMHRoGKM7yD2phvUV59_Cvb" 
+		title="I Watched Ancient Apocalypse So You Don&#39;t Have To (Part 2)" 
+		frameborder="0" 
+		allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+		allowfullscreen></iframe>
+</div>
+
+## I Watched Ancient Apocalypse So You Don't Have To (Part 3)
+
+[Miniminuteman](https://www.youtube.com/@miniminuteman773)
+
+<div class="yt">
+<iframe width="912" 
+		height="513" 
+		src="https://www.youtube.com/embed/CdPuOmCiqnw?list=PLXtMIzD-Y-bMHRoGKM7yD2phvUV59_Cvb" 
+		title="I Watched Ancient Apocalypse So You Don&#39;t Have To (Part 3)" 
+		frameborder="0" 
+		allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+		allowfullscreen></iframe>
+</div>
+
+## I Watched Ancient Apocalypse So You Don't Have To (Part 4)
+
+[Miniminuteman](https://www.youtube.com/@miniminuteman773)
+
+<div class="yt">
+<iframe width="912" 
+		height="513" 
+		src="https://www.youtube.com/embed/rIZsYYyrxUo?list=PLXtMIzD-Y-bMHRoGKM7yD2phvUV59_Cvb" 
+		title="I Watched Ancient Apocalypse So You Don&#39;t Have To (FINALE)" 
+		frameborder="0" 
+		allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+		allowfullscreen></iframe>
+</div>
+
+## The eye-opening truth about western civilisation
 
 [_Triggernometry_][youtube-triggernometry]
 
@@ -21,7 +94,7 @@ ___YouTube videos___
 
 ---
 
-### # How AI Will DISRUPT The Entire World In 3 Years (Prepare Now While Others Panic) | Emad Mostaque
+## # How AI Will DISRUPT The Entire World In 3 Years (Prepare Now While Others Panic) | Emad Mostaque
 
 [_Tom Bilyeu_][youtube-tom-bilyeu]
 
@@ -37,7 +110,7 @@ ___YouTube videos___
 
 ---
 
-### AI Revolution - Raoul Pal | Tom Bilyeu
+## AI Revolution - Raoul Pal | Tom Bilyeu
 
 [_Tom Bilyeu_][youtube-tom-bilyeu]
 
@@ -54,7 +127,7 @@ ___YouTube videos___
 
 ---
 
-#### AMERICA'S COLLAPSE: Raoul Pal's Warning For The Dollar, Housing Market & Upcoming Recession
+## AMERICA'S COLLAPSE: Raoul Pal's Warning For The Dollar, Housing Market & Upcoming Recession
 
 [_Tom Bilyeu_][youtube-tom-bilyeu]
 
@@ -70,7 +143,7 @@ ___YouTube videos___
 
 ---
 
-### Saifedean Ammous: Bitcoin, Anarchy, and Austrian Economics | Lex Fridman Podcast #284
+## Saifedean Ammous: Bitcoin, Anarchy, and Austrian Economics | Lex Fridman Podcast #284
 
 <div class="yt">
     <iframe width="908" height="511" src="https://www.youtube.com/embed/gp4U5aH_T6A" title="Saifedean Ammous: Bitcoin, Anarchy, and Austrian Economics | Lex Fridman Podcast #284" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
@@ -78,7 +151,7 @@ ___YouTube videos___
 
 ---
 
-### 12 Ways the Planet Could Truly Be Saved - Bjørn Lomborg. EP 345 | Jordan B Peterson
+## 12 Ways the Planet Could Truly Be Saved - Bjørn Lomborg. EP 345 | Jordan B Peterson
 
 [_Jordan B. Peterson_][youtube-jordan-peterson]
 
@@ -88,7 +161,7 @@ ___YouTube videos___
 
 ---
 
-### 5 Easy Ways to Save the World - Bjørn Lomborg | Triggernometry
+## 5 Easy Ways to Save the World - Bjørn Lomborg | Triggernometry
 
 [_Triggernometry_][youtube-triggernometry]
 
@@ -98,7 +171,7 @@ ___YouTube videos___
 
 ---
 
-### Eric Weinstein - All Hell Is About to Break Loose | Triggernometry
+## Eric Weinstein - All Hell Is About to Break Loose | Triggernometry
 
 [_Triggernometry_][youtube-triggernometry]
 
@@ -108,7 +181,7 @@ ___YouTube videos___
 
 ---
 
-### "We're Not Thinking, We're Emoting" - John Anderson, Former Deputy Prime Minister of Australia | Triggernometry
+## "We're Not Thinking, We're Emoting" - John Anderson, Former Deputy Prime Minister of Australia | Triggernometry
 
 [_Triggernometry_][youtube-triggernometry]
 
@@ -118,7 +191,7 @@ ___YouTube videos___
 
 ---
 
-### Holland in crisis | Jordan B Peterson
+## Holland in crisis | Jordan B Peterson
 
 [_Jordan B. Peterson_][youtube-jordan-peterson]
 
@@ -128,7 +201,7 @@ ___YouTube videos___
 
 ---
 
-### The Madness of Crowds - Douglas Murray | John Anderson
+## The Madness of Crowds - Douglas Murray | John Anderson
 
 [_John Anderson_][youtube-john-anderson]
 
@@ -138,7 +211,7 @@ ___YouTube videos___
 
 ---
 
-### Principles for Dealing with the Changing World Order by Ray Dalio
+## Principles for Dealing with the Changing World Order by Ray Dalio
 
 [_Ray Dalio_][youtube-ray-dalio]
 
@@ -148,7 +221,7 @@ ___YouTube videos___
 
 ---
 
-###  Guido van Rossum: Python and the Future of Programming | Lex Fridman Podcast #341 
+##  Guido van Rossum: Python and the Future of Programming | Lex Fridman Podcast #341 
 
 [_Lex Fridman_][youtube-led-fridman]
 

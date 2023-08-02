@@ -5,6 +5,13 @@ ___Notes___
 
 ---
 
+# Board games
+
++ **§** [Top 10 Historical Board Games - British National Museum](https://www.britishmuseum.org/blog/top-10-historical-board-games)
++ **§** [The Royal Game of Ur](https://royalur.net/)
++ **§** 
+
+
 # Stuff
 
 ***Checklista***
@@ -164,7 +171,7 @@ The prefix allocated for documentation purposes is `2001:DB8::/32`
 <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
 ```
 
-<img src="{{ site.url }}/assets/images/material_design_lite_button.png" alt="Material Design Lite Button" />
+<img src="{{ site.url }}/assets/images/MDL/material_design_lite_button.png" alt="Material Design Lite Button" />
 
 ```html
 <!-- Accent-colored raised button with ripple -->
@@ -173,7 +180,7 @@ The prefix allocated for documentation purposes is `2001:DB8::/32`
 </button>
 ```
 
-<img src="{{ site.url }}/assets/images/material_design_lite_fab_button.png" alt="Material Design Lite FAB Button" />
+<img src="{{ site.url }}/assets/images/MDL/material_design_lite_fab_button.png" alt="Material Design Lite FAB Button" />
 
 ```html
 <!-- Colored FAB button -->
