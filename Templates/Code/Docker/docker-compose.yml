@@ -1,3 +1,4 @@
+# Author § Victor-ray, S. owl@zendai.net.eu.org
 services:
   foo:
     image: foo
