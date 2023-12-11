@@ -1,4 +1,4 @@
-/** Author § Victor-ray, S. */
+/** Author § Victor-ray, S. owl@zendai.net.eu.org */
 
 public class Java {
 

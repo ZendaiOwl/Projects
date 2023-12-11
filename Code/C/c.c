@@ -3,7 +3,7 @@
 #include <unistd.h>
 #include <sys/syscall.h>
 
-/* Author § Victor-ray, S. */
+/* Author § Victor-ray, S. owl@zendai.net.eu.org */
 
 int main() {
     
