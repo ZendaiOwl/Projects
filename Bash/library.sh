@@ -1,7 +1,95 @@
 #!/usr/bin/env bash
+# shellcheck disable=SC1003
 # =======================
 # Author § Victor-ray, S.
 # -----------------------
+
+# [[ ! -e /run/current-system/sw/bin/nix ]] && {
+#     printf '%s\n' "Missing command: nix" 1>&2
+#     return 1
+# }
+# 
+# [[ ! -e /run/current-system/sw/bin/nix-shell ]] && {
+#     printf '%s\n' "Missing command: nix-shell" 1>&2
+#     return 1
+# }
+
+
+#
+# nix-shell --packages '<nixpkgs>' --command "<COMMAND>"
+# nix-shell --packages '<nixpkgs>' --command '<COMMAND>'
+# nix-shell -p '<nixpkgs>' --command '<COMMAND>'
+# (
+#     nix-shell -p '<nixpkgs>' --command '
+#         <COMMAND>
+#     ';
+# )
+#
+
+# 
+# arion down --rmi all --volumes --remove-orphans
+# 
+
+
+# ├
+# ─
+# └
+# │
+
+# shellcheck disable=SC2059
+# Owl: 13153
+# Owl branch: 131B2
+# Eye of horus: 13080
+# Da: 1099D
+# Flower: 131EC
+# Emblem of Min: 13291
+# Ship: 1329D
+# Sandal strap: 132F9
+# Ankh: 2625
+# Vidj: 1099E
+# Axe: 1330F
+# Scimitar: 1331C
+# Scale: 1335D
+# Circle: 133F8
+# Three em dash: 2E3B
+# Cross: 1455B
+# Runic cross: 16ED
+function unicode {
+    printf '\U'"$1"'\n'
+}
+
+# ᚨᛒᚲᛞᛖᚠᚷᚺᛁᛃᚲᛚᛗᚾᛟᛈᚲᚱᛊᛏᛁᚢᚹXᛁᛉÅᛖᛟ
+function elder_futhark {
+	local -Ar elder=(
+		[a]='ᚨ' [b]='ᛒ' [c]='ᚲ' [d]='ᛞ' 
+		[e]='ᛖ' [f]='ᚠ' [g]='ᚷ' [h]='ᚺ' 
+		[i]='ᛁ' [j]='ᛃ' [k]='ᚲ' [l]='ᛚ' 
+		[m]='ᛗ' [n]='ᚾ' [o]='ᛟ' [p]='ᛈ' 
+		[q]='ᚲ' [r]='ᚱ' [s]='ᛊ' [t]='ᛏ' 
+		[u]='ᛁ' [v]='ᚢ' [w]='ᚹ' [x]='X' 
+		[y]='ᛁ' [z]='ᛉ' [å]='Å' [ä]='ᛖ' 
+		[ö]='ᛟ' [' ']=' '
+	)
+	local -r TXT="${*,,}"
+	for (( x = 0; x < "${#TXT}"; x++ ))
+	do
+		[[ "${elder[${TXT:x:1}]}" ]] && {
+			printf '%s' "${elder[${TXT:x:1}]}"
+		}
+	done
+	printf '\n'
+}
+
+
+# 130C9 = One dot 
+# 130CA = Two dots
+# 130CB = Three dots
+# 130CC = Four dots
+# 130CD = Five dots
+# 130CE = Six dots
+# 130CF = Seven dots
+# 130D0 = Eight dots
+# 130D1 = Nine dots
 
 # Displays 8 × 16-bit ANSI bold colours and a blinking effect
 # \e[0;34m = Normal
@@ -32,14 +120,20 @@ function colour {
 }
 
 
+# Notes
+# https://nixos.org/manual/nixpkgs/stable/#trivial-builder-writeText
+# https://nixos.org/manual/nixpkgs/stable/#trivial-builder-writeShellApplication
+#
+# arion.build { modules = [ ./arion-compose.nix ]; pkgs = import ./arion-pkgs.nix; }
+# nix-build -E 'arion.build { modules = [ ./arion-compose.nix ]; pkgs = import ./arion-pkgs.nix; }'
+#
+
 # Runs a command with packages using nix-shell
 # Return codes
 # 0: Success / OK!
 # 1: Invalid number of arguments
-# 2: Missing command: nix-shell
 function nix-cmd {
     [[ "$#" -lt 1 ]] && { return 1; }
-    ! has_cmd 'nix-shell' && { return 2; }
     local -r PACKAGES="${1}" # ex. bash curl wget
     if [[ -p /dev/stdin ]]
     then
@@ -60,7 +154,6 @@ function nix-cmd {
 
 function filesize {
   [[ "$#" -eq 0 ]] && { return 1; }
-  ! has_cmd 'du' && { return 2; }
   du --human-readable --summarize --total "$@"
 }
 
@@ -68,7 +161,6 @@ function filesize {
 # and reports the numbers.
 function file_in_memory {
   [[ "$#" -eq 0 || ! -f "$1" ]] && { return 1; }
-  ! has_cmd 'fincore' && { return 2; }
   fincore --json "$1"
 }
 
@@ -83,14 +175,12 @@ function file_in_memory {
 # PARTLABEL=<label>
 function find_filesystem {
   [[ "$#" -eq 0 ]] && { return 1; }
-  ! has_cmd 'findfs' && { return 2; }
   findfs "$1"="$2"
 }
 
 # partx --show <disk>
 function show_partitions {
   [[ "$#" -eq 0 ]] && { printf '%s\n' "Needs a disk as argument, ex. '/dev/sda'"; return 1; }
-  ! has_cmd 'partx' && { return 2; }
   partx --show "$1"
 }
 
@@ -99,7 +189,6 @@ function show_partitions {
 # --json
 function show_filesystem {
   [[ "$#" -gt 0 ]] && { return 1; }
-  ! has_cmd 'lsblk' && { return 2; }
   lsblk --fs
 }
 
@@ -110,7 +199,6 @@ function show_filesystem {
 # filesystems, or findmnt(8) to search in already mounted filesystems.
 function show_disk_blocks {
   [[ "$#" -gt 0 ]] && { return 1; }
-  ! has_cmd 'blkid' && { return 2; }
   blkid
 }
 
@@ -126,7 +214,6 @@ function show_disk_blocks {
 # --json  : Use JSON output format
 function show_mounts {
   [[ "$#" -gt 0 ]] && { return 1; }
-  ! has_cmd 'findmnt' && { return 2; }
   findmnt --all
 }
 
@@ -145,71 +232,94 @@ function docker_GET {
 }
 
 function emoji {
-    for I in "$@"
-    do
-        case "$I" in
-            rose)                 ( println "✿ڿڰۣ—"; ) ;;
-            skull)                ( println "☠"; ) ;;
-            sigma|sum)            ( println "Σ"; ) ;;
-            omega)                ( println "Ω"; ) ;;
-            alpha)                ( println "α"; ) ;;
-            beta)                 ( println "β"; ) ;;
-            delta)                ( println "Δ"; ) ;;
-            lamda)                ( println "λ" ) ;;
-            epsilon)              ( println "ɛ" ) ;;
-            snowman)              ( println "☃"; ) ;;
-            spade)                ( println "♠"; ) ;;
-            club)                 ( println "♣"; ) ;;
-            heart)                ( println "♥"; ) ;;
-            big-heart)            ( println "❤"; ) ;;
-            diamond)              ( println "♦"; ) ;;
-            star)                 ( println "★"; ) ;;
-            empty-star)           ( println "☆"; ) ;;
-            sun)                  ( println "☀"; ) ;;
-            flower)               ( println "✿"; ) ;;
-            cloud)                ( println "☁"; ) ;;
-            triangle)             ( println "▲"; ) ;;
-            empty-triangle)       ( println "△"; ) ;;
-            yinyang)              ( println "☯"; ) ;;
-            infinity)             ( println "∞"; ) ;;
-            yolo)                 ( println "Yᵒᵘ Oᶰˡʸ Lᶤᵛᵉ Oᶰᶜᵉ"; ) ;;
-            onsen)                ( println "ツ" ) ;;
-            note)                 ( println "♫" ) ;;
-            sharp)                ( println "♯" ) ;;
-            double-sharp)         ( println "𝄪" ) ;;
-            flat)                 ( println "♭" ) ;;
-            double-flat)          ( println "𝄫" ) ;;
-            dice)                 ( println "⚄" ) ;;
-            d1|dice1)             ( println "⚀" ) ;;
-            d2|dice2)             ( println "⚁" ) ;;
-            d3|dice3)             ( println "⚂" ) ;;
-            d4|dice4)             ( println "⚃" ) ;;
-            d5|dice5)             ( println "⚄" ) ;;
-            d6|dice6)             ( println "⚅" ) ;;
-            envelope|letter)      ( println "✉︎" ) ;;
-            pi)                   ( println "π" ) ;;
-            opt|option|alt)       ( println "⌥" ) ;;
-            cmd)                  ( println "⌘" ) ;;
-            nuclear)              ( println "☢" ) ;;
-            load|loading)         ( println "███▒▒▒▒▒▒▒" ) ;;
-            load_on|loading_on)   ( printf '%s' "█" ) ;;
-            load_off|loading_off) ( printf '%s' "▒" ) ;;
-            interrobang)          ( println "‽" ) ;;
-            hammerandsickle|hs)   ( println "☭" ) ;;
-            int)                  ( println "∫" ) ;;
-            flower-smile)         ( println "(✿◠‿◠)" ) ;;
-            ellipsis)             ( println "…" ) ;;
-            cross)                ( println "†" ) ;;
-            check|checkmark)      ( println "✔" ) ;;
-            bitcoin|btc)          ( println "₿" ) ;;
-            all)                  ( println "" ) ;;
-            *)                    ( log 2 "Invalid: $I" ) ;;
-        esac
-    done
+  # local -Ar mojjie=(
+  #   [rose]='✿ڿڰۣ—' [omega]='Ω' [sigma]='Σ' [alpha]='α' 
+  #   [beta]='β' [delta]='Δ' [lamda]='λ' [epsilon]='ɛ' 
+  #   [skull]='☠' [snowman]='☃' [spade]='♠' [club]='♣' 
+  #   [heart]='♥' [big-heart]='❤' [diamond]='♦' [star]='★' 
+  #   [empty_star]='☆' [sun]='☀' [flower]='✿' [cloud]='☁' 
+  #   [triangle]='▲' [empty-triangle]='△' [yinyang]='☯' 
+  #   [infinity]='∞' [yolo]='Yᵒᵘ Oᶰˡʸ Lᶤᵛᵉ Oᶰᶜᵉ' [onsen]='ツ' [note]='♫' 
+  #   [x]='×' [degree]='°' [super-0]='⁰' [super-1]='¹' [super-2]='²' 
+  #   [super-3]='³' [super-4]='⁴' [super-5]='⁵' [super-6]='⁶' [super-7]='⁷' 
+  #   [super-8]='⁸' [super-9]='⁹' [listdot]='•' [listdot-small]='·' 
+  #   [non-breaking-space]=' '
+  #    []= []= []= []= []= []= []= []= []= []= 
+  #    []= []= []= []= []= []= []= []= []= []= 
+  #    •: u+2022
+  #    ¹: u+00B9 
+  #    ²: u+00B2
+  #    ³: u+00B1
+  #    ⁴: u+2074 
+  #    ⁵: u+2075
+  #    ...
+  # );
+  
+  for I in "$@"
+  do
+    case "$I" in
+      rose) ( println "✿ڿڰۣ—"; ) ;;
+      skull) ( println "☠"; ) ;;
+      sigma|sum) ( println "Σ"; ) ;;
+      omega) ( println "Ω"; ) ;;
+      alpha) ( println "α"; ) ;;
+      beta) ( println "β"; ) ;;
+      delta) ( println "Δ"; ) ;;
+      lamda) ( println "λ" ) ;;
+      epsilon) ( println "ɛ" ) ;;
+      snowman) ( println "☃"; ) ;;
+      spade) ( println "♠"; ) ;;
+      club) ( println "♣"; ) ;;
+      heart) ( println "♥"; ) ;;
+      big-heart) ( println "❤"; ) ;;
+      diamond) ( println "♦"; ) ;;
+      star) ( println "★"; ) ;;
+      empty-star) ( println "☆"; ) ;;
+      sun) ( println "☀"; ) ;;
+      flower) ( println "✿"; ) ;;
+      cloud) ( println "☁"; ) ;;
+      triangle) ( println "▲"; ) ;;
+      empty-triangle) ( println "△"; ) ;;
+      yinyang) ( println "☯"; ) ;;
+      infinity) ( println "∞"; ) ;;
+      yolo) ( println "Yᵒᵘ Oᶰˡʸ Lᶤᵛᵉ Oᶰᶜᵉ"; ) ;;
+      onsen) ( println "ツ" ) ;;
+      note) ( println "♫" ) ;;
+      sharp) ( println "♯" ) ;;
+      double-sharp) ( println "𝄪" ) ;;
+      flat) ( println "♭" ) ;;
+      double-flat) ( println "𝄫" ) ;;
+      dice) ( println "⚄" ) ;;
+      d1|dice1) ( println "⚀" ) ;;
+      d2|dice2) ( println "⚁" ) ;;
+      d3|dice3) ( println "⚂" ) ;;
+      d4|dice4) ( println "⚃" ) ;;
+      d5|dice5) ( println "⚄" ) ;;
+      d6|dice6) ( println "⚅" ) ;;
+      envelope|letter) ( println "✉︎" ) ;;
+      pi) ( println "π" ) ;;
+      opt|option|alt) ( println "⌥" ) ;;
+      cmd) ( println "⌘" ) ;;
+      nuclear) ( println "☢" ) ;;
+      load|loading) ( println "███▒▒▒▒▒▒▒" ) ;;
+      load_on|loading_on) ( printf '%s' "█" ) ;;
+      load_off|loading_off) ( printf '%s' "▒" ) ;;
+      interrobang) ( println "‽" ) ;;
+      hammerandsickle|hs) ( println "☭" ) ;;
+      int) ( println "∫" ) ;;
+      flower-smile) ( println "(✿◠‿◠)" ) ;;
+      ellipsis) ( println "…" ) ;;
+      cross) ( println "†" ) ;;
+      check|checkmark) ( println "✔" ) ;;
+      bitcoin|btc) ( println "₿" ) ;;
+      all) ( println "" ) ;;
+      *) ( log 2 "Invalid: $I" ) ;;
+    esac
+  done
 }
 
-# Password check against haveibeenpwned API using k-anonymity
-# There is no rate-limit so it's possible to download all the passwords
+# Password check against haveibeenpwned API using k-anonymity.
+# There is no rate-limit so it's possible to download all the passwords,
 # should a local comparison be preffered.
 function check_password {
     local PASS EXISTS
@@ -247,7 +357,7 @@ function println {
     ( printf '%s\n' "$@" )
 }
 
-# Digit: Arguments appended to one line
+# Digit: Arguments appended to one line without space
 function print_digit {
     [[ ! "$*" =~ ^[[:space:][:digit:]]*$ ]] && { return 1; }
     (
@@ -262,7 +372,7 @@ function println_digit {
     ( printf '%d\n' "$@" )
 }
 
-# Integer: Arguments appended to one line
+# Integer: Arguments appended to one line without space
 function print_int {
     [[ ! "$*" =~ ^[[:space:][:digit:]]*$ ]] && { return 1; }
     (
@@ -277,7 +387,7 @@ function println_int {
     ( printf '%i\n' "$@" )
 }
 
-# Float: Arguments appended to one line
+# Float: Arguments appended to one line without space
 function print_float {
     (
         ( printf '%f' "$@" )
@@ -296,16 +406,16 @@ function println_float {
 
 # With timestamp
 function print_err {
-    ( log 2 "$(date +%c) $*" )
+    ( log 2 "$(date "+%Z %D %T") $*" )
 }
 
 # Prints an error log to a given file with timestamp
 function err_log {
     if [[ -f "$1" ]]
     then
-        ( log 2 "$(date +%c) ${*:2}" >> "$1" )
+        ( printf '%s\n' "ERROR $(date "+%Z %D %T") ${*:2}" 1>&2 >> "$1" )
     else
-        ( log 2 "$(date +%c) ${*:2}" > "$1" )
+        ( printf '%s\n' "ERROR $(date "+%Z %D %T") ${*:2}" 1>&2 > "$1" )
     fi
 }
 
@@ -349,12 +459,97 @@ function log {
     fi
 }
 
-function get_status_code {
-    #( curl --silent --location "https://httpstatuses.io/${1}.json" )
+
+function http_status_code {
+    for I in "$@"
+    do
+        case "$I" in
+            # 1×× Informational
+            100) ( printf '%d %s\n' 100 "Continue" ) ;;
+            101) ( printf '%d %s\n' 101 "Switching protocols" ) ;;
+            102) ( printf '%d %s\n' 102 "Processing" ) ;;
+            103) ( printf '%d %s\n' 103 "Early hints" ) ;;
+            # 2×× Success
+            200) ( printf '%d %s\n' 200 "OK" ) ;;
+            201) ( printf '%d %s\n' 201 "Created" ) ;;
+            202) ( printf '%d %s\n' 202 "Accepted" ) ;;
+            203) ( printf '%d %s\n' 203 "Non-authorative information" ) ;;
+            204) ( printf '%d %s\n' 204 "No content" ) ;;
+            205) ( printf '%d %s\n' 205 "Reset content" ) ;;
+            206) ( printf '%d %s\n' 206 "Partial content" ) ;;
+            207) ( printf '%d %s\n' 207 "Multi-status" ) ;;
+            208) ( printf '%d %s\n' 208 "Already reported" ) ;;
+            226) ( printf '%d %s\n' 226 "IM Used" ) ;;
+            # 3×× Redirection
+            300) ( printf '%d %s\n' 300 "Multiple Choices" ) ;;
+            301) ( printf '%d %s\n' 301 "Moved Permanently" ) ;;
+            302) ( printf '%d %s\n' 302 "Found" ) ;;
+            303) ( printf '%d %s\n' 303 "See Other" ) ;;
+            304) ( printf '%d %s\n' 304 "Not Modified" ) ;;
+            305) ( printf '%d %s\n' 305 "Use Proxy" ) ;;
+            307) ( printf '%d %s\n' 307 "Temporary Redirect" ) ;;
+            308) ( printf '%d %s\n' 308 "Permanent Redirect" ) ;;
+            # 4×× Client Error
+            400) ( printf '%d %s\n' 400 "Bad Request" ) ;;
+            401) ( printf '%d %s\n' 401 "Unauthorized" ) ;;
+            402) ( printf '%d %s\n' 402 "Payment Required" ) ;;
+            403) ( printf '%d %s\n' 403 "Forbidden" ) ;;
+            404) ( printf '%d %s\n' 404 "Not Found" ) ;;
+            405) ( printf '%d %s\n' 405 "Method Not Allowed" ) ;;
+            406) ( printf '%d %s\n' 406 "Not Acceptable" ) ;;
+            407) ( printf '%d %s\n' 407 "Proxy Authentication Required" ) ;;
+            408) ( printf '%d %s\n' 408 "Request Timeout" ) ;;
+            409) ( printf '%d %s\n' 409 "Conflict" ) ;;
+            410) ( printf '%d %s\n' 410 "Gone" ) ;;
+            411) ( printf '%d %s\n' 411 "Length Required" ) ;;
+            412) ( printf '%d %s\n' 412 "Precondition Failed" ) ;;
+            413) ( printf '%d %s\n' 413 "Payload Too Large" ) ;;
+            414) ( printf '%d %s\n' 414 "Request-URI Too Long" ) ;;
+            415) ( printf '%d %s\n' 415 "Unsupported Media Type" ) ;;
+            416) ( printf '%d %s\n' 416 "Requested Range Not Satisfiable" ) ;;
+            417) ( printf '%d %s\n' 417 "Expectation Failed" ) ;;
+            418) ( printf '%d %s\n' 418 "I'm a teapot" ) ;;
+            421) ( printf '%d %s\n' 421 "Misdirected Request" ) ;;
+            422) ( printf '%d %s\n' 422 "Unprocessable Entity" ) ;;
+            423) ( printf '%d %s\n' 423 "Locked" ) ;;
+            424) ( printf '%d %s\n' 424 "Failed Dependency" ) ;;
+            426) ( printf '%d %s\n' 426 "Upgrade Required" ) ;;
+            428) ( printf '%d %s\n' 428 "Precondition Required" ) ;;
+            429) ( printf '%d %s\n' 429 "Too Many Requests" ) ;;
+            431) ( printf '%d %s\n' 431 "Request Header Fields Too Large" ) ;;
+            444) ( printf '%d %s\n' 444 "Connection Closed Without Response" ) ;;
+            451) ( printf '%d %s\n' 451 "Unavailable For Legal Reasons" ) ;;
+            499) ( printf '%d %s\n' 499 "Client Closed Request" ) ;;
+            # 5×× Server Error
+            500) ( printf '%d %s\n' 500 "Internal Server Error" ) ;;
+            501) ( printf '%d %s\n' 501 "Not Implemented" ) ;;
+            502) ( printf '%d %s\n' 502 "Bad Gateway" ) ;;
+            503) ( printf '%d %s\n' 503 "Service Unavailable" ) ;;
+            504) ( printf '%d %s\n' 504 "Gateway Timeout" ) ;;
+            505) ( printf '%d %s\n' 505 "HTTP Version Not Supported" ) ;;
+            506) ( printf '%d %s\n' 506 "Variant Also Negotiates" ) ;;
+            507) ( printf '%d %s\n' 507 "Insufficient Storage" ) ;;
+            508) ( printf '%d %s\n' 508 "Loop Detected" ) ;;
+            510) ( printf '%d %s\n' 510 "Not Extended" ) ;;
+            511) ( printf '%d %s\n' 511 "Network Authentication Required" ) ;;
+            599) ( printf '%d %s\n' 599 "Network Connect Timeout Error" ) ;;
+            *)   ( printf '%s\n' "Unknown status code" )
+        esac
+    done
+}
+
+
+function get_http_status_code {
+  if has_cmd 'jq'
+  then
     (
-        nix-shell --packages curl jq \
-        --command 'curl --silent --location "https://httpstatuses.io/'"$1"'.json" | jq'
+      curl --silent --location "https://httpstatuses.io/${1}.json" | jq
     )
+  else
+    (
+      curl --silent --location "https://httpstatuses.io/${1}.json"
+    )
+  fi
 }
 
 # -----
@@ -657,15 +852,16 @@ function has_cmd {
     [[ "$(command -v "$1" &>/dev/null; print_int "$?")" -eq 0 ]]
 }
 
-# Checks if a command or executable exists on the system using 'type'
+# Checks if an executable file, function, alias, keyword or 
+# built-in exists on the system using 'type'
 # Return status codes
-# 0: Command exists on the system
-# 1: Command is unavailable on the system
+# 0: Exist
+# 1: Unavailable
 # 2: Invalid argument(s)
-# $1: Command
-function is_executable {
+# $1: Executable file, keyword, alias, builtin or function
+function can_execute {
     [[ "$#" -ne 1 ]] && { return 2; }
-    [[ "$(type -at "$1" &>/dev/null; print_int "$?")" -eq 0 ]]
+    [[ "$(type -p "$1" &>/dev/null; print_int "$?")" -eq 0 ]]
 }
 
 #function is_email_html5_standard {
@@ -679,13 +875,25 @@ function is_executable {
 
 # Calculation using bc
 function bC {
-    ( nix-shell --packages bc --command 'printf "%s\n" '"$*"' | bc -l' )
-    # ( printf '%s\n' "$*" | bc -l )
+    # ( nix-shell --packages bc --command 'printf "%s\n" '"$*"' | bc -l' )
+    ! has_cmd 'bc' && { log 2 "Missing command: bc"; return 1; }
+    ( printf '%s\n' "$*" | bc -l )
 }
 
 # Calculation using awk
 function Calc {
-    ( awk "BEGIN{print $*}" )
+    if [[ "$#" -eq 1 ]]
+    then
+    	( awk "BEGIN{print $*}" )
+    else
+    	( log 2 "Calculation as 1 argument string is required"; exit 1; )
+    fi
+}
+
+# Calculation using Nix expression
+function calculate {
+	[[ "$#" -ne 1 ]] && { return 1; }
+	nix-instantiate --eval --expr ''"($*)"''
 }
 
 # Arithmetic Addition
@@ -792,6 +1000,10 @@ function percentile {
             "[ $(Calc "$(Calc "$2"/"$1")"*100)% ] Percentage"
     )
 }
+
+# TODO A function that calculates compound interest
+# on principal with recurring contributions with varying compounding periods
+
 
 
 # ---
@@ -1164,6 +1376,30 @@ function github_remote_add {
 # Utility
 # -------
 
+# Compress a PDF file
+# Return codes
+# 1: Invalid number of arguments
+# 2: Not a file
+# Arguments
+# $1: PDF file to compress
+# $2: Name of the compressed PDF file
+# Configurations
+# dPDFSETTINGS
+# /prepress (default)	Higher quality output (300 dpi) but bigger size
+# /ebook	Medium quality output (150 dpi) with moderate output file size
+# /screen	Lower quality output (72 dpi) but smallest possible output file size
+function compress_pdf {
+	[[ "$#" -ne 2 ]] && { return 1; }
+	[[ ! -f "$1" ]] && { return 2; }
+	gs -sDEVICE=pdfwrite \
+	   -dCompatibilityLevel=1.4 \
+	   -dPDFSETTINGS=/prepress \
+	   -dNOPAUSE \
+	   -dQUIET \
+	   -dBATCH \
+	   -sOutputFile="$1" "$2"
+}
+
 # Create a tar.xz archive from a directory
 # Return codes
 # 1: No such PATH to directory exists
@@ -1505,9 +1741,9 @@ function find_pattern {
 # Search for files with pattern(s) recursively
 # Return codes
 # 1: Missing argument: String
-# 2: Missing command: grep
+# 2: Command not found: grep
 function get_files_with_text {
-    ! has_cmd 'grep' && { log 2 "Missing command: grep"; return 2; }
+    ! has_cmd 'grep' && { log 2 "Command not found: grep"; return 2; }
     [[ "$#" -eq 0 ]] && { log 2 "Requires: [ Pattern(s) to locate ]"; return 1; }
     local -r ARGS=(--recursive --files-with-matches --exclude-dir=".*")
     grep "${ARGS[@]}" "$*" 2>/dev/null
@@ -1982,7 +2218,7 @@ function get_url {
 }
 
 # Loops through HTML elements that are fed through a pipe via STDIN
-function html_next {
+function html_parse {
     local IFS='>'
     # shellcheck disable=SC2034
     read -r -d '<' TAG VALUE
@@ -2011,11 +2247,16 @@ function get_crypto_price {
 # 1: Missing command: curl
 function get_btc {
     ! has_cmd 'curl' && { log 2 "Missing command: curl"; return 1; }
-    local -r URL="https://api.binance.com/api/v3/ticker/price?symbol=BTCEUR" \
-               ARGS=(--silent --location)
+    local -r BINANCE_URL="https://api.binance.com/api/v3/ticker/price?symbol=BTCEUR"
+    local -r KRAKEN_URL="https://api.kraken.com/0/public/Ticker?pair=XBTEUR"
+    local -ar ARGS=(--silent --location)
     if ! has_cmd 'jq'
-    then curl "${ARGS[@]}" "$URL"
-    else curl "${ARGS[@]}" "$URL" | jq
+    then
+    	curl "${ARGS[@]}" "$BINANCE_URL" && \
+    	curl "${ARGS[@]}" "$KRAKEN_URL"
+    else
+    	curl "${ARGS[@]}" "$BINANCE_URL" | jq '.' && \
+    	curl "${ARGS[@]}" "$KRAKEN_URL" | jq '.result.XXBTZEUR.c'
     fi
 }
 
@@ -2583,6 +2824,54 @@ function json_new {
     esac
 }
 
+# WiP - Work-in-Progress
+# Intended to build a JSON object using variables and argument options, incomplete
+function json_create_object {
+    local ARGS=("$@") KEYS=() VALUES=() OBJECT DIGIT
+    for (( X = 0; X < "${#@}"; X += 1 ))
+    do
+        case "${ARGS[$X]}" in
+            -k|--key)
+                DIGIT=$(( "$X" + 1 ))
+                KEYS+=("${ARGS[$DIGIT]}")
+            ;;
+            -v|--value)
+                DIGIT=$(( "$X" + 1 ))
+                VALUES+=("${ARGS[$DIGIT]}")
+            ;;
+            *)
+                if is_json_object "${ARGS[$X]}"
+                then
+                    VALUES+=("${ARGS[$X]}")
+                else
+                    continue
+                fi
+            ;;
+        esac
+    done
+    [[ "${#VALUES[@]}" -ne "${#KEYS[@]}" ]] && {
+        print "Keys and values don't match"
+    }
+    print "Keys: ${KEYS[*]}"
+    print "Values: ${VALUES[*]}"
+    for (( Y = 0; Y < "${#KEYS[@]}"; Y += 1 ))
+    do
+        if [[ "$Y" -eq $(("${#KEYS[@]}" - 1)) ]]
+        then
+            if is_json "${VALUES[$Y]}"
+            then
+                OBJECT+='{"'"${KEYS[$Y]}"'":'"${VALUES[$Y]}"'}'
+            else
+                OBJECT+='{"'"${KEYS[$Y]}"'":"'"${VALUES[$Y]}"'"}'
+            fi
+        else
+            OBJECT+='{"'"${KEYS[$Y]}"'":"'"${VALUES[$Y]}"'"},'
+        fi
+    done
+    json_new "[$OBJECT]"
+    #json_add "[]" "[$OBJECT]"
+}
+
 # Creates a JSON array object from given argument variables
 function json_create_array {
     local STR='[' COUNT=0
@@ -3124,9 +3413,11 @@ function show_pattern {
     fi
 }
 
-# Encodes a set of character according to an assigned array.
+# Encodes a set of character according to an assigned array
+# shellcheck disable=SC1003
 function encode_char {
     local -A dictionary
+    # shellcheck disable=SC1003
     dictionary=(
         ['0']='00' ['1']='01' ['2']='02' ['3']='03' ['4']='04' ['5']='05' ['6']='06'
         ['7']='07' ['8']='08' ['9']='09' ['A']='0a' ['B']='0b' ['C']='0c' ['D']='0d'
@@ -3139,11 +3430,11 @@ function encode_char {
         ['r']='1o' ['s']='1p' ['t']='1q' ['u']='1r' ['v']='1s' ['w']='1t' ['x']='1u'
         ['y']='1v' ['z']='20' ['å']='21' ['ä']='22' ['ö']='23' ['?']='24' ['!']='25'
         ['+']='26' ['=']='27' ['#']='28' ['%']='29' ['&']='2a' ['@']='2b' ['"']='2c'
-        ["'"]='2d' ['-']='2e' ['_']='2f' ['/']='2g' ['|']='2h' [\\]='2i'  [' ']='2j'
+        ["'"]='2d' ['-']='2e' ['_']='2f' ['/']='2g' ['|']='2h' ['\']='2i'  [' ']='2j'
         [':']='2k' [';']='2l' [',']='2m' ['.']='2n' ['^']='2o' ['*']='2p' ['¡']='2q'
         ['¤']='2r' ['(']='2s' [')']='2t' ['{']='2u' ['}']='2v' ['[']='30' [']']='31'
         ['<']='32' ['>']='33' ['~']='34' ['`']='35' ['´']='36' ['$']='37' ['€']='38'
-        ['¥']='39' ['£']='3a' ['₿']='3b' 
+        ['¥']='39' ['£']='3a' ['₿']='3b'
     )
     local -r args="$*"
     for (( I = 0; I < "${#args}"; I += 1 ))
@@ -3155,7 +3446,8 @@ function encode_char {
     printf '\n'
 }
 
-# Decodes a set of character according to an assigned array.
+# Decodes a set of character according to an assigned array
+# shellcheck disable=SC1003
 function decode_char {
     local -A dictionary
     dictionary=(
@@ -3170,11 +3462,11 @@ function decode_char {
         ['1o']='r' ['1p']='s' ['1q']='t' ['1r']='u' ['1s']='v' ['1t']='w' ['1u']='x'
         ['1v']='y' ['20']='z' ['21']='å' ['22']='ä' ['23']='ö' ['24']='?' ['25']='!'
         ['26']='+' ['27']='=' ['28']='#' ['29']='%' ['2a']='&' ['2b']='@' ['2c']='"'
-        ['2d']="'" ['2e']='-' ['2f']='_' ['2g']='/' ['2h']='|' ['2i']=\\  ['2j']=' '
+        ['2d']="'" ['2e']='-' ['2f']='_' ['2g']='/' ['2h']='|' ['2i']='\'  ['2j']=' '
         ['2k']=':' ['2l']=';' ['2m']=',' ['2n']='.' ['2o']='^' ['2p']='*' ['2q']='¡'
         ['2r']='¤' ['2s']='(' ['2t']=')' ['2u']='{' ['2v']='}' ['30']='[' ['31']=']'
         ['32']='<' ['33']='>' ['34']='~' ['35']='`' ['36']='´' ['37']='$' ['38']='€'
-        ['39']='¥' ['3a']='£' ['3b']='₿' 
+        ['39']='¥' ['3a']='£' ['3b']='₿'
     )
     local -r args="$*"
     for (( I = 0; I < "${#args}"; I += 2 ))
@@ -3240,6 +3532,36 @@ function dictionary {
 # 2:
 # 3:
 
+# Sends a HTTP/TCP request to the Docker daemon using cURL 
+# Return codes
+# 1: Missing command: curl
+# 2: Missing command: jq
+# 3: Invalid number of arguments
+function docker_request {
+    ! has_cmd 'curl' && { return 1; }
+    ! has_cmd 'jq' && { return 2; }
+    local RESPONSE
+    if [[ "$#" -eq 1 ]]; then
+      RESPONSE="$(curl --silent \
+        --unix-socket /var/run/docker.sock \
+        --header "Content-Type: application/json" \
+        localhost/v1.42"$1")"
+    elif [[ "$#" -eq 3 ]]; then
+      RESPONSE="$(curl --silent \
+        --unix-socket /var/run/docker.sock \
+        --header "Content-Type: application/json" \
+        --request "$1" \
+        --data "$2" \
+        localhost/v1.42"$3")"
+    else
+      printf '\e[1;31m%s\e[0m %s\n' "ERROR" "Invalid number of arguments: $#/(1|3)" 1>&2
+    fi
+    if [[ ! "$RESPONSE" == "Not Found" ]]; then
+      jq <<<"$RESPONSE"
+    else
+      printf '\e[1;31m%s\e[0m %s\n' "ERROR" "Endpoint not found" 1>&2
+    fi
+}
 
 # Get the images names, tag & repository
 # Return codes
@@ -3264,7 +3586,7 @@ function get_images {
 # Get the Container ID & Name of running containers
 # Return codes
 # 1: Missing command: curl
-# 2: Missing command: awk
+# 2: Command not found: awk
 # 3: Invalid number of arguments
 function get_containers {
     ! has_cmd 'curl' && { return 1; }
