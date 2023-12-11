@@ -5,6 +5,10 @@
     printf '%s\n' "Invalid number of arguments: $#/1"
 }
 
+if ! command -v curl &> /dev/null; then
+    printf '\e[1;31m%s\e[0m %s\n' "ERROR" "Missing command: curl"
+fi
+
 # Password check against haveibeenpwned API
 function check_password {
     local PASS EXISTS
