@@ -19,7 +19,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="description" content="A front-end template that helps you build fast, modern mobile web apps.">
+    <meta name="description" content="Stuffz">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
     <title>Dockr Dashboard</title>
 
@@ -131,80 +131,6 @@
                 up: time,
             }];
         };
-      </script>
-      <main class="mdl-layout__content">
-        <div class="page-content">
-          <div class="mdl-grid">
-            <div class="mdl-cell mdl-cell--6-col mdl-cell--4-col-phone" x-data="{}">
-              <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
-                <thead>
-                  <tr>
-                    <th class="mdl-data-table__cell--non-numeric">Arch</th>
-                    <th class="mdl-data-table__cell--non-numeric">Images</th>
-                    <th class="mdl-data-table__cell--non-numeric">Containers</th>
-                    <th class="mdl-data-table__cell--non-numeric">Version</th>
-                    <th class="mdl-data-table__cell--non-numeric">Uptime</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <template x-for="system in await get_system_info();">
-                  <tr>
-                      <td style="text-align: center;" class="mdl-data-table__cell--non-numeric" 
-                          x-text="system.arch"></td>
-                      <td style="text-align: center;" class="mdl-data-table__cell--non-numeric" 
-                          x-text="system.img"></td>
-                      <td style="text-align: center;" class="mdl-data-table__cell--numeric" 
-                          x-text="system.ct"></td>
-                      <td style="text-align: center;" class="mdl-data-table__cell--numeric" 
-                          x-text="system.v"></td>
-                      <td class="mdl-data-table__cell--numeric" 
-                          x-text="system.up"></td>
-                  </tr>
-                  </template>
-                </tbody>
-              </table>
-            </div>
-            <div class="mdl-cell mdl-cell--4-col mdl-cell--4-col-phone"></div>
-            <div class="mdl-cell mdl-cell--4-col" x-data="{}">
-              <!-- mdl-data-table--selectable -->
-              <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
-                <thead>
-                  <tr>
-                    <th class="mdl-data-table__cell--non-numeric">Name</th>
-                    <th class="mdl-data-table__cell--non-numeric">Tag</th>
-                    <th class="mdl-data-table__cell--non-numeric">Containers</th>
-                    <th class="mdl-data-table__cell--non-numeric">Version</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <template x-for="image in await get_images();">
-                  <tr>
-                      <td style="text-align: center;" 
-                          class="mdl-data-table__cell--non-numeric" 
-                          x-text="image.name"></td>
-                      <td style="text-align: center;" 
-                          class="mdl-data-table__cell--non-numeric" 
-                          x-text="image.tag"></td>
-                      <td style="text-align: center;" 
-                          class="mdl-data-table__cell--numeric" 
-                          x-text="image.containers"></td>
-                      <td style="text-align: center;" 
-                          class="mdl-data-table__cell--numeric" 
-                          x-text="image.version"></td>
-                  </tr>
-                  </template>
-                </tbody>
-              </table>
-            </div>
-            <div class="mdl-cell mdl-cell--4-col mdl-cell--4-col-phone"></div>
-          </div>
-        </div>
-      </main>
-    </div>
-    <script src="material.min.js"></script>
-    <script src="htmx.min.js"></script>
-    <script src="alpine.js"></script>
-    <script>
       function test(data) {
           console.log(data);
       };
@@ -303,6 +229,78 @@
       async function toggle_class(element_id, class_string) {
         document.getElementById(element_id).classList.toggle(class_string);
       };
-    </script>
+      </script>
+    <script src="material.min.js"></script>
+    <script src="htmx.min.js"></script>
+    <script src="alpine.js"></script>
+      <main class="mdl-layout__content">
+        <div class="page-content">
+          <div class="mdl-grid">
+            <div class="mdl-cell mdl-cell--6-col mdl-cell--4-col-phone" x-data="{}">
+              <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+                <thead>
+                  <tr>
+                    <th class="mdl-data-table__cell--non-numeric">Arch</th>
+                    <th class="mdl-data-table__cell--non-numeric">Images</th>
+                    <th class="mdl-data-table__cell--non-numeric">Containers</th>
+                    <th class="mdl-data-table__cell--non-numeric">Version</th>
+                    <th class="mdl-data-table__cell--non-numeric">Uptime</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <template x-for="system in await get_system_info();">
+                  <tr>
+                      <td style="text-align: center;" class="mdl-data-table__cell--non-numeric" 
+                          x-text="system.arch"></td>
+                      <td style="text-align: center;" class="mdl-data-table__cell--non-numeric" 
+                          x-text="system.img"></td>
+                      <td style="text-align: center;" class="mdl-data-table__cell--numeric" 
+                          x-text="system.ct"></td>
+                      <td style="text-align: center;" class="mdl-data-table__cell--numeric" 
+                          x-text="system.v"></td>
+                      <td class="mdl-data-table__cell--numeric" 
+                          x-text="system.up"></td>
+                  </tr>
+                  </template>
+                </tbody>
+              </table>
+            </div>
+            <div class="mdl-cell mdl-cell--4-col mdl-cell--4-col-phone"></div>
+            <div class="mdl-cell mdl-cell--4-col" x-data="{}">
+              <!-- mdl-data-table--selectable -->
+              <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+                <thead>
+                  <tr>
+                    <th class="mdl-data-table__cell--non-numeric">Name</th>
+                    <th class="mdl-data-table__cell--non-numeric">Tag</th>
+                    <th class="mdl-data-table__cell--non-numeric">Containers</th>
+                    <th class="mdl-data-table__cell--non-numeric">Version</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <template x-for="image in await get_images();">
+                  <tr>
+                      <td style="text-align: center;" 
+                          class="mdl-data-table__cell--non-numeric" 
+                          x-text="image.name"></td>
+                      <td style="text-align: center;" 
+                          class="mdl-data-table__cell--non-numeric" 
+                          x-text="image.tag"></td>
+                      <td style="text-align: center;" 
+                          class="mdl-data-table__cell--numeric" 
+                          x-text="image.containers"></td>
+                      <td style="text-align: center;" 
+                          class="mdl-data-table__cell--numeric" 
+                          x-text="image.version"></td>
+                  </tr>
+                  </template>
+                </tbody>
+              </table>
+            </div>
+            <div class="mdl-cell mdl-cell--4-col mdl-cell--4-col-phone"></div>
+          </div>
+        </div>
+      </main>
+    </div>
   </body>
 </html>

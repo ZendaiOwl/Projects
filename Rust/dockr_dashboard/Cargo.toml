@@ -16,7 +16,7 @@ edition = "2021"
 # build = ""
 # exclude = [""]
 # include = [""]
-publish = ["false"]
+publish = false
 
 # [profile.dev]
 # opt-level = 0
@@ -30,7 +30,7 @@ publish = ["false"]
 base64 = "0.21.0"
 hyper = { version = "0.14.25", features = ["stream"] }
 hyperlocal = "0.8"
-reqwasm = "0.5.0"
+#reqwasm = "0.5.0"
 serde_json = "1.0.94"
 serde = { version = "1", features = ["derive"] }
 tokio = { version = "1", features = ["full"] }
