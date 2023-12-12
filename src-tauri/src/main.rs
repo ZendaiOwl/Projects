@@ -88,7 +88,52 @@ async fn container_restart(
     let response_data = client.restart_container(&id, &signal, time).await;
     response_data
 }
+/**
+#[tauri::command]
+async fn get_container_logs(
+  id: String
+) -> String {
+    let client = Connect::new();
+    let response_data = client.container_logs(&id).await;
+    response_data
+}
 
+#[tauri::command]
+async fn container_run(
+  ct: Json
+) -> String {
+    let mut client = Connect::new();
+    let response_data = client.run_container(ct).await;
+    response_data
+}
+
+#[tauri::command]
+async fn container_run_to_writer(
+  request: Json
+) -> Json {
+    let mut client = Connect::new();
+    let response_data = client.run_container_to_writer(request).await;
+    response_data
+}
+
+#[tauri::command]
+async fn container_run_detached(
+  request: Json
+) -> Json {
+    let mut client = Connect::new();
+    let response_data = client.run_container_detached(request).await;
+    response_data
+}
+
+#[tauri::command]
+async fn container_run_detached_to_writer(
+  request: Json
+) -> Json {
+    let mut client = Connect::new();
+    let response_data = client.run_container_detached_to_writer(request).await;
+    response_data
+}
+**/
 #[tauri::command]
 async fn fetch_images() -> Json {
     let client = Connect::new();
@@ -171,6 +216,8 @@ fn main() {
           fetch_networks, fetch_system_info,
           container_create, container_remove, container_start, 
           container_stop, container_restart, container_create_with_name,
+          //container_run, container_run_detached, get_container_logs,
+          //container_run_detached_to_writer, container_run_to_writer,
           pull_image, remove_image,
           network_remove, network_create,
           volume_remove, volume_create

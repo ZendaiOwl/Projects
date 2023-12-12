@@ -7,7 +7,7 @@
            extract_system_time,
            format_bytes,
            extract_locale_time
-          } from './functions.svelte';
+          } from '$lib/functions.svelte';
   
   let i = "";
   

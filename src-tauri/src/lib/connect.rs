@@ -471,7 +471,19 @@ impl Connect {
     }
 
     /**/
-    pub async fn run_container(&mut self, req_body: Json) -> String {
+    pub async fn run_container(&mut self, ct: Json) -> String {
+        let s = ct["Id"]
+            .as_str()
+            .expect("Failed to parse JSON string")
+            .to_string();
+        let ct_id = String::from(&s[0..11]);
+        self.wait_container(&ct_id).await;
+        self.start_container(&ct_id).await;
+        self.container_logs(&ct_id).await
+    }
+
+    /**/
+    pub async fn create_run_container(&mut self, req_body: Json) -> String {
         let ct = self.create_container(req_body).await;
         let s = ct["Id"]
             .as_str()
@@ -484,7 +496,32 @@ impl Connect {
     }
 
     /**/
-    pub async fn run_container_to_writer(&mut self, req_body: Json) -> Json {
+    pub async fn run_container_to_writer(&mut self, ct: Json) -> Json {
+        let s = ct["Id"]
+            .as_str()
+            .expect("Failed to parse JSON string")
+            .to_string();
+        let ct_id = String::from(&s[0..11]);
+        let rjson_wait = self.wait_container(&ct_id).await;
+        let rjson_start = self.start_container(&ct_id).await;
+        let mut data = Vec::new();
+        self.container_logs_to_writer(&ct_id, &mut data).await;
+        let string_output = String::from_utf8(data).unwrap();
+        json!({
+            "Id": ct_id,
+            "ContainerID": s,
+            "Response": [
+                ct,
+                rjson_wait,
+                rjson_start,
+            ],
+            "Output": string_output
+
+        })
+    }
+
+    /**/
+    pub async fn create_run_container_to_writer(&mut self, req_body: Json) -> Json {
         let ct = self.create_container(req_body).await;
         let s = ct["Id"]
             .as_str()
@@ -493,8 +530,9 @@ impl Connect {
         let ct_id = String::from(&s[0..11]);
         let rjson_wait = self.wait_container(&ct_id).await;
         let rjson_start = self.start_container(&ct_id).await;
-        self.container_logs_to_writer(&ct_id, std::io::stdout().lock())
-            .await;
+        let mut data = Vec::new();
+        self.container_logs_to_writer(&ct_id, &mut data).await;
+        let string_output = String::from_utf8(data).unwrap();
         json!({
             "Id": ct_id,
             "ContainerID": s,
@@ -502,18 +540,17 @@ impl Connect {
                 ct,
                 rjson_wait,
                 rjson_start,
-            ]
+            ],
+            "Output": string_output
 
         })
     }
 
     /**/
-    pub async fn run_container_detached(&mut self, req_body: Json) -> Json {
-        let ct = self.create_container(req_body).await;
-        let s = ct["Id"]
-            .as_str()
-            .expect("Failed to parse JSON string")
-            .to_string();
+    pub async fn run_container_detached(&mut self, ct: Json) -> Json {
+        let s = ct["Id"].as_str()
+                        .expect("Failed to parse JSON string")
+                        .to_string();
         let ct_id = String::from(&s[0..11]);
         let json_response = self.start_container(&ct_id).await;
         self.container_logs(&ct_id).await;
@@ -529,7 +566,105 @@ impl Connect {
     }
 
     /**/
-    pub async fn run_container_detached_to_writer(&mut self, req_body: Json) -> Json {
+    pub async fn create_run_container_detached(
+      &mut self, req_body: Json
+    ) -> Json {
+        let ct = self.create_container(req_body).await;
+        let s = ct["Id"].as_str()
+                        .expect("Failed to parse JSON string")
+                        .to_string();
+        let ct_id = String::from(&s[0..11]);
+        let json_response = self.start_container(&ct_id).await;
+        self.container_logs(&ct_id).await;
+        json!({
+            "Id": ct_id,
+            "ContainerID": s,
+            "Response": [
+                ct,
+                json_response,
+            ]
+
+        })
+    }
+
+    /**/
+    pub async fn run_container_detached_to_writer(
+      &mut self, ct: Json
+    ) -> Json {
+        let s = ct["Id"]
+            .as_str()
+            .expect("Failed to parse JSON string")
+            .to_string();
+        let ct_id = String::from(&s[0..11]);
+        let json_response = self.start_container(&ct_id).await;
+        let mut data = Vec::new();
+        self.container_logs_to_writer(&ct_id, &mut data).await;
+        let string_output = String::from_utf8(data).unwrap();
+        json!({
+            "Id": ct_id,
+            "ContainerID": s,
+            "Response": [
+                ct,
+                json_response,
+            ],
+            "Output": string_output
+
+        })
+    }
+
+    /**/
+    pub async fn create_run_container_detached_to_writer(
+      &mut self, req_body: Json
+    ) -> Json {
+        let ct = self.create_container(req_body).await;
+        let s = ct["Id"]
+            .as_str()
+            .expect("Failed to parse JSON string")
+            .to_string();
+        let ct_id = String::from(&s[0..11]);
+        let json_response = self.start_container(&ct_id).await;
+        let mut data = Vec::new();
+        self.container_logs_to_writer(&ct_id, &mut data).await;
+        let string_output = String::from_utf8(data).unwrap();
+        json!({
+            "Id": ct_id,
+            "ContainerID": s,
+            "Response": [
+                ct,
+                json_response,
+            ],
+            "Output": string_output
+
+        })
+    }
+
+    /**/
+    pub async fn run_container_detached_to_stdout(
+      &mut self, ct: Json
+    ) -> Json {
+        let s = ct["Id"]
+            .as_str()
+            .expect("Failed to parse JSON string")
+            .to_string();
+        let ct_id = String::from(&s[0..11]);
+        let json_response = self.start_container(&ct_id).await;
+        self.container_logs_to_writer(&ct_id, std::io::stdout().lock())
+            .await;
+        json!({
+            "Id": ct_id,
+            "ContainerID": s,
+            "Response": [
+                ct,
+                json_response,
+            ]
+
+        })
+    }
+
+    /**/
+    pub async fn create_run_container_detached_to_stdout(
+      &mut self, req_body: Json
+    ) -> Json {
         let ct = self.create_container(req_body).await;
         let s = ct["Id"]
             .as_str()
