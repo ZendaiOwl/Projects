@@ -7,6 +7,7 @@ use crate::exec::*;
 use crate::system::*;
 use crate::format::*;
 use hyper::{service::Service, Body, Client};
+#[cfg(unix)]
 use hyperlocal::{UnixClientExt, UnixConnector};
 use serde_json::json;
 
