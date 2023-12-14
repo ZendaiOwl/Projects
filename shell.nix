@@ -20,6 +20,8 @@ let
     libsoup
     webkitgtk
     appimagekit
+    lld
+    llvm
   ];
 in
 pkgs.mkShell {
