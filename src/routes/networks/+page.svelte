@@ -4,4 +4,8 @@
 </script>
 
 <Navbar />
-<Networks />
+<div class="container">
+    <section class="block">
+        <Networks />
+    </section>
+</div>

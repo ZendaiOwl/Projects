@@ -4,4 +4,8 @@
 </script>
 
 <Navbar />
-<Images />
+<div class="container">
+    <section class="block">
+        <Images />
+    </section>
+</div>

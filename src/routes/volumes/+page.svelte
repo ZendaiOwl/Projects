@@ -4,4 +4,8 @@
 </script>
 
 <Navbar />
-<Volumes />
+<div class="container">
+    <section class="block">
+        <Volumes />
+    </section>
+</div>

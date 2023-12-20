@@ -5,4 +5,9 @@
 </script>
 
 <Navbar />
-<Containers />
+<div class="container">
+    <section class="block">
+        <Containers />
+    </section>
+</div>
+
