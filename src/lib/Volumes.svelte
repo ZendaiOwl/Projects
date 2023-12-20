@@ -1,120 +1,137 @@
 <script>
-  import { invoke } from "@tauri-apps/api/tauri";
-  import { onMount } from "svelte";
-  import { strip_name, 
-           Unix_timestamp, 
-           print_ports,
-           extract_volume_mountpoint,
-           extract_system_time,
-           extract_time,
-           test_name,
-           string_12
-          } from './functions.svelte';
-  import RefreshIcon from '$lib/assets/refresh.svg';
-  import TrashIcon from '$lib/assets/trash.svg';
-  
-  let volumes_list = [];
-  let vol = "";
-  
-  
-  let volume_name;
-  let dialog;
-  let dialog_data;
-  
-  function get_label_key(labels) {
-    let output = "";
-    for (var i in labels) {
-      output += i + "\n";
-    }
-    return output;
-  };
-  
-  function get_label_value(labels) {
-    let output = "";
-    for (var i in labels) {
-      output += labels[i] + "\n";
-    }
-    return output;
-  };
-  
-  async function update_volumes_list() {
-    await invoke('fetch_volumes').then((result) => {
-      volumes_list = result.Volumes;
-    }).catch((error) => {
-      dialog_data = error;
-      dialog.showModal();
-    });
-  };
-  
-  async function remove_volume(NAME) {
-    await invoke('volume_remove', {
-      name: NAME.Name, force: false
-    }).then((result) => {
-      update_volumes_list();
-      if (result.StatusCode != 204) {
-        dialog_data = result.Message;
-        dialog.showModal();
-      }
-    }).catch((error) => {
-      dialog_data = error;
-      dialog.showModal();
-    });
-  };
-  
-  async function create_volume(event) {
-    let formData = new FormData(event.target);
-    let data = Object.fromEntries(formData.entries());
-    let obj = {};
+    import { invoke } from "@tauri-apps/api/tauri";
+    import { onMount } from "svelte";
+    import { strip_name, 
+             Unix_timestamp, 
+             print_ports,
+             extract_volume_mountpoint,
+             extract_system_time,
+             extract_time,
+             test_name,
+             string_12
+            } from './functions.svelte';
+    import RefreshIcon from '$lib/assets/refresh.svg';
+    import TrashIcon from '$lib/assets/trash.svg';
     
-    if (volume_name) {
-      obj.Name = volume_name;
+    let volumes_list = [];
+    let vol = "";
+    
+    
+    let volume_name;
+    let valid_name;
+    let name_regex = new RegExp('^[a-zA-Z0-9][a-zA-Z0-9_.-]*$');
+    let dialog;
+    let dialog_data;
+    
+    function get_label_key(labels) {
+        let output = "";
+        for (var i in labels) {
+            output += i + "\n";
+        }
+        return output;
     };
     
-    obj.Driver = "local";
-    obj.DriverOpts = {};
+    function get_label_value(labels) {
+        let output = "";
+        for (var i in labels) {
+            output += labels[i] + "\n";
+        }
+        return output;
+    };
     
-    obj.Labels = {};
+    function check_volume_name() {
+        valid_name = name_regex.test(volume_name);
+        if (volume_name == '') {
+            valid_name = true;
+        };
+    };
     
-    let label_input = document.getElementsByName('label[]');
-    let value_input = document.getElementsByName('value[]');
+    async function update_volumes_list() {
+        await invoke('fetch_volumes').then((result) => {
+            volumes_list = result.Volumes;
+        }).catch((error) => {
+            dialog_data = error;
+            dialog.showModal();
+        });
+    };
     
+    async function remove_volume(NAME) {
+        await invoke('volume_remove', {
+            name: NAME.Name.toString(), force: false
+        }).then((result) => {
+            update_volumes_list();
+            if (result) {
+                if (result.error.includes("volume is being used")) {
+                    dialog_data = "Volume is being used";
+                    dialog.showModal();
+                };
+            };
+        }).catch((error) => {
+            dialog_data = error;
+            dialog.showModal();
+            update_volumes_list();
+        });
+    };
     
-    for (var i = 0; i < label_input.length; i++) {
-      if (label_input[i].value != "") {
-        obj.Labels[label_input[i].value] = value_input[i].value;
-      }
-    }
+    async function create_volume(event) {
+        let formData = new FormData(event.target);
+        let data = Object.fromEntries(formData.entries());
+        let obj = {};
+        
+        if (volume_name) {
+            obj.Name = volume_name;
+        } else {
+            obj.Name = "none"
+        };
+        
+        obj.Driver = "local";
+        obj.DriverOpts = {};
+        
+        obj.Labels = {};
+        
+        let label_input = document.getElementsByName('label[]');
+        let value_input = document.getElementsByName('value[]');
+        
+        if (label_input[0].value != "") {
+            for (var i = 0; i < label_input.length; i++) {
+                if (label_input[i].value != "") {
+                    obj.Labels[label_input[i].value] = value_input[i].value;
+                }
+            }
+        } else {
+            obj.Labels = "none";
+        };
+        
+        if (valid_name) {
+            await invoke('volume_create', { request: obj }).then((result) => {
+                update_volumes_list();
+            }).catch((error) => {
+                dialog_data = error;
+                dialog.showModal();
+            });
+        };
+    };
     
+    function add_row() {
+        let table = document.getElementById("volumes_labels");
+        let row = table.insertRow(-1);
+        let cell1 = row.insertCell(0);
+        let cell2 = row.insertCell(1);
+        
+        cell1.innerHTML = '<input class="input is-normal" type="text" name="label[]">';
+        cell2.innerHTML = '<input class="input is-normal" type="text" name="value[]">';
+    };
     
-    await invoke('volume_create', { request: obj }).then((result) => {
-      update_volumes_list();
-    }).catch((error) => {
-      dialog_data = error;
-      dialog.showModal();
+    function delete_last_row() {
+        if (document.getElementById("volumes_labels").rows.length > 1) {
+            document.getElementById("volumes_labels").deleteRow(-1);
+        }
+    };
+    
+    onMount(async function () {
+        update_volumes_list();
+        dialog = document.getElementById('a_dialog');
     });
-  };
-  
-  function add_row() {
-    let table = document.getElementById("volumes_labels");
-    let row = table.insertRow(-1);
-    let cell1 = row.insertCell(0);
-    let cell2 = row.insertCell(1);
-    
-    cell1.innerHTML = '<input class="input is-normal" type="text" name="label[]">';
-    cell2.innerHTML = '<input class="input is-normal" type="text" name="value[]">';
-    
-  };
-  
-  function delete_last_row() {
-    if (document.getElementById("volumes_labels").rows.length > 1) {
-      document.getElementById("volumes_labels").deleteRow(-1);
-    }
-  };
-  
-  onMount(async function () {
-     update_volumes_list();
-     dialog = document.getElementById('a_dialog');
-  });
   
 </script>
 
@@ -155,8 +172,12 @@
                               placeholder="Volume name" 
                               name="Volumename"
                               id="Volume_name"
-                              bind:value={volume_name}>
+                              bind:value={volume_name}
+                              on:input={check_volume_name}>
                         </label>
+                        {#if valid_name == false}
+                            <p class="help is-danger">Invalid name</p>
+                        {/if}
                       </div>
                   </div>
                   

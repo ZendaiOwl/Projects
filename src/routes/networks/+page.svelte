@@ -1,7 +1,7 @@
 <script>
   import Navbar from '../../lib/Navbar.svelte'
-  import NetworksOverview from '../../lib/NetworksOverview.svelte'
+  import Networks from '../../lib/Networks.svelte'
 </script>
 
 <Navbar />
-<NetworksOverview />
+<Networks />

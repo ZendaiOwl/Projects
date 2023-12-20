@@ -24,7 +24,7 @@
   
   async function update_networks_list() {
      await invoke('fetch_networks').then((result) => {
-      networks = result;
+      networks = result.networks;
      }).catch((error) => {
       dialog_data = error;
       dialog.showModal();
@@ -68,17 +68,17 @@
     obj.Name = network_name;
     
     if (data.check_duplicate == "on") {
-      obj.CheckDuplicate = true;
+      obj.CheckDuplicate = "true";
     } else {
-      obj.CheckDuplicate = false;
+      obj.CheckDuplicate = "false";
     }
     
-    obj.Driver = "bridge";
+    obj.Driver = 'bridge';
     
     if (data.enable_ipv6 == "on") {
-      obj.EnableIPv6 = true;
+      obj.EnableIPv6 = "true";
     } else {
-      obj.EnableIPv6 = false;
+      obj.EnableIPv6 = "false";
     }
     
     obj.IPAM = {};
@@ -98,39 +98,43 @@
     // obj.IPAM.Options = {};
     
     if (data.internal == "on") {
-      obj.Internal = true;
+      obj.Internal = "true";
     } else {
-      obj.Internal = false;
+      obj.Internal = "false";
     }
     
     if (data.attachable == "on") {
-      obj.Attachable = true;
+      obj.Attachable = "true";
     } else {
-      obj.Attachable = false;
+      obj.Attachable = "false";
     }
     
     if (data.ingress == "on") {
-      obj.Ingress = true;
+      obj.Ingress = "true";
     } else {
-      obj.Ingress = false;
+      obj.Ingress = "false";
     }
     
     if (bridge_name) {
       obj.Options = {
         "com.docker.network.bridge.name": bridge_name
       };
-    }
+    } else {
+        obj.Options = "none";
+    };
     
-    await invoke('network_create', { request: obj }).then((result) => {
-      console.log(result);
-      if (result.response == 500) {
-        dialog_data = uppercase_first_letter(result.message);
-        dialog.showModal();
-      }
-      update_networks_list();
+    await invoke('network_create', {
+        name: network_name, request: obj
+    }).then((result) => {
+        console.log(result);
+        if (result.response == 500) {
+            dialog_data = uppercase_first_letter(result.message);
+            dialog.showModal();
+        }
+        update_networks_list();
     }).catch((error) => {
-      dialog_data = error;
-      dialog.showModal();
+        dialog_data = error;
+        dialog.showModal();
     });
     
   };

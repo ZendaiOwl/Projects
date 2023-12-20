@@ -1,5 +1,5 @@
 let
-  pkgs = import <nixpkgs> { };
+  pkgs = import <nixpkgs> { overlays = [ (import <rust-overlay>) ]; };
 
   libraries = with pkgs;[
     webkitgtk
@@ -22,6 +22,8 @@ let
     appimagekit
     lld
     llvm
+    rust-bin.stable.latest.default
+    rust-analyzer
   ];
 in
 pkgs.mkShell {
@@ -32,13 +34,5 @@ pkgs.mkShell {
       export XDG_DATA_DIRS=${pkgs.gsettings-desktop-schemas}/share/gsettings-schemas/${pkgs.gsettings-desktop-schemas.name}:${pkgs.gtk3}/share/gsettings-schemas/${pkgs.gtk3.name}:$XDG_DATA_DIRS
       export LD_LIBRARY_PATH=${pkgs.lib.makeLibraryPath libraries}:$LD_LIBRARY_PATH
     '';
-  preFixup = ''
-    gappsWrapperArgs+=(
-      --set WEBKIT_DISABLE_COMPOSITING_MODE 1
-      --prefix XDG_DATA_DIRS : ${pkgs.lib.concatMapStringsSep ":" (x: "${x}/share") [ pkgs.gnome.adwaita-icon-theme pkgs.shared-mime-info ]}
-      --prefix XDG_DATA_DIRS : ${pkgs.lib.concatMapStringsSep ":" (x: "${x}/share/gsettings-schemas/${x.name}") [ pkgs.glib pkgs.gsettings-desktop-schemas pkgs.gtk3 ]}
-      --prefix GIO_EXTRA_MODULES : ${pkgs.glib-networking}/lib/gio/modules
-    )
-  '';
 }
 

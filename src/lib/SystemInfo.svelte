@@ -44,24 +44,16 @@
                 <td>{#if i.Containers != undefined}{i.Containers}{/if}</td>
               </tr>
               <tr>
-                <td>Running</td>
+                <td>Running containers</td>
                 <td>{#if i.ContainersRunning != undefined}{i.ContainersRunning}{/if}</td>
               </tr>
               <tr>
-                <td>Paused</td>
+                <td>Paused containers</td>
                 <td>{#if i.ContainersPaused != undefined}{i.ContainersPaused}{/if}</td>
               </tr>
               <tr>
-                <td>Stopped</td>
+                <td>Stopped containers</td>
                 <td>{#if i.ContainersStopped != undefined}{i.ContainersStopped}{/if}</td>
-              </tr>
-              <tr>
-                <td>System Time</td>
-                <td>{#if i.SystemTime != undefined}{extract_locale_time(i.SystemTime)}{/if}</td>
-              </tr>
-              <tr>
-                <td>Uptime</td>
-                <td>{#if i.Uptime != undefined}{i.Uptime}{/if}</td>
               </tr>
               <tr>
                 <td>Name</td>
@@ -92,14 +84,6 @@
                 <td>{#if i.MemTotal != undefined}{format_bytes(i.MemTotal)}{/if}</td>
               </tr>
               <tr>
-                <td>Swap free</td>
-                <td>{#if i.SwapFree != undefined}{format_bytes(i.SwapFree)}{/if}</td>
-              </tr>
-              <tr>
-                <td>Swap total</td>
-                <td>{#if i.SwapTotal != undefined}{format_bytes(i.SwapTotal)}{/if}</td>
-              </tr>
-              <tr>
                 <td>Memory limit</td>
                 <td>{#if i.MemoryLimit != undefined}{i.MemoryLimit}{/if}</td>
               </tr>
@@ -110,6 +94,34 @@
               <tr>
                 <td>Driver</td>
                 <td>{#if i.Driver != undefined}{i.Driver}{/if}</td>
+              </tr>
+              <tr>
+                <td>Docker Root Directory</td>
+                <td>{#if i.DockerRootDir != undefined}{i.DockerRootDir}{/if}</td>
+              </tr>
+              <tr>
+                <td>Experimental build</td>
+                <td>{#if i.ExperimentalBuild != undefined}{i.ExperimentalBuild}{/if}</td>
+              </tr>
+              <tr>
+                <td>Server version</td>
+                <td>{#if i.ServerVersion != undefined}{i.ServerVersion}{/if}</td>
+              </tr>
+              <tr>
+                <td>Product license</td>
+                <td>{#if i.ProductLicense != undefined}{i.ProductLicense}{/if}</td>
+              </tr>
+              <tr>
+                <td>Warnings</td>
+                <td>{#if i.Warnings != undefined}{i.Warnings}{/if}</td>
+              </tr>
+              <tr>
+                <td>Security options</td>
+                <td>{#if i.SecurityOptions != undefined}{i.SecurityOptions}{/if}</td>
+              </tr>
+              <tr>
+                <td>Default runtime</td>
+                <td>{#if i.DefaultRuntime != undefined}{i.DefaultRuntime}{/if}</td>
               </tr>
               <tr>
                 <td>CPU CFS Period</td>
@@ -148,40 +160,16 @@
                 <td>{#if i.Debug != undefined}{i.Debug}{/if}</td>
               </tr>
               <tr>
-                <td>NFd</td>
-                <td>{#if i.NFd != undefined}{i.NFd}{/if}</td>
-              </tr>
-              <tr>
-                <td>Oom kill disable</td>
-                <td>{#if i.OomKillDisable != undefined}{i.OomKillDisable}{/if}</td>
-              </tr>
-              <tr>
                 <td>NGoroutine</td>
                 <td>{#if i.NGoroutines != undefined}{i.NGoroutines}{/if}</td>
-              </tr>
-              <tr>
-                <td>Logging driver</td>
-                <td>{#if i.LoggingDriver != undefined}{i.LoggingDriver}{/if}</td>
-              </tr>
-              <tr>
-                <td>Cgroup driver</td>
-                <td>{#if i.CgroupDrivers != undefined}{i.CgroupDriver}{/if}</td>
               </tr>
               <tr>
                 <td>NEvents listener</td>
                 <td>{#if i.NEventsListener != undefined}{i.NEventsListener}{/if}</td>
               </tr>
               <tr>
-                <td>Index server address</td>
-                <td>{#if i.IndexServerAddress != undefined}{i.IndexServerAddress}{/if}</td>
-              </tr>
-              <tr>
                 <td>NCPU</td>
                 <td>{#if i.NCPU != undefined}{i.NCPU}{/if}</td>
-              </tr>
-              <tr>
-                <td>Docker Root Directory</td>
-                <td>{#if i.DockerRootDir != undefined}{i.DockerRootDir}{/if}</td>
               </tr>
               <tr>
                 <td>Http proxy</td>
@@ -200,56 +188,12 @@
                 <td>{#if i.Labels != null}{i.Labels}{/if}</td>
               </tr>
               <tr>
-                <td>Experimental build</td>
-                <td>{#if i.ExperimentalBuild != undefined}{i.ExperimentalBuild}{/if}</td>
-              </tr>
-              <tr>
-                <td>Server version</td>
-                <td>{#if i.ServerVersion != undefined}{i.ServerVersion}{/if}</td>
-              </tr>
-              <tr>
-                <td>Default runtime</td>
-                <td>{#if i.DefaultRuntime != undefined}{i.DefaultRuntime}{/if}</td>
-              </tr>
-              <tr>
                 <td>Live restore enabled</td>
                 <td>{#if i.LiveRestoreEnabled != undefined}{i.LiveRestoreEnabled}{/if}</td>
               </tr>
               <tr>
-                <td>Isolation</td>
-                <td>{#if i.Isolation != undefined}{i.Isolation}{/if}</td>
-              </tr>
-              <tr>
-                <td>Security options</td>
-                <td>{#if i.SecurityOptions != undefined}{i.SecurityOptions}{/if}</td>
-              </tr>
-              <tr>
-                <td>Product license</td>
-                <td>{#if i.ProductLicense != undefined}{i.ProductLicense}{/if}</td>
-              </tr>
-              <tr>
-                <td>Warnings</td>
-                <td>{#if i.Warnings != undefined}{i.Warnings}{/if}</td>
-              </tr>
-              <tr>
-                <td>Buildah version</td>
-                <td>{#if i.BuildahVersion != undefined}{i.BuildahVersion}{/if}</td>
-              </tr>
-              <tr>
-                <td>CPU realtime period</td>
-                <td>{#if i.CPURealtimePeriod != undefined}{i.CPURealtimePeriod}{/if}</td>
-              </tr>
-              <tr>
-                <td>CPU realtime runtime</td>
-                <td>{#if i.CPURealtimeRuntime != undefined}{i.CPURealtimeRuntime}{/if}</td>
-              </tr>
-              <tr>
                 <td>Cgroup version</td>
                 <td>{#if i.CgroupVersion != undefined}{i.CgroupVersion}{/if}</td>
-              </tr>
-              <tr>
-                <td>Rootless</td>
-                <td>{#if i.Rootless != undefined}{i.Rootless}{/if}</td>
               </tr>
             </tbody>
           </table>

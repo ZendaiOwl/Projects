@@ -1,8 +1,8 @@
 <script>
   import Navbar from '../../lib/Navbar.svelte'
-  import CreateContainer from '../../lib/CreateContainer.svelte'
+  import Containers from '../../lib/Containers.svelte'
   
 </script>
 
 <Navbar />
-<CreateContainer />
+<Containers />

@@ -1,7 +1,7 @@
 <script>
   import Navbar from '../../lib/Navbar.svelte'
-  import ImagesOverview from '../../lib/ImagesOverview.svelte'
+  import Images from '../../lib/Images.svelte'
 </script>
 
 <Navbar />
-<ImagesOverview />
+<Images />

@@ -1,7 +1,7 @@
 <script>
   import Navbar from '../../lib/Navbar.svelte'
-  import VolumesOverview from '../../lib/VolumesOverview.svelte'
+  import Volumes from '../../lib/Volumes.svelte'
 </script>
 
 <Navbar />
-<VolumesOverview />
+<Volumes />
