@@ -254,7 +254,7 @@ async fn fetch_containers() -> JSON {
 
 #[tauri::command(rename_all = "snake_case")]
 async fn container_create(
-    i: String, name: String, data: JSON
+    i: String, name: String, network: String, data: JSON
 ) -> JSON {
     let docker: Docker = Docker::connect_with_local_defaults().unwrap();
     let options = Some(CreateContainerOptions::<String>{
@@ -303,10 +303,8 @@ async fn container_create(
         host_configuration.privileged = Some(false);
     };
     
-    if data["HostConfig"]["NetworkMode"] != "none" {
-        host_configuration.network_mode = Some(
-            data["HostConfig"]["NetworkMode"].to_string()
-        );
+    if network != "none" {
+        host_configuration.network_mode = Some(network);
     };
     
     if data["HostPort"] != "none" 
@@ -317,8 +315,9 @@ async fn container_create(
             vec![port_host].into()
         );
         host_configuration.port_bindings = Some(ports);
-        config.host_config = Some(host_configuration);
     };
+    
+    config.host_config = Some(host_configuration);
     
     if data["Cmd"] != "none" {
         config.cmd = Some(vec![data["Cmd"].to_string()]);

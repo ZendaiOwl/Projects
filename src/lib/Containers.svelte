@@ -227,9 +227,9 @@
         obj.HostConfig = {};
         
         if (data.Network != "") {
-            obj.HostConfig.NetworkMode = network;
+            obj.Network = network;
         } else {
-            obj.HostConfig.NetworkMode = "none";
+            obj.Network = "none";
         };
         
         obj.HostConfig.PublishAllPorts = false;
@@ -243,7 +243,7 @@
         if (invalid == false) {
             await invoke('container_create', {
                 i: image, name: data.Name, 
-                data: obj
+                network: obj.Network, data: obj
             }).then((resp) => {
                 update_containers_list();
                 console.log(resp);
@@ -315,7 +315,7 @@
                 <select name="Network" bind:value={network} id="network_select">
                     <option value="">Select network</option>
                     {#each network_list as { Name } }
-                    <option>{Name}</option>
+                        <option>{Name}</option>
                     {/each}
                 </select>
                 </div>
