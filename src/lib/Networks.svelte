@@ -1,191 +1,180 @@
 <script>
-  import { invoke } from "@tauri-apps/api/tauri";
-  import { onMount } from "svelte";
-  import { strip_name, 
-           Unix_timestamp, 
-           print_ports,
-           extract_time,
-           test_name,
-           valid_ip,
-           uppercase_first_letter,
-           string_12
-          } from './functions.svelte';
-  import RefreshIcon from '$lib/assets/refresh.svg';
-  import TrashIcon from '$lib/assets/trash.svg';
-  
-  let networks = [];
-  let network_name;
-  let bridge_name;
-  let host_binding_ipv4;
-  let ip_validation;
-  let name_validation;
-  let dialog;
-  let dialog_data;
-  
-  async function update_networks_list() {
-     await invoke('fetch_networks').then((result) => {
-      networks = result.networks;
-     }).catch((error) => {
-      dialog_data = error;
-      dialog.showModal();
-     });
-  };
-  
-  function print_containers(data) {
-    let keys = Object.keys(data);
-    return keys.length;
-  };
-  
-  function get_gateway(data) {
-  var output = "";
-    for (var i = 0; i < data.IPAM.Config.length; i++) {
-      output += data.IPAM.Config[i].Gateway + "\n";
-    }
-    return output;
-  };
-  
-  function get_subnet(data) {
-  var output = "";
-    for (var i = 0; i < data.IPAM.Config.length; i++) {
-      output += data.IPAM.Config[i].Subnet + "\n";
-    }
-    return output;
-  };
-  
-  async function delete_network(name) {
-    await invoke('network_remove', { id: name }).then((result) => {
-      update_networks_list();
-    }).catch((error) => {
-      console.log(error);
-    });
-  };
-  
-  async function create_network(event) {
-    let formData = new FormData(event.target);
-    let data = Object.fromEntries(formData.entries());
-    let obj = {};
+    import { invoke } from "@tauri-apps/api/tauri";
+    import { onMount } from "svelte";
+    import { strip_name, 
+             Unix_timestamp, 
+             print_ports,
+             extract_time,
+             test_name,
+             valid_ip,
+             uppercase_first_letter,
+             string_12
+            } from './functions.svelte';
+    import RefreshIcon from '$lib/assets/refresh.svg';
+    import TrashIcon from '$lib/assets/trash.svg';
     
-    obj.Name = network_name;
+    let networks = [];
+    let network_name;
+    let bridge_name;
+    let host_binding_ipv4;
+    let ip_validation;
+    let name_validation;
+    let dialog;
+    let dialog_data;
     
-    if (data.check_duplicate == "on") {
-      obj.CheckDuplicate = "true";
-    } else {
-      obj.CheckDuplicate = "false";
-    }
-    
-    obj.Driver = 'bridge';
-    
-    if (data.enable_ipv6 == "on") {
-      obj.EnableIPv6 = "true";
-    } else {
-      obj.EnableIPv6 = "false";
-    }
-    
-    obj.IPAM = {};
-    obj.IPAM.Driver = "default";
-    
-    // obj.IPAM.Config = [];
-    // {
-    //   "Subnet": "172.20.0.0/16",
-    //   "IPRange": "172.20.10.0/24",
-    //   "Gateway": "172.20.10.11"
-    // },
-    // {
-    //   "Subnet": "2001:db8:abcd::/64",
-    //   "Gateway": "2001:db8:abcd::1011"
-    // }
-    
-    // obj.IPAM.Options = {};
-    
-    if (data.internal == "on") {
-      obj.Internal = "true";
-    } else {
-      obj.Internal = "false";
-    }
-    
-    if (data.attachable == "on") {
-      obj.Attachable = "true";
-    } else {
-      obj.Attachable = "false";
-    }
-    
-    if (data.ingress == "on") {
-      obj.Ingress = "true";
-    } else {
-      obj.Ingress = "false";
-    }
-    
-    if (bridge_name) {
-      obj.Options = {
-        "com.docker.network.bridge.name": bridge_name
-      };
-    } else {
-        obj.Options = "none";
+    async function update_networks_list() {
+        await invoke('fetch_networks').then((result) => {
+            networks = result.networks;
+        }).catch((error) => {
+            dialog_data = error;
+            dialog.showModal();
+        });
     };
     
-    await invoke('network_create', {
-        name: network_name, request: obj
-    }).then((result) => {
-        console.log(result);
-        if (result.response == 500) {
-            dialog_data = uppercase_first_letter(result.message);
-            dialog.showModal();
-        }
-        update_networks_list();
-    }).catch((error) => {
-        dialog_data = error;
-        dialog.showModal();
-    });
+    function print_containers(data) {
+        let keys = Object.keys(data);
+        return keys.length;
+    };
     
-  };
-  
-  function check_name() {
-    if (test_name(network_name)) {
-      name_validation = true;
-    } else {
-      name_validation = false;
-    }
-    if (network_name == '') {
-      name_validation = null;
-    }
-  };
-  
-  function checkIP() {
-    if (valid_ip(host_binding_ipv4)) {
-      ip_validation = true;
-    } else {
-      ip_validation = false;
-    }
-    if (host_binding_ipv4 == '') {
-      ip_validation = null;
-    }
-  };
-  
-  function return_delete_button() {
-    return '<button on:click={() => delete_network(net.Name)} class="button is-small has-tooltip-right" data-tooltip="Delete network"><span class="icon is-small"><img src={TrashIcon} alt="Trash icon"></span></button>'
-  };
-  
-  onMount(async function () {
-    dialog = document.getElementById('a_dialog');
-    document.getElementById("Network_name").addEventListener("invalid",
-        function(event) {
-            event.preventDefault();
+    function get_gateway(data) {
+        var output = "";
+        for (var i = 0; i < data.IPAM.Config.length; i++) {
+            output += data.IPAM.Config[i].Gateway + "\n";
+        }
+        return output;
+    };
+    
+    function get_subnet(data) {
+        var output = "";
+        for (var i = 0; i < data.IPAM.Config.length; i++) {
+            output += data.IPAM.Config[i].Subnet + "\n";
+        }
+        return output;
+    };
+    
+    async function delete_network(name) {
+        await invoke('network_remove', { id: name }).then((result) => {
+            update_networks_list();
+            if (result) {
+                if (result.error.includes("network is being used")) {
+                    dialog_data = uppercase_first_letter("Network is being used");
+                    dialog.showModal();
+                };
+            };
+        }).catch((error) => {
+            dialog_data = error;
+            dialog.showModal();
+        });
+    };
+    
+    async function create_network(event) {
+        let formData = new FormData(event.target);
+        let data = Object.fromEntries(formData.entries());
+        let obj = {};
+        
+        obj.Name = network_name;
+        
+        if (data.check_duplicate == "on") {
+            obj.CheckDuplicate = "true";
+        } else {
+            obj.CheckDuplicate = "false";
+        }
+        
+        obj.Driver = 'bridge';
+        
+        if (data.enable_ipv6 == "on") {
+            obj.EnableIPv6 = "true";
+        } else {
+            obj.EnableIPv6 = "false";
+        }
+    
+        obj.IPAM = {};
+        obj.IPAM.Driver = "default";
+    
+        if (data.internal == "on") {
+            obj.Internal = "true";
+        } else {
+            obj.Internal = "false";
+        }
+    
+        if (data.attachable == "on") {
+            obj.Attachable = "true";
+        } else {
+            obj.Attachable = "false";
+        }
+    
+        if (data.ingress == "on") {
+            obj.Ingress = "true";
+        } else {
+            obj.Ingress = "false";
+        }
+    
+        if (bridge_name) {
+            obj.Options = {
+            "com.docker.network.bridge.name": bridge_name
+            };
+        } else {
+            obj.Options = "none";
+        };
+    
+        await invoke('network_create', {
+            name: network_name, request: obj
+        }).then((result) => {
+            update_networks_list();
+        }).catch((error) => {
+            dialog_data = error;
+            dialog.showModal();
+        });
+    
+    };
+    
+    function check_name() {
+        if (test_name(network_name)) {
+            name_validation = true;
+        } else {
+            name_validation = false;
+        }
+        if (network_name == '') {
+            name_validation = null;
+        }
+    };
+    
+    function checkIP() {
+        if (valid_ip(host_binding_ipv4)) {
+            ip_validation = true;
+        } else {
+            ip_validation = false;
+        }
+        if (host_binding_ipv4 == '') {
+            ip_validation = null;
+        }
+    };
+    
+    function return_delete_button() {
+        return '<button on:click={() => delete_network(net.Name)} class="button is-small has-tooltip-right" data-tooltip="Delete network"><span class="icon is-small"><img src={TrashIcon} alt="Trash icon"></span></button>'
+    };
+    
+    onMount(async function () {
+        dialog = document.getElementById('a_dialog');
+        document.getElementById("Network_name").addEventListener("invalid",
+            function(event) {
+                event.preventDefault();
+        });
+        update_networks_list();
     });
-    update_networks_list();
-  });
   
 </script>
 
 <style>
-  td {
-    vertical-align: middle;
-  }
-  input:invalid {
-    background-color: ivory;
-    border: none;
-    outline: 1px solid red;
-    border-radius: 5px;
-  }
+    td {
+        vertical-align: middle;
+    }
+    input:invalid {
+        background-color: ivory;
+        border: none;
+        outline: 1px solid red;
+        border-radius: 5px;
+    }
 </style>
 
 <dialog id="a_dialog">
