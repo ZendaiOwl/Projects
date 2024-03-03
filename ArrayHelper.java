@@ -542,7 +542,7 @@ class ArrayHelper {
       && index < array.length) {
       if (array[index] != array2[index])
         isEqual = false;
-      index++ ;
+        index++ ;
     }
 
     if (isEqual)
