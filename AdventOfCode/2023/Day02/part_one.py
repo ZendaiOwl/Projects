@@ -5,4 +5,4 @@ with open("input.txt") as f:
     a = l.split(" ")
     b = a[1]
     game = b[:-1]
-    print(game)
+    print(len(a))
