@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/* @author Victor-ray, S. <12261439+ZendaiOwl@users.noreply.github.com> */
+/* § Victor-ray, S. <owl@zendai.net.eu.org> */
 const process = require('process');
 const args = process.argv;
 const P = process.argv[2];

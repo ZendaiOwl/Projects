@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/* Victor-ray, S. <12261439+ZendaiOwl@users.noreply.github.com> */
+/* § Victor-ray, S. <owl@zendai.net.eu.org> */
 const args = process.argv
 const nodePath = args.shift()
 const scriptName = args.shift()

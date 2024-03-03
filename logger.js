@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* § Victor-ray, S. <owl@zendai.net.eu.org> */
 const args = process.argv
 const nodePath = args.shift()
 const scriptName = args.shift()
@@ -59,31 +60,31 @@ if (lvl == null) {
     case 2:
     case 'e':
     case 'error':
-      let message = getString(args)
+      var message = getString(args)
       error(message)
       break;
     case 1:
     case 'w':
     case 'warning':
-      let message = getString(args)
+      var message = getString(args)
       warning(message)
       break;
     case 0:
     case 's':
     case 'success':
-      let message = getString(args)
+      var message = getString(args)
       success(message)
       break;
     case -1:
     case 'i':
     case 'info':
-      let message = getString(args)
+      var message = getString(args)
       info(message)
       break;
     case -2:
     case 'd':
     case 'debug':
-      let message = getString(args)
+      var message = getString(args)
       debug(message)
       break;
     default:
