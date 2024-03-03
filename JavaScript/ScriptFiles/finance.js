@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* § Victor-ray, S. <owl@zendai.net.eu.org> */
 
 // Calculate compound interest with monthly contributions
 function CompoundInterest(principal, interestRate, contribution, years) {

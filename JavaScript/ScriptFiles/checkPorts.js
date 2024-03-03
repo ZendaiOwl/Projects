@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/* @author Victor-ray, S. <12261439+ZendaiOwl@users.noreply.github.com> */
+/* § Victor-ray, S. <owl@zendai.net.eu.org> */
 const http = require('http')
 const net = require('net')
 const ports = [80,443]
