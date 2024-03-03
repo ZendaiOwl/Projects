@@ -1,3 +1,4 @@
+#!/usr/bin/env -S tcc -run
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
