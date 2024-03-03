@@ -30,12 +30,6 @@
 # arion down --rmi all --volumes --remove-orphans
 # 
 
-
-# ├
-# ─
-# └
-# │
-
 # shellcheck disable=SC2059
 # Owl: 13153
 # Owl branch: 131B2
@@ -107,12 +101,16 @@ function elder_futhark {
 # \e[1;5;m = Blinking Bold
 function colour {
     local -r Z='\e[0m'
-    local -r COLOUR=('\e[1;37m' '\e[1;36m' '\e[1;35m' '\e[1;34m' 
-                     '\e[1;33m' '\e[1;32m' '\e[1;31m' '\e[1;30m' 
-                     '\e[5m'    '\e[0m' '\e[1;104m\e[K')
-    local -r NAME=("WHITE"  "CYAN"  "PURPLE" "BLUE" 
-                   "YELLOW" "GREEN" "RED"    "BLACK" 
-                   "BLINK"  "RESET" "EXPAND")
+    local -r COLOUR=(
+        '\e[1;37m' '\e[1;36m' '\e[1;35m' '\e[1;34m' 
+        '\e[1;33m' '\e[1;32m' '\e[1;31m' '\e[1;30m' 
+        '\e[5m'    '\e[0m' '\e[1;104m\e[K'
+    )
+    local -r NAME=(
+        "WHITE"  "CYAN"  "PURPLE" "BLUE" 
+        "YELLOW" "GREEN" "RED" "BLACK" 
+        "BLINK"  "RESET" "EXPAND"
+    )
     local -r LENGTH="${#NAME[@]}"
     for (( C = 0; C < "$LENGTH"; C++ ))
     do ( printf "${COLOUR[$C]}%s${Z} \t%s\n" "${NAME[$C]}" "${COLOUR[$C]}" )
@@ -231,93 +229,6 @@ function docker_GET {
 	    "localhost/v1.42/${1}"
 }
 
-function emoji {
-  # local -Ar mojjie=(
-  #   [rose]='✿ڿڰۣ—' [omega]='Ω' [sigma]='Σ' [alpha]='α' 
-  #   [beta]='β' [delta]='Δ' [lamda]='λ' [epsilon]='ɛ' 
-  #   [skull]='☠' [snowman]='☃' [spade]='♠' [club]='♣' 
-  #   [heart]='♥' [big-heart]='❤' [diamond]='♦' [star]='★' 
-  #   [empty_star]='☆' [sun]='☀' [flower]='✿' [cloud]='☁' 
-  #   [triangle]='▲' [empty-triangle]='△' [yinyang]='☯' 
-  #   [infinity]='∞' [yolo]='Yᵒᵘ Oᶰˡʸ Lᶤᵛᵉ Oᶰᶜᵉ' [onsen]='ツ' [note]='♫' 
-  #   [x]='×' [degree]='°' [super-0]='⁰' [super-1]='¹' [super-2]='²' 
-  #   [super-3]='³' [super-4]='⁴' [super-5]='⁵' [super-6]='⁶' [super-7]='⁷' 
-  #   [super-8]='⁸' [super-9]='⁹' [listdot]='•' [listdot-small]='·' 
-  #   [non-breaking-space]=' '
-  #    []= []= []= []= []= []= []= []= []= []= 
-  #    []= []= []= []= []= []= []= []= []= []= 
-  #    •: u+2022
-  #    ¹: u+00B9 
-  #    ²: u+00B2
-  #    ³: u+00B1
-  #    ⁴: u+2074 
-  #    ⁵: u+2075
-  #    ...
-  # );
-  
-  for I in "$@"
-  do
-    case "$I" in
-      rose) ( println "✿ڿڰۣ—"; ) ;;
-      skull) ( println "☠"; ) ;;
-      sigma|sum) ( println "Σ"; ) ;;
-      omega) ( println "Ω"; ) ;;
-      alpha) ( println "α"; ) ;;
-      beta) ( println "β"; ) ;;
-      delta) ( println "Δ"; ) ;;
-      lamda) ( println "λ" ) ;;
-      epsilon) ( println "ɛ" ) ;;
-      snowman) ( println "☃"; ) ;;
-      spade) ( println "♠"; ) ;;
-      club) ( println "♣"; ) ;;
-      heart) ( println "♥"; ) ;;
-      big-heart) ( println "❤"; ) ;;
-      diamond) ( println "♦"; ) ;;
-      star) ( println "★"; ) ;;
-      empty-star) ( println "☆"; ) ;;
-      sun) ( println "☀"; ) ;;
-      flower) ( println "✿"; ) ;;
-      cloud) ( println "☁"; ) ;;
-      triangle) ( println "▲"; ) ;;
-      empty-triangle) ( println "△"; ) ;;
-      yinyang) ( println "☯"; ) ;;
-      infinity) ( println "∞"; ) ;;
-      yolo) ( println "Yᵒᵘ Oᶰˡʸ Lᶤᵛᵉ Oᶰᶜᵉ"; ) ;;
-      onsen) ( println "ツ" ) ;;
-      note) ( println "♫" ) ;;
-      sharp) ( println "♯" ) ;;
-      double-sharp) ( println "𝄪" ) ;;
-      flat) ( println "♭" ) ;;
-      double-flat) ( println "𝄫" ) ;;
-      dice) ( println "⚄" ) ;;
-      d1|dice1) ( println "⚀" ) ;;
-      d2|dice2) ( println "⚁" ) ;;
-      d3|dice3) ( println "⚂" ) ;;
-      d4|dice4) ( println "⚃" ) ;;
-      d5|dice5) ( println "⚄" ) ;;
-      d6|dice6) ( println "⚅" ) ;;
-      envelope|letter) ( println "✉︎" ) ;;
-      pi) ( println "π" ) ;;
-      opt|option|alt) ( println "⌥" ) ;;
-      cmd) ( println "⌘" ) ;;
-      nuclear) ( println "☢" ) ;;
-      load|loading) ( println "███▒▒▒▒▒▒▒" ) ;;
-      load_on|loading_on) ( printf '%s' "█" ) ;;
-      load_off|loading_off) ( printf '%s' "▒" ) ;;
-      interrobang) ( println "‽" ) ;;
-      hammerandsickle|hs) ( println "☭" ) ;;
-      int) ( println "∫" ) ;;
-      flower-smile) ( println "(✿◠‿◠)" ) ;;
-      ellipsis) ( println "…" ) ;;
-      cross) ( println "†" ) ;;
-      check|checkmark) ( println "✔" ) ;;
-      bitcoin|btc) ( println "₿" ) ;;
-      all) ( println "" ) ;;
-      *) ( log 2 "Invalid: $I" ) ;;
-    esac
-  done
-}
-
 # Password check against haveibeenpwned API using k-anonymity.
 # There is no rate-limit so it's possible to download all the passwords,
 # should a local comparison be preffered.
@@ -334,6 +245,7 @@ function check_password {
         if [[ "${i:0:35}" == "${PASS:5:40}" ]]; then
             printf '\e[1;33m%s\e[0m %s\n' "WARNING" "Password is known, times used: ${i:36:50}"
             EXISTS=1
+            break;
         fi
     done
     [[ -z "$EXISTS" ]] && {
@@ -461,95 +373,63 @@ function log {
 
 
 function http_status_code {
-    for I in "$@"
+	local -Ar CODES=(
+        # 1×× Informational
+		[100]="Continue" [101]="Switching protocols" [102]="Processing" [103]="Early hints" 
+        # 2×× Success
+        [200]="OK" [201]="Created" [202]="Accepted" [203]="Non-authorative information" 
+        [204]="No content" [205]="Reset content" [206]="Partial content" [207]="Multi-status" 
+        [208]="Already reported" [226]="IM Used"
+        # 3×× Redirection
+		[300]="Multiple Choices" [301]="Moved Permanently" [302]="Found" [303]="See Other" 
+        [304]="Not Modified" [305]="Use Proxy" [307]="Temporary Redirect" [308]="Permanent Redirect" 
+        # 4×× Client Error
+        [400]="Bad Request" [401]="Unauthorized" [402]="Payment Required" [403]="Forbidden" 
+        [404]="Not Found" [405]="Method Not Allowed"[406]="Not Acceptable" [407]="Proxy Authentication Required" 
+        [408]="Request Timeout" [409]="Conflict" [410]="Gone" [411]="Length Required" [412]="Precondition Failed" 
+        [413]="Payload Too Large" [414]="Request-URI Too Long" [415]="Unsupported Media Type" 
+        [416]="Requested Range Not Satisfiable" [417]="Expectation Failed" [418]="I'm a teapot" 
+        [421]="Misdirected Request" [422]="Unprocessable Entity" [423]="Locked" [424]="Failed Dependency" 
+        [426]="Upgrade Required" [428]="Precondition Required" [429]="Too Many Requests" 
+        [431]="Request Header Fields Too Large" [444]="Connection Closed Without Response" 
+        [451]="Unavailable For Legal Reasons" [499]="Client Closed Request" 
+        # 5×× Server Error
+        [500]="Internal Server Error" [501]="Not Implemented" [502]="Bad Gateway" [503]="Service Unavailable"
+		[504]="Gateway Timeout" [505]="HTTP Version Not Supported" [506]="Variant Also Negotiates" 
+        [507]="Insufficient Storage" [508]="Loop Detected" [510]="Not Extended" 
+        [511]="Network Authentication Required" [599]="Network Connect Timeout Error"
+	)
+    for i in "$@"
     do
-        case "$I" in
-            # 1×× Informational
-            100) ( printf '%d %s\n' 100 "Continue" ) ;;
-            101) ( printf '%d %s\n' 101 "Switching protocols" ) ;;
-            102) ( printf '%d %s\n' 102 "Processing" ) ;;
-            103) ( printf '%d %s\n' 103 "Early hints" ) ;;
-            # 2×× Success
-            200) ( printf '%d %s\n' 200 "OK" ) ;;
-            201) ( printf '%d %s\n' 201 "Created" ) ;;
-            202) ( printf '%d %s\n' 202 "Accepted" ) ;;
-            203) ( printf '%d %s\n' 203 "Non-authorative information" ) ;;
-            204) ( printf '%d %s\n' 204 "No content" ) ;;
-            205) ( printf '%d %s\n' 205 "Reset content" ) ;;
-            206) ( printf '%d %s\n' 206 "Partial content" ) ;;
-            207) ( printf '%d %s\n' 207 "Multi-status" ) ;;
-            208) ( printf '%d %s\n' 208 "Already reported" ) ;;
-            226) ( printf '%d %s\n' 226 "IM Used" ) ;;
-            # 3×× Redirection
-            300) ( printf '%d %s\n' 300 "Multiple Choices" ) ;;
-            301) ( printf '%d %s\n' 301 "Moved Permanently" ) ;;
-            302) ( printf '%d %s\n' 302 "Found" ) ;;
-            303) ( printf '%d %s\n' 303 "See Other" ) ;;
-            304) ( printf '%d %s\n' 304 "Not Modified" ) ;;
-            305) ( printf '%d %s\n' 305 "Use Proxy" ) ;;
-            307) ( printf '%d %s\n' 307 "Temporary Redirect" ) ;;
-            308) ( printf '%d %s\n' 308 "Permanent Redirect" ) ;;
-            # 4×× Client Error
-            400) ( printf '%d %s\n' 400 "Bad Request" ) ;;
-            401) ( printf '%d %s\n' 401 "Unauthorized" ) ;;
-            402) ( printf '%d %s\n' 402 "Payment Required" ) ;;
-            403) ( printf '%d %s\n' 403 "Forbidden" ) ;;
-            404) ( printf '%d %s\n' 404 "Not Found" ) ;;
-            405) ( printf '%d %s\n' 405 "Method Not Allowed" ) ;;
-            406) ( printf '%d %s\n' 406 "Not Acceptable" ) ;;
-            407) ( printf '%d %s\n' 407 "Proxy Authentication Required" ) ;;
-            408) ( printf '%d %s\n' 408 "Request Timeout" ) ;;
-            409) ( printf '%d %s\n' 409 "Conflict" ) ;;
-            410) ( printf '%d %s\n' 410 "Gone" ) ;;
-            411) ( printf '%d %s\n' 411 "Length Required" ) ;;
-            412) ( printf '%d %s\n' 412 "Precondition Failed" ) ;;
-            413) ( printf '%d %s\n' 413 "Payload Too Large" ) ;;
-            414) ( printf '%d %s\n' 414 "Request-URI Too Long" ) ;;
-            415) ( printf '%d %s\n' 415 "Unsupported Media Type" ) ;;
-            416) ( printf '%d %s\n' 416 "Requested Range Not Satisfiable" ) ;;
-            417) ( printf '%d %s\n' 417 "Expectation Failed" ) ;;
-            418) ( printf '%d %s\n' 418 "I'm a teapot" ) ;;
-            421) ( printf '%d %s\n' 421 "Misdirected Request" ) ;;
-            422) ( printf '%d %s\n' 422 "Unprocessable Entity" ) ;;
-            423) ( printf '%d %s\n' 423 "Locked" ) ;;
-            424) ( printf '%d %s\n' 424 "Failed Dependency" ) ;;
-            426) ( printf '%d %s\n' 426 "Upgrade Required" ) ;;
-            428) ( printf '%d %s\n' 428 "Precondition Required" ) ;;
-            429) ( printf '%d %s\n' 429 "Too Many Requests" ) ;;
-            431) ( printf '%d %s\n' 431 "Request Header Fields Too Large" ) ;;
-            444) ( printf '%d %s\n' 444 "Connection Closed Without Response" ) ;;
-            451) ( printf '%d %s\n' 451 "Unavailable For Legal Reasons" ) ;;
-            499) ( printf '%d %s\n' 499 "Client Closed Request" ) ;;
-            # 5×× Server Error
-            500) ( printf '%d %s\n' 500 "Internal Server Error" ) ;;
-            501) ( printf '%d %s\n' 501 "Not Implemented" ) ;;
-            502) ( printf '%d %s\n' 502 "Bad Gateway" ) ;;
-            503) ( printf '%d %s\n' 503 "Service Unavailable" ) ;;
-            504) ( printf '%d %s\n' 504 "Gateway Timeout" ) ;;
-            505) ( printf '%d %s\n' 505 "HTTP Version Not Supported" ) ;;
-            506) ( printf '%d %s\n' 506 "Variant Also Negotiates" ) ;;
-            507) ( printf '%d %s\n' 507 "Insufficient Storage" ) ;;
-            508) ( printf '%d %s\n' 508 "Loop Detected" ) ;;
-            510) ( printf '%d %s\n' 510 "Not Extended" ) ;;
-            511) ( printf '%d %s\n' 511 "Network Authentication Required" ) ;;
-            599) ( printf '%d %s\n' 599 "Network Connect Timeout Error" ) ;;
-            *)   ( printf '%s\n' "Unknown status code" )
-        esac
+        if [[ "${CODES[$i]}" ]]
+        then ( printf '%s %s\n' "$i" "${CODES[$i]}"; )
+        else ( printf '%s %s\n' "$i" "Unknown"; )
+        fi
     done
+
 }
 
 
 function get_http_status_code {
-  if has_cmd 'jq'
-  then
-    (
-      curl --silent --location "https://httpstatuses.io/${1}.json" | jq
-    )
-  else
-    (
-      curl --silent --location "https://httpstatuses.io/${1}.json"
-    )
-  fi
+	local -ar CODES=(
+		100 101 102 103 200 201 202 203 204 205 206 207 208 226
+		300 301 302 303 304 305 307 308 400 401 402 403 404 405
+		406 407 408 409 410 411 412 413 414 415 416 417 418 421
+		422 423 424 426 428 429 431 444 451 499 500 501 502 503
+		504 505 506 507 508 510 511 599
+	)
+	[[ "${CODES[*]}" =~ ${1} ]] && {
+  		if has_cmd 'jq'
+  		then
+  	  	(
+  	    	curl --silent --location "https://httpstatuses.io/${1}.json" | jq
+  	  	)
+  		else
+  	  	(
+  	    	curl --silent --location "https://httpstatuses.io/${1}.json"
+  	  	)
+  		fi
+	}
 }
 
 # -----
@@ -747,26 +627,17 @@ function is_socket {
 
 # Checks what type a given variable is of:
 # alias, keyword, function, builtin, file or ''
-# Return codes
-# 1: Alias
-# 2: Builtin
-# 3: File
-# 4: Function
-# 5: Keyword
-# 6: Unknown
-# 7: Invalid number of arguments
+# Returns
+# 0: Alias
+# 0: Builtin
+# 0: File
+# 0: Function
+# 0: Keyword
+# 1: Unknown / Error
+# 2: Invalid number of arguments
 function is_type {
-    [[ "$#" -ne 1 ]] && { return 7; }
-    (
-        case "$(type -t "$1")" in
-           'alias') { return 1; } ;;
-         'builtin') { return 2; } ;;
-            'file') { return 3; } ;;
-        'function') { return 4; } ;;
-         'keyword') { return 5; } ;;
-                 *) { return 6; } ;;
-        esac
-    )
+    [[ "$#" -ne 1 ]] && { return 2; }
+    ( type -t "$1" )
 }
 
 # Checks if a user exists
@@ -1302,12 +1173,13 @@ function subtree_split {
 
 function github_subtree_add {
     ! has_cmd 'git' && { return 1; }
+    local -r GH_USER="ZendaiOwl"
     if [[ "$#" -eq 2 ]]
     then
-        ( git subtree add --prefix="$1" git@github.com:ZendaiOwl/"$1" "$2" )
+        ( git subtree add --prefix="$1" git@github.com:"$GH_USER"/"$1" "$2" )
     elif [[ "$#" -eq 3 ]]
     then
-        ( git subtree add --prefix="$1" git@github.com:ZendaiOwl/"$2" "$3" )
+        ( git subtree add --prefix="$1" git@github.com:"$GH_USER"/"$2" "$3" )
     else
         return 2
     fi
@@ -1315,17 +1187,18 @@ function github_subtree_add {
 
 function github_subtree_pull {
     ! has_cmd 'git' && { return 1; }
+    local -r GH_USER="ZendaiOwl"
     if [[ "$#" -eq 2 ]]
     then
-        ( git subtree pull --prefix="$1" git@github.com:ZendaiOwl/"$1" "$2" )
+        ( git subtree pull --prefix="$1" git@github.com:"$GH_USER"/"$1" "$2" )
     elif [[ "$#" -eq 3 ]]
     then
-        ( git subtree pull --prefix="$1" git@github.com:ZendaiOwl/"$2" "$3" )
+        ( git subtree pull --prefix="$1" git@github.com:"$GH_USER"/"$2" "$3" )
     elif [[ "$#" -gt 3 ]]
     then
         (
             git subtree pull \
-                --prefix="$1" git@github.com:ZendaiOwl/"$2" "$3" \
+                --prefix="$1" git@github.com:"$GH_USER"/"$2" "$3" \
                 --message="࿓❯ ${*:4}"
         )
     else
@@ -1335,18 +1208,19 @@ function github_subtree_pull {
 
 function github_subtree_pull_squash {
     ! has_cmd 'git' && { return 1; }
+    local -r GH_USER="ZendaiOwl"
     if [[ "$#" -eq 2 ]]
     then
-        ( git subtree pull --prefix="$1" git@github.com:ZendaiOwl/"$1" "$2" --squash )
+        ( git subtree pull --prefix="$1" git@github.com:"$GH_USER"/"$1" "$2" --squash )
     elif [[ "$#" -eq 3 ]]
     then
-        ( git subtree pull --prefix="$1" git@github.com:ZendaiOwl/"$2" "$3" --squash )
+        ( git subtree pull --prefix="$1" git@github.com:"$GH_USER"/"$2" "$3" --squash )
     elif [[ "$#" -gt 3 ]]
     then
         (
             git subtree pull \
                 --squash \
-                --prefix="$1" git@github.com:ZendaiOwl/"$2" "$3" \
+                --prefix="$1" git@github.com:"$GH_USER"/"$2" "$3" \
                 --message="࿓❯ ${*:4}"
         )
     else
@@ -1356,12 +1230,13 @@ function github_subtree_pull_squash {
 
 function github_subtree_push {
     ! has_cmd 'git' && { return 1; }
+    local -r GH_USER="ZendaiOwl"
     if [[ "$#" -eq 2 ]]
     then
-        ( git subtree push --prefix="$1" git@github.com:ZendaiOwl/"$1" "$2" )
+        ( git subtree push --prefix="$1" git@github.com:"$GH_USER"/"$1" "$2" )
     elif [[ "$#" -eq 3 ]]
     then
-        ( git subtree push --prefix="$1" git@github.com:ZendaiOwl/"$2" "$3" )
+        ( git subtree push --prefix="$1" git@github.com:"$GH_USER"/"$2" "$3" )
     else
         return 2
     fi
@@ -1369,7 +1244,8 @@ function github_subtree_push {
 
 function github_remote_add {
     ! has_cmd 'git' && { return 1; }
-    ( git remote add -f "$1" git@github.com:ZendaiOwl/"$1".git )
+    local -r GH_USER="ZendaiOwl"
+    ( git remote add -f "$1" git@github.com:"$GH_USER"/"$1".git )
 }
 
 # -------
@@ -1946,6 +1822,15 @@ function string_length {
     printf '%d\n' "${#STR}"
 }
 
+# Saves a password inside Pass
+function insert_new_password {
+    [[ "$#" -lt 1 ]] && { log 2 "Invalid number of arguments: $#/1+"; return 1; }
+    pass insert -m Browser/"$1" > /dev/null <<EOF
+$2
+login: $3
+EOF
+}
+
 # This function() uses /dev/urandom to generate a password randomly.
 # Default length is 36, another length can be specified by 1st argument value
 # Ex. This one below uses the most commonly allowed password characters
@@ -2206,7 +2091,7 @@ function network_interface_services {
 }
 
 # Gets the HTML code for a URL with Bash TCP
-# Reuires the host TCP server to listen on HTTP, not HTTPS, it'a a plain HTTP request
+# Reuires the host TCP server to listen on HTTP, not HTTPS, it's a plain HTTP request
 # Return codes
 # 1: Arguments error, requires: Host, Port
 function get_url {
@@ -2252,11 +2137,13 @@ function get_btc {
     local -ar ARGS=(--silent --location)
     if ! has_cmd 'jq'
     then
-    	curl "${ARGS[@]}" "$BINANCE_URL" && \
+    	curl "${ARGS[@]}" "$BINANCE_URL"
     	curl "${ARGS[@]}" "$KRAKEN_URL"
     else
-    	curl "${ARGS[@]}" "$BINANCE_URL" | jq '.' && \
-    	curl "${ARGS[@]}" "$KRAKEN_URL" | jq '.result.XXBTZEUR.c'
+    	LC_NUMERIC=C printf '%s %.2f %s\n' "€" "$(curl "${ARGS[@]}" "$BINANCE_URL" | jq -r '.price')" "Binance"
+    	LC_NUMERIC=C printf '%s %.2f %s\n' "€" "$(curl "${ARGS[@]}" "$KRAKEN_URL" | jq -r '.result.XXBTZEUR.c[0]')" "Kraken"
+    	#curl "${ARGS[@]}" "$KRAKEN_URL" | jq -r '"Kraken: " + .result.XXBTZEUR.c[0]'
+    	#curl "${ARGS[@]}" "$BINANCE_URL" | jq -r '"Binance: " + .price'
     fi
 }
 
@@ -3304,7 +3191,7 @@ function url_encode {
         ['&']='%26'       ["'"]='%27'    ['"']='%22'
         [\\]='%5C'        ['^']='%5E'    ['$']='%24'
         ['`']='%60'       ['#']='%23'    ['@']='%40'
-        ['!']='%21'       ['%']='%25'    [' ']='%20'
+        ['!']='%21'       ['%']='%25'    [' ']='+' # %20
         ['å']='%C3%A5'    ['ä']='%C3%A4' ['ö']='%C3%B6'
         ['Å']='%C3%85'    ['Ä']='%C3%84' ['Ö']='%C3%96'
         ['€']='%E2%82%AC'
@@ -3333,7 +3220,7 @@ function url_decode {
         ['%26']='&'       ['%27']="'"    ['%22']='"'
         ['%5C']=\\        ['%5E']='^'    ['%24']='$'
         ['%60']='`'       ['%23']='#'    ['%40']='@'
-        ['%21']='!'       ['%25']='%'    ['%20']=' '
+        ['%21']='!'       ['%25']='%'    ['+']=' ' # %20
         ['%C3%A5']='å'    ['%C3%A4']='ä' ['%C3%B6']='ö'
         ['%C3%85']='Å'    ['%C3%84']='Ä' ['%C3%96']='Ö'
         ['%E2%82%AC']='€'
@@ -3430,7 +3317,7 @@ function encode_char {
         ['r']='1o' ['s']='1p' ['t']='1q' ['u']='1r' ['v']='1s' ['w']='1t' ['x']='1u'
         ['y']='1v' ['z']='20' ['å']='21' ['ä']='22' ['ö']='23' ['?']='24' ['!']='25'
         ['+']='26' ['=']='27' ['#']='28' ['%']='29' ['&']='2a' ['@']='2b' ['"']='2c'
-        ["'"]='2d' ['-']='2e' ['_']='2f' ['/']='2g' ['|']='2h' ['\']='2i'  [' ']='2j'
+        ["'"]='2d' ['-']='2e' ['_']='2f' ['/']='2g' ['|']='2h' [\\]='2i'  [' ']='2j'
         [':']='2k' [';']='2l' [',']='2m' ['.']='2n' ['^']='2o' ['*']='2p' ['¡']='2q'
         ['¤']='2r' ['(']='2s' [')']='2t' ['{']='2u' ['}']='2v' ['[']='30' [']']='31'
         ['<']='32' ['>']='33' ['~']='34' ['`']='35' ['´']='36' ['$']='37' ['€']='38'
@@ -3542,24 +3429,24 @@ function docker_request {
     ! has_cmd 'jq' && { return 2; }
     local RESPONSE
     if [[ "$#" -eq 1 ]]; then
-      RESPONSE="$(curl --silent \
-        --unix-socket /var/run/docker.sock \
-        --header "Content-Type: application/json" \
-        localhost/v1.42"$1")"
+        RESPONSE="$(curl --silent \
+            --unix-socket /var/run/docker.sock \
+            --header "Content-Type: application/json" \
+            localhost/v1.42"$1")"
     elif [[ "$#" -eq 3 ]]; then
-      RESPONSE="$(curl --silent \
-        --unix-socket /var/run/docker.sock \
-        --header "Content-Type: application/json" \
-        --request "$1" \
-        --data "$2" \
-        localhost/v1.42"$3")"
+        RESPONSE="$(curl --silent \
+            --unix-socket /var/run/docker.sock \
+            --header "Content-Type: application/json" \
+            --request "$1" \
+            --data "$2" \
+            localhost/v1.42"$3")"
     else
       printf '\e[1;31m%s\e[0m %s\n' "ERROR" "Invalid number of arguments: $#/(1|3)" 1>&2
     fi
     if [[ ! "$RESPONSE" == "Not Found" ]]; then
-      jq <<<"$RESPONSE"
+        jq <<<"$RESPONSE"
     else
-      printf '\e[1;31m%s\e[0m %s\n' "ERROR" "Endpoint not found" 1>&2
+        printf '\e[1;31m%s\e[0m %s\n' "ERROR" "Endpoint not found" 1>&2
     fi
 }
 
@@ -3571,16 +3458,18 @@ function docker_request {
 function get_images {
     ! has_cmd 'curl' && { return 1; }
     ! has_cmd 'jq' && { return 2; }
-    curl --silent --unix-socket /var/run/docker.sock \
-         -H "Content-Type: application/json" localhost/v1.42/images/json \
-         | jq -r '.[] as $in |  
-         $in."Id" | 
-         split("[:]"; "")[1] | 
-         split("") | .[0:12] | 
-         join("") as $i |
-         $in."Names"[] | 
-         split("[/]"; "") as $f | 
-         $f[1] + "/" + $f[2] + " " + $i'
+    curl --silent \
+        --unix-socket /var/run/docker.sock \
+        -H "Content-Type: application/json" \
+        localhost/v1.42/images/json \
+        | jq -r '.[] as $in |  
+        $in."Id" | 
+        split("[:]"; "")[1] | 
+        split("") | .[0:12] | 
+        join("") as $i |
+        $in."Names"[] | 
+        split("[/]"; "") as $f | 
+        $f[1] + "/" + $f[2] + " " + $i'
 }
 
 # Get the Container ID & Name of running containers
