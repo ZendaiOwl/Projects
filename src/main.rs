@@ -24,29 +24,60 @@ fn run_program(arg: &Vec<String>) {
             use_args();
         },
         2.. => {
-            if arg[1] == "echo" {
-                //echo(&arg);
-                let string_array = &arg[2..];
-                echo(&string_array);
-            } else if arg[1] == "gr" {
-                gr(&arg, std::io::stdout().lock());
-            } else if arg[1] == "ls" {
-                ls(&arg);
-            } else if arg[1] == "list" {
-                list(&arg);
-            } else if arg[1] == "print" {
-                print(&arg);
-            } else if arg[1] == "rd" {
-                rd(&arg);
-            } else if arg[1] == "run_cmd" {
-                let string_array = &arg[2..];
-                run_cmd(&string_array, &mut std::io::stdout().lock());
-                // run_cmd(&arg);
-            } else if arg[1] == "search" {
-                search(&arg);
-            } else {
-                first_arg_invalid(&arg[1]);
-            }
+            match arg[1] {
+                "echo" => {
+                    let string_array = &arg[2..];
+                    echo(&string_array);
+                },
+                "gr" => {
+                    gr(&arg, std::io::stdout().lock());
+                },
+                "ls" => {
+                    ls(&arg);
+                },
+                "list" => {
+                    list(&arg);
+                },
+                "print" => {
+                    print(&arg);
+                },
+                "rd" => {
+                    rd(&arg);
+                },
+                "run_cmd" => {
+                    let string_array = &arg[2..];
+                    run_cmd(&string_array, &mut std::io::stdout().lock());
+                },
+                "search" => {
+                    search(&arg);
+                },
+                _ => {
+                    first_arg_invalid(&arg[1]);
+                },
+            };
+            //if arg[1] == "echo" {
+            //    //echo(&arg);
+            //    let string_array = &arg[2..];
+            //    echo(&string_array);
+            //} else if arg[1] == "gr" {
+            //    gr(&arg, std::io::stdout().lock());
+            //} else if arg[1] == "ls" {
+            //    ls(&arg);
+            //} else if arg[1] == "list" {
+            //    list(&arg);
+            //} else if arg[1] == "print" {
+            //    print(&arg);
+            //} else if arg[1] == "rd" {
+            //    rd(&arg);
+            //} else if arg[1] == "run_cmd" {
+            //    let string_array = &arg[2..];
+            //    run_cmd(&string_array, &mut std::io::stdout().lock());
+            //    // run_cmd(&arg);
+            //} else if arg[1] == "search" {
+            //    search(&arg);
+            //} else {
+            //    first_arg_invalid(&arg[1]);
+            //}
         },
         _ => {
             Format::Error("Invalid argument(s)").print();
